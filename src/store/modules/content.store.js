@@ -3,34 +3,54 @@
 
 const state = {
   top: {
-    text: 'Based on a comparison with speeds listed in the ACCC Broadband Performance Data Report'
+    header: 'Heading Title',
+    text: 'Some text will be here... Some text will be here... Some text will be here... Some text will be here... Some text will be here...',
+    button: 'CTA'
+  },
+  info: {
+    header: 'Heading Title',
+    text: 'Some text will be here... Some text will be here... Some text will be here... Some text will be here... Some text will be here...',
+    offer: [
+      {
+        blackText: 'information about',
+        greenText: 'offer'
+      },
+      {
+        blackText: 'information about',
+        greenText: 'offer'
+      }
+    ]
+  },
+  userForm: {
+    title: 'Title about offer',
+    messagePlaceholder: '',
+    button: 'CTA'
+  },
+  howToConnect: {
+    header: 'Title around Optic Fibre',
+    text: 'Some text here... Some text here... Some text here... Some text here...',
+    items: [
+      {
+        title: 'Benefit 1',
+        text: 'Some text here... Some text here... Some text here... Some text here...'
+      },
+      {
+        title: 'Benefit 2',
+        text: 'Some text here... Some text here... Some text here... Some text here...'
+      },
+      {
+        title: 'Benefit 3',
+        text: 'Some text here... Some text here... Some text here... Some text here...'
+      }
+    ]
+  },
+  testimonials: {
+    header: 'Title around reviews',
+    button: 'CTA'
   },
   footer: {
     topHead: 'READY TO GET STARTED?',
     topText: 'Leave your inquiry and we\'ll get back to you within 24 hours on business days'
-  },
-  about: 'Pineapple Net is an Australian Internet service provider offering the fastest and most affordable fibre optic connection to business and residential customers.',
-  copyright: 'Copyright © 2020 TPG Internet Pty Ltd ABN 15 068 383 737',
-  whoAreWe: 'Pineapple Net is an authorised retail service provider. Our fibre optic broadband is a superior alternative to the NBN.',
-  speedTest: {
-    text: [
-      'With speeds up to 1000Mbps, say goodbye to buffering, enjoy crystal clear video streaming, low latency and superior gaming capability. Talk to family and friends without worrying about call quality.',
-      'All Pineapple Net packages include unlimited data with no interruption. Our customers never experience evening congestion and enjoy 99.6% uptime.'
-    ]
-  },
-  home: {
-    contactUs: 'Get in touch to find out if Pineapple is available at your address',
-    getConnected: 'Our team of installers get you connected to our network',
-    enjoy: 'Fast fibre internet'
-  },
-  checkAddress: {
-    text: 'Enter your address to find out if Pineapple Net is available',
-    placeholder: 'Enter your address',
-    buttonText: 'Check Now'
-  },
-  internetPlans: {
-    text: `Zero connection fee with 12 month plans<br>
-          Commitment issues? month-to-month plans also available`
   }
 }
 

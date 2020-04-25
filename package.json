@@ -11,10 +11,9 @@
   "dependencies": {
     "core-js": "^3.6.4",
     "email-validator": "^2.0.4",
+    "googleapis": "^49.0.0",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.11",
-    "vue-router": "^3.1.5",
-    "vue-speedometer": "^1.2.1",
     "vuetify": "^2.2.11",
     "vuex": "^3.1.2"
   },

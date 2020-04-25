@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid fill-height style="position: relative; margin-bottom: -10px; margin-top: 50px;">
+  <v-container fluid fill-height class="homefone" style="position: relative; margin-bottom: -10px; margin-top: 50px;">
     <FooterFone :footerHeight="footerHeight" />
     <v-container fluid class="footer--top-content" :style="{ top: topContentTop }">
       <v-row align="start" justify="center" style="position: absolute; top: 0; left: 0; width: 100%">
@@ -19,6 +19,7 @@
                       height="53"
                       class="input-field rounded transparent"
                       label="Name"
+                      hide-details
                       rounded
                       outlined
                       dark
@@ -31,6 +32,7 @@
                       height="53"
                       class="input-field rounded transparent"
                       label="Email"
+                      hide-details
                       rounded
                       outlined
                       dark
@@ -43,6 +45,7 @@
                       height="53"
                       class="input-field rounded transparent"
                       label="Phone"
+                      hide-details
                       rounded
                       outlined
                       dark
@@ -59,10 +62,11 @@
                     min-width="280"
                     label="Phone"
                     dense
+                    hide-details
                     rounded
                     light
                     @click="submit"
-                    style="color: #20731C; margin-bottom: 28px;"
+                    style="color: #20731C"
                 >Get started</v-btn>
               </v-card>
             </v-row>

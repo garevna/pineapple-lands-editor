@@ -2,9 +2,15 @@
 /* eslint-disable no-shadow */
 
 const state = {
-  userFullName: '',
-  userEmail: '',
-  userMessage: ''
+  userInfo: {
+    name: '',
+    email: '',
+    address: '',
+    postCode: '',
+    state: '',
+    phone: '',
+    message: ''
+  }
 }
 
 const getters = {
@@ -14,9 +20,7 @@ const getters = {
 }
 
 const mutations = {
-  USER_FULL_NAME: (state, name) => { state.userFullName = name },
-  USER_EMAIL: (state, email) => { state.userEmail = email },
-  USER_MESSAGE: (state, message) => { state.userMessage = message }
+  UPDATE_USER_INFO: (state, payload) => { state.user[payload.prop] = payload.value }
 }
 
 const actions = {

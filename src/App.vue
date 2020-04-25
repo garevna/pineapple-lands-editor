@@ -1,8 +1,57 @@
 <template>
-  <v-app class="transparent">
-    <!-- <v-content class="mx-0"> -->
-      <router-view class="mt-12 mx-0 px-0"></router-view>
-    <!-- </v-content> -->
+  <v-app class="homefone">
+    <v-container fluid class="homefone">
+      <AppHeader :pages="pages" :selected.sync="page"/>
+      <Top />
+
+      <!-- ============================= USER CONTACT ============================= -->
+
+      <v-row justify="center" class="pa-0 ma-0">
+        <v-sheet
+          width="100%"
+          max-width="1440"
+          color="homefone"
+          tile
+          class="mx-auto"
+        >
+          <v-row class="mx-0 px-0">
+            <v-col cols="12" md="6" class="aside-col">
+              <Aside />
+            </v-col>
+            <v-col cols="12" md="6" class="mx-0 px-0">
+              <v-card flat class="transparent mx-0">
+                <!-- <v-img src="@/img/map-picture.svg" height="800" contain style="opacity:0.2;"></v-img> -->
+                <v-card
+                        flat
+                        class="user-contact transparent mx-auto pa-0"
+                        style="margin-bottom: 80px"
+                >
+                  <UserContact />
+                </v-card>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-sheet>
+      </v-row>
+
+      <!-- ============================= HOW TO CONNECT ============================= -->
+      <v-row width="100%">
+        <HowToConnect :contact.sync="contactUs" :connect.sync="getConnected" />
+      </v-row>
+      <!-- ============================= TESTIMONIALS ============================= -->
+      <v-row width="100%">
+        <Testimonials />
+      </v-row>
+      <!-- ============================= FOOTER ============================= -->
+      <section id="footer" class="homefone">
+        <div class="base-title">
+          <a href="#footer" class="core-goto"></a>
+            <v-row width="100%">
+              <Footer :page.sync="page" :user.sync="user" />
+            </v-row>
+        </div>
+      </section>
+    </v-container>
   </v-app>
 </template>
 
@@ -11,7 +60,6 @@
 html, body {
   width: 100%;
   max-width: 100%;
-  // overflow-x: hidden;
 }
 
 .container,
@@ -19,38 +67,35 @@ html, body {
 .container.fill-height {
   padding: 0!important;
 }
+.container.fill-height > .row {
+  max-width: 100%!important;
+}
 
-.green--text {
-  color: #363636;
+h1, h2, h3, h4, h5 {
+  white-space: normal;
+  word-break: normal;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 150%;
+  letter-spacing: 0.02em;
+  color: #000;
 }
 h1 {
   font-size: 46px;
-  font-style: normal;
-  line-height: 150%;
-  font-weight: 900;
-  letter-spacing: 0.02em;
 }
 h2 {
   font-size: 32px;
-  font-style: normal;
-  line-height: 150%;
-  font-weight: 900;
   text-align: center;
-  letter-spacing: 0.02em;
-  color: #363636;
   width: 100%;
 }
 h3 {
   font-size: 28px;
-  line-height: 150%;
 }
 h4 {
   font-size: 24px;
-  color: #6D6D6D;
-  font-style: normal;
-  font-weight: normal;
-  line-height: 150%;
-  letter-spacing: 0.02em;
+}
+h5 {
+  font-size: 20px;
 }
 
 p {
@@ -76,19 +121,29 @@ svg.defs-only {
   overflow: hidden;
 }
 
+.user-contact {
+  width: 640px;
+}
+
 @media (max-width: "600px"), (max-height: "600px") {
   h1 { font-size: 28px; }
   h2 { font-size: 24px; }
   h3 { font-size: 20px; }
-  h4 { font-size: 18px; }
+  h4, h5 { font-size: 18px; }
   p { font-size: 16px; }
+  .user-contact {
+    width: 480px;
+  }
 }
 
 @media (max-width: '400px'), (max-height: '400px') {
   h1 { font-size: 26px; }
   h2 { font-size: 24px; }
   h3 { font-size: 20px; }
-  h4 { font-size: 16px; }
+  h4, h5 { font-size: 16px; }
+  .user-contact {
+    width: 300px;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -108,27 +163,93 @@ svg.defs-only {
 
 <script>
 
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
+
+import AppHeader from '@/components/AppHeader.vue'
+import Top from '@/components/Top.vue'
+import Aside from '@/components/Aside.vue'
+import UserContact from '@/components/UserContact.vue'
+import HowToConnect from '@/components/HowToConnect.vue'
+import Testimonials from '@/components/Testimonials.vue'
+import Footer from '@/components/Footer.vue'
 
 export default {
   name: 'App',
-
-  data: () => ({
-
-  }),
+  components: {
+    AppHeader,
+    Top,
+    Aside,
+    UserContact,
+    HowToConnect,
+    Testimonials,
+    Footer
+  },
+  data () {
+    return {
+      page: 0,
+      user: {
+        name: '',
+        email: '',
+        phone: ''
+      },
+      contactUs: false,
+      getConnected: false
+    }
+  },
   computed: {
-    ...mapState('map', ['serviceAvailable'])
+    ...mapState(['viewport', 'viewportWidth', 'pages', 'selectors'])
+  },
+  watch: {
+    contactUs (val) {
+      if (val) this.$router.push({ name: 'contact' })
+    },
+    getConnected (val) {
+      if (val) this.$router.push({ name: 'connect' })
+    },
+    business (val) {
+      if (val) {
+        this.page = this.pages.indexOf('Business')
+      }
+    },
+    residential (val) {
+      this.page = this.pages.indexOf('Residential')
+    },
+    page (val) {
+      if (this.selectors[val] === '#connect') {
+        if (this.addressAvalable) {
+          this.$router.push({ name: 'connect' })
+        } else {
+          this.$vuetify.goTo('#check', {
+            duration: 500,
+            offset: 200,
+            easing: 'easeInOutCubic'
+          })
+        }
+        this.page = undefined
+        return
+      }
+      if (this.selectors[val] === '#contact') {
+        this.$router.push({ name: 'contact' })
+        return
+      }
+      if (this.selectors[val] === '#plans') {
+        this.$store.commit('CHANGE_PLAN', this.pages[this.page].toLowerCase())
+      }
+      if (this.selectors[val]) {
+        this.$vuetify.goTo(this.selectors[val], {
+          duration: 500,
+          offset: 0,
+          easing: 'easeInOutCubic'
+        })
+      }
+    }
   },
   methods: {
-    ...mapActions({
-      getAvailable: 'map/GET_AVAILABLE'
-    }),
     onResize () {
       this.$store.commit('CHANGE_VIEWPORT')
     }
   },
   mounted () {
-    this.getAvailable()
     this.onResize()
     window.addEventListener('resize', this.onResize, { passive: true })
   },

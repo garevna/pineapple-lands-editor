@@ -1,8 +1,9 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="homefone">
+
     <v-card flat class="transparent mx-auto my-12 text-center" max-width="1360">
       <v-card-title class="text-center" max-width="940">
-        <h1 style="width: 100%; text-align: center">Our customers <span class="green--text">love us.</span></h1>
+        <h1 style="width: 100%; text-align: center">{{ content.header }}</h1>
       </v-card-title>
 
       <v-slide-group
@@ -68,6 +69,19 @@
         </v-carousel-item>
       </v-carousel>
     </v-card>
+    <v-card-text class="text-center text-md-left">
+      <v-btn
+          color="buttons"
+          dark
+          rounded
+          width="220"
+          height="48"
+          class="px-auto mx-auto"
+          @click="action"
+      >
+          {{ content.button }}
+      </v-btn>
+    </v-card-text>
   </v-container>
 </template>
 
@@ -143,6 +157,9 @@ export default {
   }),
 
   computed: {
+    ...mapState('content', {
+      content: 'testimonials'
+    }),
     ...mapState('testimonials', ['testimonials']),
     ...mapState({
       screen: 'viewportWidth'
@@ -152,6 +169,11 @@ export default {
     },
     textSize () {
       return this.screen < 600 ? '12px' : '14px'
+    }
+  },
+  methods: {
+    action () {
+      console.log('Testimonials action')
     }
   },
   mounted () {

@@ -6,8 +6,10 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    host: 'https://garevna.github.io/pineapple.net',
-    // host: 'http://192.168.0.102:8080',
+    // host: 'https://garevna.github.io/pineapple.net',
+    // landhost: 'https://garevna.github.io/pineapple-land',
+    host: 'http://192.168.0.102:8080',
+    landhost: 'http://192.168.0.102:8080',
     officeAddress: '75 Brighton Road, Elwood VIC 3184',
     officePhone: '1300 857 501',
     officeEmail: 'info@pineapple.net.au',
@@ -25,7 +27,12 @@ export default new Vuex.Store({
   modules,
 
   getters: {
-    //
+    familyPicture: (state) => {
+      const size = state.viewportWidth < 600 ? 'small' : state.viewportWidth < 1440 ? 'medium' : 'large'
+      const num = location.hash ? location.hash.slice(1) : '1'
+      console.log(`${state.landhost}/img/family-${size}-${num}.png`)
+      return `${state.landhost}/img/family-${size}-${num}.png`
+    }
   },
 
   mutations: {
