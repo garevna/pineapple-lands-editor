@@ -1,6 +1,6 @@
 # pineapple.net
 
-[**demo**](https://garevna.github.io/pineapple.net/)
+[**demo**](https://garevna.github.io/pineapple-land-editor/)
 
 ## Project setup
 ```
