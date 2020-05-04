@@ -86,21 +86,6 @@ const actions = {
     return response
   },
 
-  async SAVE_CONTENT ({ getters, commit, dispatch }, content) {
-    const requestBody = Object.assign({}, ...state.pageFields.map(key => ({ [key]: content[key] })))
-
-    try {
-      const response = await fetch(`${getters.contentEndpoint}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: localStorage.getItem('token')
-        },
-        body: JSON.stringify(requestBody)
-      })
-    } catch (error) { dispatch('LOG_ERROR', error) }
-  },
-
   async GET_IMAGES (context, endpoint) {
     const response = await (await fetch(endpoint)).json()
     return response.filter(img => !img.match(/.gitkeep/))

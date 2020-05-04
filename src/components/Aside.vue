@@ -16,7 +16,7 @@
       <h2
           class="text-left"
           contenteditable
-          ref="infoHeader"
+          ref="asideHeader"
           v-text="info.header"
       ></h2>
     </v-card-title>
@@ -24,7 +24,7 @@
       <p
           class="text-left"
           contenteditable
-          ref="infoText"
+          ref="asideText"
           v-text="info.text"
       ></p>
     </v-card-text>
@@ -125,8 +125,8 @@ export default {
       this.$store.commit('content/ADD_OFFER')
     },
     saveContent () {
-      this.$store.commit('content/UPDATE_INFO', { prop: 'header', value: this.$refs.infoHeader.innerText })
-      this.$store.commit('content/UPDATE_INFO', { prop: 'text', value: this.$refs.infoText.innerText })
+      this.$store.commit('content/UPDATE_INFO', { prop: 'header', value: this.$refs.asideHeader.innerText })
+      this.$store.commit('content/UPDATE_INFO', { prop: 'text', value: this.$refs.asideText.innerText })
       this.$store.commit('content/UPDATE_OFFER', {
         num: 0,
         greenText: this.$refs.offerGreen_1.innerText,
@@ -137,12 +137,16 @@ export default {
         greenText: this.$refs.offerGreen_2.innerText,
         blackText: this.$refs.offerBlack_2.innerText
       })
+      if (!this.$refs.offerGreen_3) return
       this.$store.commit('content/UPDATE_OFFER', {
         num: 2,
         greenText: this.$refs.offerGreen_3.innerText,
         blackText: this.$refs.offerBlack_3.innerText
       })
       this.$store.commit('content/FILTER_OFFERS')
+      this.$store.commit('SET_POPUP_TITLE', 'SECTION CONTENT')
+      this.$store.commit('SET_POPUP_TEXT', 'Data successfully saved')
+      this.$store.commit('SHOW_POPUP')
     }
   }
 }

@@ -153,9 +153,6 @@ export default {
       this.$store.commit('editor/SHOW_GALLERY')
       this.gallery = true
     }
-  },
-  mounted () {
-    // if (!this.pictureLimit) this.pictureLimit = 1000000
   }
 }
 </script>

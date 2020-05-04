@@ -26,18 +26,15 @@ const actions = {
   },
 
   async SAVE_CONTENT ({ state, getters }) {
-    try {
-      const response = await fetch(`${getters.contentEndpoint}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: localStorage.getItem('token')
-        },
-        body: JSON.stringify(state.testimonials)
-      })
-    } catch (error) {
-      console.log('ERROR', error)
-    }
+    const response = await fetch(getters.db, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: localStorage.getItem('token')
+      },
+      body: JSON.stringify(state.testimonials)
+    })
+    return response.status
   }
 }
 

@@ -121,6 +121,9 @@ export default {
       // this.faq.items.forEach((item) => {
       //   this.$store.commit('content/UPDATE_FAQ_ITEM', { prop: 'button', value: this.$refs.item.innerText })
       // })
+      this.$store.commit('SET_POPUP_TITLE', 'SECTION CONTENT')
+      this.$store.commit('SET_POPUP_TEXT', 'Data successfully saved')
+      this.$store.commit('SHOW_POPUP')
     }
   }
 }

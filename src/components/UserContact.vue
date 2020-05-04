@@ -170,6 +170,9 @@ export default {
       this.$store.commit('content/UPDATE_USER_FORM', { prop: 'title', value: this.$refs.userContactHeader.innerText })
       this.$store.commit('content/UPDATE_USER_FORM', { prop: 'button', value: this.$refs.userContactButton.innerText })
       this.$store.commit('content/UPDATE_USER_FORM', { prop: 'messagePlaceholder', value: this.message })
+      this.$store.commit('SET_POPUP_TITLE', 'SECTION CONTENT')
+      this.$store.commit('SET_POPUP_TEXT', 'Data successfully saved')
+      this.$store.commit('SHOW_POPUP')
     }
   },
   mounted () {

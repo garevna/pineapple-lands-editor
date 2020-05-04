@@ -75,12 +75,13 @@
           dark
           class="buttons"
     >
-      <v-btn @click="$store.commit('SET_SAVE')">
+      <v-btn @click="savePageContent">
         <span>Save</span>
         <v-icon>mdi-content-save-edit</v-icon>
       </v-btn>
     </v-bottom-navigation>
     <ImageGallery />
+    <Popup />
   </v-app>
 </template>
 
@@ -231,7 +232,7 @@ svg.defs-only {
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 import AppHeader from '@/components/AppHeader.vue'
 import Top from '@/components/Top.vue'
@@ -244,6 +245,7 @@ import FAQ from '@/components/FAQ.vue'
 import Footer from '@/components/Footer.vue'
 
 import ImageGallery from '@/components/editor/ImageGallery.vue'
+import Popup from '@/components/editor/Popup.vue'
 
 export default {
   name: 'App',
@@ -257,7 +259,8 @@ export default {
     InternetPlans,
     FAQ,
     Footer,
-    ImageGallery
+    ImageGallery,
+    Popup
   },
   data () {
     return {
@@ -272,7 +275,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(['viewport', 'viewportWidth', 'pages', 'selectors'])
+    ...mapState(['viewport', 'viewportWidth', 'pages', 'selectors']),
+    ...mapGetters('editor', ['contentEndpoint'])
   },
   watch: {
     contactUs (val) {
@@ -322,6 +326,13 @@ export default {
   methods: {
     onResize () {
       this.$store.commit('CHANGE_VIEWPORT')
+    },
+    async savePageContent () {
+      await this.$store.dispatch('content/SAVE_CONTENT', this.contentEndpoint)
+      await this.$store.dispatch('testimonials/SAVE_CONTENT')
+      this.$store.commit('SET_POPUP_TITLE', 'SAVE DATA')
+      this.$store.commit('SET_POPUP_TEXT', 'Data successfully saved')
+      this.$store.commit('SHOW_POPUP')
     }
   },
   mounted () {

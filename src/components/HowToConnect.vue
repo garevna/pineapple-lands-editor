@@ -134,6 +134,9 @@ export default {
       this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 1, prop: 'text', value: this.$refs.howToConnectText_2.innerText })
       this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 2, prop: 'title', value: this.$refs.howToConnectTitle_3.innerText })
       this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 2, prop: 'text', value: this.$refs.howToConnectText_3.innerText })
+      this.$store.commit('SET_POPUP_TITLE', 'SECTION CONTENT')
+      this.$store.commit('SET_POPUP_TEXT', 'Data successfully saved')
+      this.$store.commit('SHOW_POPUP')
     }
   }
 }

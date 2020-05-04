@@ -113,6 +113,9 @@ export default {
       if (!val) return
       this.saveContent()
       this.save = false
+      this.$store.commit('SET_POPUP_TITLE', 'CARD CONTENT')
+      this.$store.commit('SET_POPUP_TEXT', 'Data successfully saved')
+      this.$store.commit('SHOW_POPUP')
     }
   },
   methods: {

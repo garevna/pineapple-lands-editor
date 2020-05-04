@@ -149,8 +149,11 @@ export default {
   },
   methods: {
     saveContent () {
-      this.$store.commit('content/UPDATE_TESTIMONIALS', { prop: 'header', value: this.$refs.testimonialsHeader.innerText })
+      this.$store.commit('content/UPDATE_TESTIMONIALS', { prop: 'header', value: this.$refs.testimonialsTitle.innerText })
       this.$store.commit('content/UPDATE_TESTIMONIALS', { prop: 'button', value: this.$refs.testimonialsButton.innerText })
+      this.$store.commit('SET_POPUP_TITLE', 'SECTION CONTENT')
+      this.$store.commit('SET_POPUP_TEXT', 'Data successfully saved')
+      this.$store.commit('SHOW_POPUP')
     }
   },
   mounted () {

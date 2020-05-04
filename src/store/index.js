@@ -21,16 +21,15 @@ export default new Vuex.Store({
     plan: 'residential',
     pages: ['Benefits', 'Internet Plans', 'FAQs', 'Contact Us'],
     selectors: ['benefits', 'plans', 'faq', 'contact'],
-    token: null
+    token: null,
+    popup: false,
+    popupTitle: '',
+    popupText: ''
   },
   modules,
 
   getters: {
-    // familyPicture: (state) => {
-    //   const size = state.viewportWidth < 600 ? 'small' : state.viewportWidth < 1440 ? 'medium' : 'large'
-    //   const num = location.hash ? location.hash.slice(1) : '1'
-    //   return `${state.landhost}/img/family-${size}-${num}.png`
-    // }
+    //
   },
 
   mutations: {
@@ -63,6 +62,18 @@ export default new Vuex.Store({
     },
     DELETE_PROPERTY: (state, payload) => {
       Vue.delete(payload.object, payload.propertyName)
+    },
+    SHOW_POPUP: (state) => {
+      state.popup = true
+    },
+    HIDE_POPUP: (state) => {
+      state.popup = false
+    },
+    SET_POPUP_TITLE: (state, title) => {
+      state.popupTitle = title
+    },
+    SET_POPUP_TEXT: (state, text) => {
+      state.popupText = text
     }
   },
   actions: {

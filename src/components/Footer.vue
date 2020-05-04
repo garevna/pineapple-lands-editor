@@ -79,7 +79,6 @@
 
     <FooterBottomContent v-if="viewportWidth >= 770" />
     <FooterBottomContentSmall  v-if="viewportWidth < 770" class="footer--bottom-content-small"/>
-    <Popup :opened.sync="popupOpened" />
   </v-container>
 </template>
 
@@ -152,8 +151,6 @@ import FooterFone from '@/components/footer/FooterFone.vue'
 import FooterBottomContent from '@/components/footer/BottomContent.vue'
 import FooterBottomContentSmall from '@/components/footer/BottomContentSmall.vue'
 
-import Popup from '@/components/Popup.vue'
-
 const emailValidator = require('email-validator')
 
 export default {
@@ -161,8 +158,7 @@ export default {
   components: {
     FooterFone,
     FooterBottomContentSmall,
-    FooterBottomContent,
-    Popup
+    FooterBottomContent
   },
   props: ['user', 'page'],
   data () {

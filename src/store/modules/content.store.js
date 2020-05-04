@@ -127,6 +127,19 @@ const actions = {
   },
   SET_PAGE_FIELDS ({ commit }, payload) {
     commit('UPDATE_ALL', payload)
+  },
+
+  async SAVE_CONTENT (context, endpoint) {
+    const content = { ...state }
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: localStorage.getItem('token')
+      },
+      body: JSON.stringify(content)
+    })
+    return response.status
   }
 }
 
