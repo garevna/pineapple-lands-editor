@@ -22,7 +22,7 @@ export default new Vuetify({
         deepgreen: '#20731C',
         homefone: '#FAFAFA',
         plansfone: '#E5FDD7',
-        warning: '#FAFF00'
+        warning: '#FA0'
       },
       dark: {
         primary: '#4CAF50',
@@ -32,7 +32,7 @@ export default new Vuetify({
         deepgreen: '#20731C',
         homefone: '#FAFAFA',
         plansfone: '#E5FDD7',
-        warning: '#FAFF00'
+        warning: '#FA0'
       }
     }
   }

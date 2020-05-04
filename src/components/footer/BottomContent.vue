@@ -21,7 +21,7 @@
         </v-card-text>
       </v-card>
     </v-col>
-    <v-col style="max-width: 180px">
+    <!-- <v-col style="max-width: 180px">
       <v-card flat class="transparent mx-auto">
         <v-card-title>
           <p class="left-16">COMPANY</p>
@@ -35,8 +35,8 @@
           <p class="left-14 ref" @click="$emit('update:page', 5)">Contact Us</p>
         </v-card-text>
       </v-card>
-    </v-col>
-    <v-col style="max-width: 180px">
+    </v-col> -->
+    <!-- <v-col style="max-width: 180px">
       <v-card flat class="transparent mx-auto">
         <v-card-title>
           <p class="left-16">PRODUCTS</p>
@@ -46,7 +46,7 @@
           <p class="left-14 ref">Business Internet</p>
         </v-card-text>
       </v-card>
-    </v-col>
+    </v-col> -->
     <v-col style="max-width: 180px">
       <v-card flat class="transparent mx-auto">
         <v-card-title>

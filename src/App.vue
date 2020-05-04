@@ -38,9 +38,27 @@
       <v-row width="100%">
         <HowToConnect :contact.sync="contactUs" :connect.sync="getConnected" />
       </v-row>
+      <!-- ============================= INTERNET PLANS ============================= -->
+      <v-row width="100%" justify="center">
+        <section id="plans">
+          <div class="base-title">
+            <a href="#plans" class="core-goto"></a>
+            <InternetPlans :page.sync="page"/>
+          </div>
+        </section>
+      </v-row>
       <!-- ============================= TESTIMONIALS ============================= -->
       <v-row width="100%">
         <Testimonials />
+      </v-row>
+      <!-- ============================= FAQ ============================= -->
+      <v-row width="100%">
+        <section id="faq" style="width: 100%">
+          <div class="base-title">
+            <a href="#faq" class="core-goto"></a>
+            <FAQ :page.sync="page"/>
+          </div>
+        </section>
       </v-row>
       <!-- ============================= FOOTER ============================= -->
       <section id="footer" class="homefone">
@@ -52,14 +70,25 @@
         </div>
       </section>
     </v-container>
+    <v-bottom-navigation
+          fixed
+          dark
+          class="buttons"
+    >
+      <v-btn @click="$store.commit('SET_SAVE')">
+        <span>Save</span>
+        <v-icon>mdi-content-save-edit</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
+    <ImageGallery />
   </v-app>
 </template>
 
 <style lang="scss">
-
 html, body {
   width: 100%;
   max-width: 100%;
+  font-family: Gilroy;
 }
 
 .container,
@@ -79,6 +108,7 @@ h1, h2, h3, h4, h5 {
   line-height: 150%;
   letter-spacing: 0.02em;
   color: #000;
+  font-family: Gilroy;
 }
 h1 {
   font-size: 46px;
@@ -97,12 +127,21 @@ h4 {
 h5 {
   font-size: 20px;
 }
+h4, h5 {
+  font-weight: 600;
+}
 
 p {
   font-size: 16px;
   font-weight: normal;
-  line-height: 150%;
+  line-height: 180%;
   letter-spacing: 0.02em;
+}
+
+.contenteditable, [contenteditable] {
+  outline-style: dotted;
+  outline-color: #f50;
+  outline-width: thin;
 }
 
 .row {
@@ -124,25 +163,55 @@ svg.defs-only {
 .user-contact {
   width: 640px;
 }
+.submit-button {
+  font-family: Gilroy;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px!important;
+  line-height: 100%;
+  text-transform: uppercase;
+  width: 340px;
+  color: #fff!important;
+  text-align:center!important;
+  background-color: #72BF44;
+  padding: 8px 16px;
+  border-radius: 32px;
+}
 
-@media (max-width: "600px"), (max-height: "600px") {
+@media (max-width: 600px), (max-height: 600px) {
   h1 { font-size: 28px; }
   h2 { font-size: 24px; }
   h3 { font-size: 20px; }
-  h4, h5 { font-size: 18px; }
+  h4, h5 {
+    font-size: 18px;
+  }
   p { font-size: 16px; }
   .user-contact {
     width: 480px;
   }
+  .submit-button {
+    font-size: 14px!important;
+  }
 }
 
-@media (max-width: '400px'), (max-height: '400px') {
+@media (max-width: 400px), (max-height: 400px) {
   h1 { font-size: 26px; }
   h2 { font-size: 24px; }
   h3 { font-size: 20px; }
-  h4, h5 { font-size: 16px; }
+  h4, h5 {
+    font-size: 16px;
+  }
+  p {
+    font-size: 14px!important;
+    width: 100%!important;
+  }
   .user-contact {
     width: 300px;
+  }
+  .submit-button {
+    font-size: 13px!important;
+    width: 100%!important;
+    border-radius: 8px!important;
   }
 }
 
@@ -158,7 +227,6 @@ svg.defs-only {
 ::-webkit-scrollbar-thumb:hover {
   background: #72BF44;
 }
-
 </style>
 
 <script>
@@ -171,7 +239,11 @@ import Aside from '@/components/Aside.vue'
 import UserContact from '@/components/UserContact.vue'
 import HowToConnect from '@/components/HowToConnect.vue'
 import Testimonials from '@/components/Testimonials.vue'
+import InternetPlans from '@/components/InternetPlans.vue'
+import FAQ from '@/components/FAQ.vue'
 import Footer from '@/components/Footer.vue'
+
+import ImageGallery from '@/components/editor/ImageGallery.vue'
 
 export default {
   name: 'App',
@@ -182,7 +254,10 @@ export default {
     UserContact,
     HowToConnect,
     Testimonials,
-    Footer
+    InternetPlans,
+    FAQ,
+    Footer,
+    ImageGallery
   },
   data () {
     return {
@@ -250,6 +325,9 @@ export default {
     }
   },
   mounted () {
+    this.$store.dispatch('content/GET_CONTENT')
+    this.$store.dispatch('editor/GET_ALL_PICTURES')
+    this.$store.dispatch('editor/GET_ALL_AVATARS')
     this.onResize()
     window.addEventListener('resize', this.onResize, { passive: true })
   },

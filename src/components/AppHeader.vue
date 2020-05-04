@@ -19,7 +19,6 @@
       </span>
     </v-row>
   </v-system-bar>
-
   <!-- Viewport width less then lg -->
   <v-expansion-panels
           tile
@@ -48,7 +47,7 @@
               <v-list-item
                   v-for="(page, index) in pages"
                   :key="index"
-                  @click="$emit('update:selected', index); panel = []"
+                  @click="$emit('update:page', selectors[index]); panel = []"
               >
                 <v-list-item-title class="main-menu-items">{{ page }}</v-list-item-title>
               </v-list-item>
@@ -81,8 +80,7 @@
                v-for="(page, index) in pages"
                :key="index"
                :class="getClassName(page)"
-               @click="$emit('update:selected', index)">
-          <ContactUs v-if="page === 'Contact Us'" style="width: 50px; height:50px;" />
+               @click="$emit('update:page', selectors[index]); panel = []">
               {{ page }}
         </v-btn>
       </v-btn-toggle>
@@ -158,17 +156,11 @@
 
 <script>
 
-import ContactUs from '@/components/svg/ContactUsIcon'
+import { mapState } from 'vuex'
 
 export default {
   name: 'AppHeader',
-  components: {
-    ContactUs
-  },
-  props: {
-    pages: Array,
-    selected: Number
-  },
+  props: ['page'],
   data () {
     return {
       toggle: 0,
@@ -176,6 +168,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['pages', 'selectors']),
     burgerMenuClassFirst () {
       return this.panel === 0 ? 'burger-menu-active--first' : 'burger-menu--first'
     },
@@ -185,8 +178,11 @@ export default {
   },
   methods: {
     getClassName (pageName) {
-      const className = pageName === 'Sign In' ? ' app-bar-menu-bordered py-2 px-12' : ''
+      const className = pageName === 'Contact Us' ? ' app-bar-menu-bordered py-2 px-12' : ''
       return `app-bar-menu${className}`
+    },
+    returnPage () {
+
     }
   }
 }

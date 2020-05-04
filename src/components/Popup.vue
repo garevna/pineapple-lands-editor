@@ -10,7 +10,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn class="primary" text @click="$emit('update:opened', false)">CLOSE</v-btn>
+            <v-btn class="submit-button" text @click="$emit('update:opened', false)">CLOSE</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

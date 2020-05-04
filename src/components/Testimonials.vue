@@ -1,15 +1,28 @@
 <template>
   <v-container fluid class="homefone">
-
-    <v-card flat class="transparent mx-auto my-12 text-center" max-width="1360">
+    <v-card flat class="transparent mx-auto mt-12 mb-0 text-center" max-width="1360">
+      <v-tooltip top color="info">
+        <template v-slot:activator="{ on }">
+          <v-btn fab dark small color="warning" v-on="on" @click="saveContent">
+            <v-icon>mdi-content-save</v-icon>
+          </v-btn>
+        </template>
+        <span>Save section content</span>
+      </v-tooltip>
       <v-card-title class="text-center" max-width="940">
-        <h1 style="width: 100%; text-align: center">{{ content.header }}</h1>
+        <h2
+            style="width: 100%;
+            text-align: center"
+            ref="testimonialsTitle"
+            contenteditable
+            v-text="content.header"
+        ></h2>
       </v-card-title>
 
       <v-slide-group
-        v-if="screen >= 600"
+        v-if="viewportWidth >= 600"
         v-model="model"
-        class="pa-4"
+        class="pa-12"
         center-active
         show-arrows
       >
@@ -19,8 +32,9 @@
           v-slot:default="{ active, toggle }"
         >
           <v-card
+            flat
             class="ma-4"
-            height="340"
+            height="250"
             width="376"
             @click="toggle"
           >
@@ -30,12 +44,13 @@
               justify="center"
             >
               <v-scale-transition>
-                <v-card flat hover :width="cardWidth" height="340" style="position: relative" pa-4>
-                  <img :src="testimonial.photo" class="testimonial-photo" width="40" height="40" style="border-radius: 50%" :alt="testimonial.name" />
-                  <p class="testimonial-name">{{ testimonial.name }}</p>
-                  <p class="testimonial-text" :style="{ fontSize: textSize }">{{ testimonial.text }}</p>
-                  <p class="testimonial-date">{{ testimonial.date }}</p>
-                </v-card>
+                <TestimonialsCard
+                      :index="index"
+                      :date="testimonial.date"
+                      :name="testimonial.name"
+                      :photo.sync="testimonial.photo"
+                      :text="testimonial.text"
+                />
               </v-scale-transition>
             </v-row>
           </v-card>
@@ -47,40 +62,39 @@
             :continuous="true"
             :show-arrows="true"
             hide-delimiters
-            height="340"
+            height="280"
             width="100%"
             light
-            class="testimonials transparent"
+            class="testimonials transparent my-10"
       >
         <v-carousel-item
           v-for="(testimonial, index) in testimonials"
           :key="index"
         >
-          <v-sheet height="100%" tile class="transparent">
+          <v-sheet height="100%" flat tile class="transparent">
             <v-row align="center" justify="center">
-              <v-card hover width="70%" height="320" style="position: relative" pa-4>
-                <img :src="testimonial.photo" class="testimonial-photo" width="40" height="40" style="border-radius: 50%" :alt="testimonial.name" />
-                <p class="testimonial-name">{{ testimonial.name }}</p>
-                <p class="testimonial-text" :style="{ fontSize: textSize }" v-html="testimonial.text"></p>
-                <p class="testimonial-date">{{ testimonial.date }}</p>
-              </v-card>
+              <TestimonialsCard
+                    :date="testimonial.date"
+                    :name="testimonial.name"
+                    :photo="testimonial.photo"
+                    :text="testimonial.text"
+              />
             </v-row>
           </v-sheet>
         </v-carousel-item>
       </v-carousel>
     </v-card>
     <v-card-text class="text-center text-md-left">
-      <v-btn
+      <p class="submit-button mx-auto"
+          contenteditable
+          ref="testimonialsButton"
+          v-text="content.button"
           color="buttons"
           dark
           rounded
           width="220"
           height="48"
-          class="px-auto mx-auto"
-          @click="action"
-      >
-          {{ content.button }}
-      </v-btn>
+      ></p>
     </v-card-text>
   </v-container>
 </template>
@@ -105,75 +119,38 @@
   z-index: 0!important;
 }
 
-.testimonial-name,
-.testimonial-text,
-.testimonial-date,
-.testimonial-photo {
-  position: absolute;
-}
-
-.testimonial-name, .testimonial-date { text-align: left; }
-
-.testimonial-photo {
-  top: 30px;
-  left: 20px;
-  border-radius: 50%!important;
-}
-.testimonial-name {
-  top: 36px;
-  left: 70px;
-  font-size: 15px;
-  font-weight: bold;
-}
-.testimonial-text {
-  position: absolute;
-  top: 80px;
-  left: 20px;
-  width: calc(100% - 40px);
-  text-align: justify;
-  /* font-size: 14px; */
-  font-weight: normal;
-}
-.testimonial-date {
-  position: absolute;
-  bottom: 4px;
-  left: 12px;
-  font-size: 12px;
-  font-weight: normal;
-}
 </style>
 
 <script>
 
 import { mapState } from 'vuex'
 
-// import CardsShow from '@/components/CardsShow.vue'
+import TestimonialsCard from '@/components/TestimonialsCard.vue'
 
 export default {
   name: 'Testimonials',
-
-  data: () => ({
-    model: 0
-  }),
-
+  components: {
+    TestimonialsCard
+  },
+  props: ['page'],
+  data: () => ({ model: 0 }),
   computed: {
     ...mapState('content', {
       content: 'testimonials'
     }),
     ...mapState('testimonials', ['testimonials']),
-    ...mapState({
-      screen: 'viewportWidth'
-    }),
+    ...mapState(['viewportWidth']),
     cardWidth () {
-      return this.screen < 600 ? this.screen - 100 : 376
+      return this.viewportWidth < 600 ? this.viewportWidth - 100 : 376
     },
     textSize () {
-      return this.screen < 600 ? '12px' : '14px'
+      return this.viewportWidth < 600 ? '12px' : '14px'
     }
   },
   methods: {
-    action () {
-      console.log('Testimonials action')
+    saveContent () {
+      this.$store.commit('content/UPDATE_TESTIMONIALS', { prop: 'header', value: this.$refs.testimonialsHeader.innerText })
+      this.$store.commit('content/UPDATE_TESTIMONIALS', { prop: 'button', value: this.$refs.testimonialsButton.innerText })
     }
   },
   mounted () {

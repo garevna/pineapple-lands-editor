@@ -1,36 +1,44 @@
 <template>
-<v-container fluid style="overflow-x: hidden; margin-top: 160px;">
+<v-container fluid style="overflow-x: hidden; margin-top: 160px; margin-bottom: 64px;">
   <v-card flat class="mx-auto homefone" width="100%" max-width="1440">
     <v-row align="center" justify="center">
-      <v-col sm="12" md="6">
-        <v-card flat width="100%" class="transparent mx-auto">
+      <v-col sm="12" md="6" class="text-center mx-auto">
+        <v-card flat width="100%" max-width="480" class="transparent mx-auto top-element">
           <v-card-text class="text-center text-md-left">
-            <h1 class="text-center text-md-left">{{ top.header }}</h1>
+            <h1
+                class="text-center text-md-left"
+                v-text="top.header"
+                ref="topHeader"
+                contenteditable
+            >
+            </h1>
           </v-card-text>
           <v-card-text class="mx-auto mx-lg-0">
-            <p class="text-center text-md-left">
-              {{ top.text }}
-            </p>
+            <p
+                class="text-center text-md-left"
+                v-text="top.text"
+                ref="topText"
+                contenteditable
+            ></p>
           </v-card-text>
           <v-card-text class="text-center text-md-left">
-            <v-btn
-                color="buttons"
-                dark
-                rounded
-                width="220"
-                height="48"
-                class="px-auto mx-auto"
-                @click="action"
-            >
-                {{ top.button }}
-            </v-btn>
+            <p class="submit-button mx-auto"
+                contenteditable
+                ref="topButton"
+                v-text="top.button"
+            ></p>
           </v-card-text>
         </v-card>
       </v-col>
       <v-col sm="12" md="6">
-          <v-card flat class="transparent">
-            <v-img :src="familyPicture" max-width="750" class="mx-auto"></v-img>
-          </v-card>
+        <ChangePicture
+              :pictureURL.sync="imageURL"
+              pictureType="image"
+              :saveContent.sync="save"
+        />
+        <v-card flat width="100%" max-width="600" class="transparent">
+          <v-img :src="top.pictureURL" max-width="750" class="mx-auto"></v-img>
+        </v-card>
       </v-col>
     </v-row>
   </v-card>
@@ -38,25 +46,57 @@
 </template>
 
 <style scoped>
+p {
+  line-height: 180%!important;
+}
 </style>
 
 <script>
 
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
+
+import ChangePicture from '@/components/editor/ChangePicture.vue'
 
 export default {
   name: 'Top',
-  computed: {
-    ...mapState('content', ['top']),
-    ...mapGetters(['familyPicture'])
+  components: {
+    ChangePicture
   },
-  methods: {
-    action () {
-      console.log('Action')
+  props: ['page'],
+  data () {
+    return {
+      close: false,
+      save: false
     }
   },
-  mounted () {
-    console.log(this.familyPicture)
-  }
+  computed: {
+    ...mapState('content', ['top']),
+    imageURL: {
+      get () {
+        return this.top.pictureURL
+      },
+      set (url) {
+        this.$store.commit('content/UPDATE_TOP', {
+          prop: 'pictureURL',
+          value: url
+        })
+      }
+    }
+  },
+  watch: {
+    save (val) {
+      if (!val) return
+      this.saveContent()
+      this.save = false
+    }
+  },
+  methods: {
+    saveContent () {
+      this.$store.commit('content/UPDATE_TOP', { prop: 'header', value: this.$refs.topHeader.innerText })
+      this.$store.commit('content/UPDATE_TOP', { prop: 'text', value: this.$refs.topText.innerText })
+      this.$store.commit('content/UPDATE_TOP', { prop: 'button', value: this.$refs.topButton.innerText })
+    }
+  },
+  mounted () {}
 }
 </script>

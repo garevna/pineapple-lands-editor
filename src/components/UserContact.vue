@@ -1,7 +1,19 @@
 <template>
   <v-card class="user-info mx-auto pa-6 homefone" width="480">
+    <v-tooltip top color="info">
+      <template v-slot:activator="{ on }">
+        <v-btn fab dark small color="warning" v-on="on" @click="saveContent">
+          <v-icon>mdi-content-save</v-icon>
+        </v-btn>
+      </template>
+      <span>Save section content</span>
+    </v-tooltip>
     <v-card-title>
-      <h4>{{ userForm.title }}</h4>
+      <h4
+          ref="userContactHeader"
+          contenteditable
+          v-text="userForm.title"
+      ></h4>
     </v-card-title>
     <v-card-text class="mx-0 px-0" width="100%">
       <v-text-field
@@ -12,36 +24,35 @@
             dense
             hide-details
             height="32"
-            :color="item.color"
-            v-model="item.value"
             class="user-inputs"
-            :error="item.error"
-            :append-icon="item.validationIcon"
-            @input="validate(item)"
       ></v-text-field>
-      <!-- <v-textarea
+      <v-textarea
             :placeholder="userForm.messagePlaceholder"
             outlined
             color="#656565"
             auto-grow
             v-model="message"
             class="user-inputs"
-      ></v-textarea> -->
+      ></v-textarea>
     </v-card-text>
-    <v-card-actions class="text-center">
-      <v-btn
+    <v-card-actions>
+      <!-- <v-btn
+          color="buttons"
           dark
           rounded
-          width="100%"
+          width="220"
           height="48"
-          color="buttons"
-          class="submit-button"
+          class="submit-button px-auto mx-auto"
           @click="sendUserRequest"
       >
         {{ userForm.button }}
-      </v-btn>
+      </v-btn> -->
+      <p class="submit-button mx-auto"
+          contenteditable
+          ref="userContactButton"
+          v-text="userForm.button"
+      ></p>
     </v-card-actions>
-    <Popup :opened.sync="popupOpened" />
   </v-card>
 </template>
 
@@ -70,14 +81,6 @@ h4 {
   line-height: 100%;
   color: #656565;
 }
-.submit-button {
-  font-family: Gilroy;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 18px!important;
-  line-height: 100%;
-  text-transform: capitalize;
-}
 
 @media screen and (max-width: 600px) {
   .v-btn__content {
@@ -90,9 +93,6 @@ h4 {
   .user-inputs {
     font-size: 14px;
   }
-  .submit-button {
-    font-size: 16px;
-  }
 }
 @media screen and (max-width: 320px) {
   .user-info {
@@ -102,9 +102,6 @@ h4 {
   .user-inputs {
     font-size: 13px;
   }
-  .submit-button {
-    font-size: 14px;
-  }
 }
 </style>
 
@@ -112,73 +109,49 @@ h4 {
 
 import { mapState } from 'vuex'
 
-import Popup from '@/components/Popup.vue'
-
-const emailValidator = require('email-validator')
-
 export default {
   name: 'UserContact',
-  components: {
-    Popup
-  },
   data () {
     return {
       message: '',
-      normalColor: '#656565',
-      errorColor: '#FF0E00',
-      popupOpened: false,
       items: {
         name: {
           value: '',
-          placeholder: 'Name*',
-          error: false,
-          color: '',
-          validationIcon: '',
-          validator () { this.error = this.value.length < 2 }
+          placeholder: 'Full name*'
         },
         email: {
           value: '',
-          placeholder: 'Email*',
-          error: false,
-          color: '',
-          validationIcon: '',
-          validator () {
-            this.error = !emailValidator.validate(this.value)
-            this.validationIcon = this.error ? '$invalid' : '$valid'
-            this.color = this.error ? '#FF0E00' : '#656565'
-          }
+          placeholder: 'Email*'
         },
-        address: {
-          value: '',
-          placeholder: 'Address*',
-          error: false,
-          color: '',
-          validationIcon: '',
-          validator () { this.error = this.value.length < 5 }
-        },
-        postcode: {
-          value: '',
-          placeholder: 'Postcode*',
-          error: false,
-          color: '',
-          validationIcon: '',
-          validator () {
-            this.error = !Number(this.value) || Number(this.value) < 3000 || Number(this.value) > 9999
-          }
-        },
-        state: {
-          value: '',
-          placeholder: 'State*',
-          error: false,
-          color: '',
-          validationIcon: '',
-          validator () { this.error = this.value.length < 5 }
-        },
+        //   address: {
+        //     value: '',
+        //     placeholder: 'Address*',
+        //     error: false,
+        //     color: '',
+        //     validationIcon: '',
+        //     validator () { this.error = this.value.length < 5 }
+        //   },
+        //   postcode: {
+        //     value: '',
+        //     placeholder: 'Postcode*',
+        //     error: false,
+        //     color: '',
+        //     validationIcon: '',
+        //     validator () {
+        //       this.error = !Number(this.value) || Number(this.value) < 3000 || Number(this.value) > 9999
+        //     }
+        //   },
+        //   state: {
+        //     value: '',
+        //     placeholder: 'State*',
+        //     error: false,
+        //     color: '',
+        //     validationIcon: '',
+        //     validator () { this.error = this.value.length < 5 }
+        //   },
         phone: {
           value: '',
-          placeholder: 'Phone',
-          error: false,
-          color: ''
+          placeholder: 'Phone'
         }
       }
     }
@@ -189,46 +162,14 @@ export default {
   methods: {
     initFields () {
       for (const item in this.items) {
-        this.items[item].validationIcon = ''
-        this.items[item].error = false
-        this.items[item].color = this.normalColor
         this.items[item].value = ''
       }
       this.message = ''
     },
-    validate (item) {
-      if (!item.validator) return
-      item.validator()
-      item.validationIcon = item.error ? '$invalid' : '$valid'
-      item.color = item.error ? this.errorColor : this.normalColor
-    },
-    findErrors () {
-      let counter = 0
-      for (const item in this.items) {
-        this.validate(this.items[item])
-        counter += this.items[item].error
-      }
-      return counter > 0
-    },
-    async sendUserRequest () {
-      if (this.findErrors()) return
-      this.popupOpened = true
-      await (await fetch('https://dka.dgtek.net/api/frontend/mail', {
-        method: 'POST',
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: this.items.name.value,
-          email: this.items.email.value,
-          phone: '...',
-          subject: 'COVID-19: DGTek helping The Community',
-          message: `Your address: ${this.items.address.value}, ${this.items.postcode.value}, ${this.items.state.value}\nYour message:\n${this.message}`
-        })
-      })).json()
-
-      this.initFields()
+    saveContent () {
+      this.$store.commit('content/UPDATE_USER_FORM', { prop: 'title', value: this.$refs.userContactHeader.innerText })
+      this.$store.commit('content/UPDATE_USER_FORM', { prop: 'button', value: this.$refs.userContactButton.innerText })
+      this.$store.commit('content/UPDATE_USER_FORM', { prop: 'messagePlaceholder', value: this.message })
     }
   },
   mounted () {

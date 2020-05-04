@@ -6,10 +6,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    // host: 'https://garevna.github.io/pineapple.net',
-    // landhost: 'https://garevna.github.io/pineapple-land',
-    host: 'http://192.168.0.102:8080',
-    landhost: 'http://192.168.0.102:8080',
+    host: 'https://pineapple-net-land.glitch.me',
+    landhost: `${location.origin}${location.pathname}`,
     officeAddress: '75 Brighton Road, Elwood VIC 3184',
     officePhone: '1300 857 501',
     officeEmail: 'info@pineapple.net.au',
@@ -21,21 +19,22 @@ export default new Vuex.Store({
     viewportWidth: window.innerWidth,
     viewportHeight: window.innerHeight,
     plan: 'residential',
-    pages: ['Home', 'About Us', 'Residential', 'Business', 'Connect', 'Contact Us', 'Sign In'],
-    selectors: ['#top', '#about', '#plans', '#plans', '#connect', '#contact', null]
+    pages: ['Benefits', 'Internet Plans', 'FAQs', 'Contact Us'],
+    selectors: ['benefits', 'plans', 'faq', 'contact'],
+    token: null
   },
   modules,
 
   getters: {
-    familyPicture: (state) => {
-      const size = state.viewportWidth < 600 ? 'small' : state.viewportWidth < 1440 ? 'medium' : 'large'
-      const num = location.hash ? location.hash.slice(1) : '1'
-      console.log(`${state.landhost}/img/family-${size}-${num}.png`)
-      return `${state.landhost}/img/family-${size}-${num}.png`
-    }
+    // familyPicture: (state) => {
+    //   const size = state.viewportWidth < 600 ? 'small' : state.viewportWidth < 1440 ? 'medium' : 'large'
+    //   const num = location.hash ? location.hash.slice(1) : '1'
+    //   return `${state.landhost}/img/family-${size}-${num}.png`
+    // }
   },
 
   mutations: {
+    SET_SAVE: (state) => { state.save = true },
     CHANGE_VIEWPORT: (state) => {
       state.viewport = window.innerWidth >= 1904 ? 'xl'
         : window.innerWidth >= 1264 ? 'lg'
