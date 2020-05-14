@@ -1,6 +1,11 @@
 <template>
-  <v-card hover :width="cardWidth" :height="cardHeight" style="position: relative" pa-4>
-    <ChangePicture :pictureURL.sync="avatar" pictureType="avatar" :saveContent.sync="save" />
+  <v-card width="360" height="360" style="position: relative" pa-4>
+    <ChangePicture
+          :pictureURL.sync="avatar"
+          pictureType="avatar"
+          :saveContent.sync="save"
+          section="testimonials"
+    />
     <img
         :src="photo"
         class="testimonial-photo"
@@ -9,18 +14,40 @@
         style="border-radius: 50%"
         alt=""
     />
-    <p
-        class="testimonial-name"
-        ref="testimonial"
-        v-text="name"
-    >{{ name }}</p>
-    <p class="testimonial-text" :style="{ fontSize: textSize }" v-html="text"></p>
-    <p class="testimonial-text-ellipsis" :style="{ fontSize: textSize }" v-if="ellipsis">...</p>
-    <p class="testimonial-date">{{ date }}</p>
+    <v-text-field class="testimonial-name" v-model="author"></v-text-field>
+    <v-textarea class="testimonial-text" outlined v-model="message"></v-textarea>
+    <v-dialog
+        ref="dialog"
+        v-model="menu"
+        :return-value.sync="data"
+        persistent
+        width="290px"
+      >
+        <template v-slot:activator="{ on }">
+          <v-text-field
+            v-model="data"
+            prepend-icon="mdi-calendar"
+            readonly
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-date-picker v-model="data" scrollable>
+          <v-spacer></v-spacer>
+          <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
+          <v-btn text color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
+        </v-date-picker>
+    </v-dialog>
   </v-card>
 </template>
 
 <style scoped>
+
+.v-input {
+  position: absolute!important;
+  bottom: 4px!important;
+  left: 16px!important;
+  font-size: 14px!important;
+}
 
 p {
   line-height: 150%!important;
@@ -30,7 +57,7 @@ p {
 .testimonial-text,
 .testimonial-date,
 .testimonial-photo {
-  position: absolute;
+  position: absolute!important;
 }
 
 .testimonial-name, .testimonial-date { text-align: left; }
@@ -41,18 +68,15 @@ p {
   border-radius: 50%!important;
 }
 .testimonial-name {
-  top: 36px;
-  left: 70px;
-  font-size: 15px;
+  top: 24px;
+  left: 70px!important;
+  font-size: 15px!important;
   font-weight: bold;
 }
 .testimonial-text {
   position: absolute;
   top: 80px;
-  width: 80%!important;
-  left: 10%;
-  height: 86px;
-  overflow: hidden;
+  width: 90%!important;
   text-align: justify;
   font-weight: normal;
 }
@@ -86,7 +110,8 @@ export default {
   data: () => ({
     ellipsis: false,
     cardHeight: '240px',
-    save: false
+    save: false,
+    menu: false
   }),
   computed: {
     ...mapState(['viewportWidth']),
@@ -95,6 +120,36 @@ export default {
     },
     textSize () {
       return this.viewportWidth < 600 ? '12px' : '14px'
+    },
+    author: {
+      get () {
+        return this.name
+      },
+      set (val) {
+        this.$store.commit('testimonials/UPDATE_NAME', { num: this.index, value: val })
+      }
+    },
+    message: {
+      get () {
+        return this.text
+      },
+      set (val) {
+        this.$store.commit('testimonials/UPDATE_TEXT', { num: this.index, value: val })
+      }
+    },
+    data: {
+      get () {
+        let d
+        try {
+          d = new Date(this.date).toISOString().substr(0, 10)
+        } catch {
+          d = new Date().toISOString().substr(0, 10)
+        }
+        return d
+      },
+      set (val) {
+        this.$store.commit('testimonials/UPDATE_DATE', { num: this.index, value: val })
+      }
     },
     avatar: {
       get () {
@@ -111,19 +166,15 @@ export default {
     },
     save (val) {
       if (!val) return
-      this.saveContent()
+      // this.$store.commit('testimonials/UPDATE_NAME', { num: this.index, value: val })
       this.save = false
-      this.$store.commit('SET_POPUP_TITLE', 'CARD CONTENT')
+      this.$store.commit('SET_POPUP_TITLE', 'REVIEW\'S CARD CONTENT')
       this.$store.commit('SET_POPUP_TEXT', 'Data successfully saved')
       this.$store.commit('SHOW_POPUP')
     }
   },
   methods: {
-    saveContent () {
-      this.$store.commit('content/UPDATE_TOP', { prop: 'header', value: this.$refs.topHeader.innerText })
-      this.$store.commit('content/UPDATE_TOP', { prop: 'text', value: this.$refs.topText.innerText })
-      this.$store.commit('content/UPDATE_TOP', { prop: 'button', value: this.$refs.topButton.innerText })
-    }
+    //
   },
   mounted () {
     const textElement = document.body.appendChild(document.createElement('p'))

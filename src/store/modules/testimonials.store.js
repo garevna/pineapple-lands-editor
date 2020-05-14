@@ -11,6 +11,26 @@ const getters = {
 }
 
 const mutations = {
+  UPDATE_NAME (state, payload) {
+    state.testimonials[payload.num].name = payload.value
+  },
+  UPDATE_TEXT (state, payload) {
+    state.testimonials[payload.num].text = payload.value
+  },
+  UPDATE_DATE (state, payload) {
+    state.testimonials[payload.num].date = payload.value
+  },
+  ADD_ITEM (state) {
+    state.testimonials.push({
+      date: new Date(),
+      name: '',
+      text: '',
+      photo: 'https://pineapple-net-land.glitch.me/avatars/default.png'
+    })
+  },
+  REMOVE_ITEM (state, num) {
+    state.testimonials.splice(num, 1)
+  },
   UPDATE_CONTENT (state, payload) {
     state.testimonials = payload
   },
@@ -34,6 +54,7 @@ const actions = {
       },
       body: JSON.stringify(state.testimonials)
     })
+    console.log('Testimonials saved: ', response.status)
     return response.status
   }
 }

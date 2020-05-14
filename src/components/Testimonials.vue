@@ -34,7 +34,7 @@
           <v-card
             flat
             class="ma-4"
-            height="250"
+            height="370"
             width="376"
             @click="toggle"
           >
@@ -62,7 +62,7 @@
             :continuous="true"
             :show-arrows="true"
             hide-delimiters
-            height="280"
+            height="360"
             width="100%"
             light
             class="testimonials transparent my-10"
@@ -74,6 +74,7 @@
           <v-sheet height="100%" flat tile class="transparent">
             <v-row align="center" justify="center">
               <TestimonialsCard
+                    :index="index"
                     :date="testimonial.date"
                     :name="testimonial.name"
                     :photo="testimonial.photo"
@@ -84,6 +85,27 @@
         </v-carousel-item>
       </v-carousel>
     </v-card>
+
+    <v-tooltip top dark color="#09b">
+      <template v-slot:activator="{ on }">
+        <v-btn
+              absolute
+              fab
+              dark
+              small
+              bottom
+              right
+              color="#09b"
+              class="button-plus"
+              @click="$store.commit('testimonials/ADD_ITEM')"
+               v-on="on"
+        >
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </template>
+      <span>Add FAQ item</span>
+    </v-tooltip>
+
     <v-card-text class="text-center text-md-left">
       <p class="submit-button mx-auto"
           contenteditable

@@ -70,18 +70,27 @@
         </div>
       </section>
     </v-container>
+
+    <!-- ============================= BOTTOM NAV ============================= -->
     <v-bottom-navigation
           fixed
           dark
           class="buttons"
     >
-      <v-btn @click="savePageContent">
+
+      <v-btn @click="savePageContent" v-if="authorized">
         <span>Save</span>
         <v-icon>mdi-content-save-edit</v-icon>
+      </v-btn>
+
+      <v-btn @click="login = true" v-if="!authorized">
+        <span>Sign In</span>
+        <v-icon>mdi-login</v-icon>
       </v-btn>
     </v-bottom-navigation>
     <ImageGallery />
     <Popup />
+    <Auth :opened.sync="login" />
   </v-app>
 </template>
 
@@ -232,7 +241,7 @@ svg.defs-only {
 
 <script>
 
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 import AppHeader from '@/components/AppHeader.vue'
 import Top from '@/components/Top.vue'
@@ -246,6 +255,7 @@ import Footer from '@/components/Footer.vue'
 
 import ImageGallery from '@/components/editor/ImageGallery.vue'
 import Popup from '@/components/editor/Popup.vue'
+import Auth from '@/components/editor/Auth.vue'
 
 export default {
   name: 'App',
@@ -260,22 +270,20 @@ export default {
     FAQ,
     Footer,
     ImageGallery,
-    Popup
+    Popup,
+    Auth
   },
   data () {
     return {
       page: 0,
-      user: {
-        name: '',
-        email: '',
-        phone: ''
-      },
       contactUs: false,
-      getConnected: false
+      getConnected: false,
+      user: {},
+      login: false
     }
   },
   computed: {
-    ...mapState(['viewport', 'viewportWidth', 'pages', 'selectors']),
+    ...mapState(['viewport', 'viewportWidth', 'pages', 'selectors', 'authorized']),
     ...mapGetters('editor', ['contentEndpoint'])
   },
   watch: {
@@ -324,21 +332,43 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      validateToken: 'VALIDATE_TOKEN',
+      saveSuccess: 'SAVE_SUCCESS',
+      saveFailure: 'SAVE_FAILURE',
+      accessDenied: 'ACCESS_DENIED'
+    }),
+    ...mapActions('content', {
+      getContent: 'GET_CONTENT',
+      saveContent: 'SAVE_CONTENT'
+    }),
+    ...mapActions('editor', {
+      getAllPictures: 'GET_ALL_PICTURES',
+      getAllAvatars: 'GET_ALL_AVATARS'
+    }),
+    ...mapActions('testimonials', {
+      saveTestimonials: 'SAVE_CONTENT'
+    }),
     onResize () {
       this.$store.commit('CHANGE_VIEWPORT')
     },
     async savePageContent () {
-      await this.$store.dispatch('content/SAVE_CONTENT', this.contentEndpoint)
-      await this.$store.dispatch('testimonials/SAVE_CONTENT')
-      this.$store.commit('SET_POPUP_TITLE', 'SAVE DATA')
-      this.$store.commit('SET_POPUP_TEXT', 'Data successfully saved')
-      this.$store.commit('SHOW_POPUP')
+      let response = await this.saveTestimonials()
+      console.log('Testimonials content saved: ', response)
+
+      response = await this.saveContent(this.contentEndpoint)
+      console.log('Page content saved: ', response)
+      const actionName = response === 200 ? 'saveSuccess' : response === 403 || response === 401 ? 'accessDenied' : 'saveFailure'
+      this[actionName]()
     }
   },
+  beforeMount () {
+    this.validateToken()
+  },
   mounted () {
-    this.$store.dispatch('content/GET_CONTENT')
-    this.$store.dispatch('editor/GET_ALL_PICTURES')
-    this.$store.dispatch('editor/GET_ALL_AVATARS')
+    this.getContent()
+    this.getAllPictures()
+    this.getAllAvatars()
     this.onResize()
     window.addEventListener('resize', this.onResize, { passive: true })
   },

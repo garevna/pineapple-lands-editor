@@ -21,13 +21,21 @@
       </v-btn>
     </template>
 
-    <v-tooltip top color="info">
+    <v-tooltip top color="info" v-if="section !== 'testimonials'">
       <template v-slot:activator="{ on }">
         <v-btn fab dark small color="warning" v-on="on" @click="$emit('update:saveContent', true)">
           <v-icon>mdi-content-save</v-icon>
         </v-btn>
       </template>
       <span>Save section content</span>
+    </v-tooltip>
+    <v-tooltip top color="info" v-if="section === 'testimonials'">
+      <template v-slot:activator="{ on }">
+        <v-btn fab dark small color="error" v-on="on" @click="$store.commit('testimonials/REMOVE_ITEM', index)">
+          <v-icon>mdi-minus</v-icon>
+        </v-btn>
+      </template>
+      <span>Remove current item</span>
     </v-tooltip>
     <v-tooltip top color="info">
       <template v-slot:activator="{ on }">
@@ -77,7 +85,7 @@ export default {
   components: {
     ErrorPopup
   },
-  props: ['pictureURL', 'pictureType', 'saveContent'],
+  props: ['index', 'pictureURL', 'pictureType', 'saveContent', 'section'],
   data () {
     return {
       edit: false,

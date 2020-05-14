@@ -35,6 +35,7 @@
               :pictureURL.sync="imageURL"
               pictureType="image"
               :saveContent.sync="save"
+              section="top"
         />
         <v-card flat width="100%" max-width="600" class="transparent">
           <v-img :src="top.pictureURL" max-width="750" class="mx-auto"></v-img>

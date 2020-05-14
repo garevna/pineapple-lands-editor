@@ -8,6 +8,7 @@ export default new Vuex.Store({
   state: {
     host: 'https://pineapple-net-land.glitch.me',
     landhost: `${location.origin}${location.pathname}`,
+    authentificated: false,
     officeAddress: '75 Brighton Road, Elwood VIC 3184',
     officePhone: '1300 857 501',
     officeEmail: 'info@pineapple.net.au',
@@ -21,10 +22,10 @@ export default new Vuex.Store({
     plan: 'residential',
     pages: ['Benefits', 'Internet Plans', 'FAQs', 'Contact Us'],
     selectors: ['benefits', 'plans', 'faq', 'contact'],
-    token: null,
     popup: false,
     popupTitle: '',
-    popupText: ''
+    popupText: '',
+    authorized: false
   },
   modules,
 
@@ -33,7 +34,6 @@ export default new Vuex.Store({
   },
 
   mutations: {
-    SET_SAVE: (state) => { state.save = true },
     CHANGE_VIEWPORT: (state) => {
       state.viewport = window.innerWidth >= 1904 ? 'xl'
         : window.innerWidth >= 1264 ? 'lg'
@@ -74,8 +74,58 @@ export default new Vuex.Store({
     },
     SET_POPUP_TEXT: (state, text) => {
       state.popupText = text
+    },
+    SET_AUTH: (state, val) => {
+      state.authorized = !!val
     }
   },
+
   actions: {
+
+    async VALIDATE_TOKEN ({ state, commit }) {
+      const token = localStorage.getItem('token')
+      if (!token) return commit('SET_AUTH', false)
+      try {
+        const response = await fetch(`${state.host}/auth/token`, {
+          method: 'GET',
+          headers: {
+            Authorization: token
+          },
+          body: null
+        })
+        console.log(response)
+        commit('SET_AUTH', response.status === 200)
+      } catch (err) {
+        console.log(err)
+        commit('SET_AUTH', false)
+      }
+    },
+    AUTH_FAIL ({ commit }) {
+      commit('SET_AUTH', false)
+      commit('SET_POPUP_TITLE', 'AUTH FAILURE')
+      commit('SET_POPUP_TEXT', 'You are now in demo mode. You have no access to save changes')
+      commit('SHOW_POPUP')
+    },
+    AUTH_SUCCESS ({ commit }) {
+      commit('SET_AUTH', true)
+      commit('SET_POPUP_TITLE', 'AUTH SUCCESS')
+      commit('SET_POPUP_TEXT', 'You have full access to save changes')
+      commit('SHOW_POPUP')
+    },
+    SAVE_SUCCESS ({ commit }) {
+      commit('SET_POPUP_TITLE', 'SAVE DATA')
+      commit('SET_POPUP_TEXT', 'Data has been successfully saved')
+      commit('SHOW_POPUP')
+    },
+    SAVE_FAILURE ({ commit }) {
+      commit('SET_POPUP_TITLE', 'SAVE DATA')
+      commit('SET_POPUP_TEXT', 'Error saving data')
+      commit('SHOW_POPUP')
+    },
+    ACCESS_DENIED ({ commit }) {
+      commit('SET_POPUP_TITLE', 'SAVE DATA')
+      commit('SET_POPUP_TEXT', 'Access denied')
+      commit('SHOW_POPUP')
+    }
   }
 })

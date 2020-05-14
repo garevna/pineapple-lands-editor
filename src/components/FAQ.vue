@@ -28,6 +28,27 @@
           :key="index"
         >
           <v-expansion-panel-header class="text-left">
+
+            <v-tooltip top dark color="#09b">
+              <template v-slot:activator="{ on }">
+                <v-btn
+                      absolute
+                      fab
+                      dark
+                      small
+                      bottom
+                      left
+                      color="red"
+                      :value="index"
+                      class="button-minus"
+                      @click="$store.commit('content/DELETE_FAQ_ITEM', index)"
+                      v-on="on"
+                >
+                  <v-icon>mdi-minus</v-icon>
+                </v-btn>
+              </template>
+              <span>Remove FAQ item</span>
+            </v-tooltip>
             <v-text-field
                 class="contenteditable"
                 :value="item.question"
@@ -45,6 +66,27 @@
             ></v-textarea>
           </v-expansion-panel-content>
         </v-expansion-panel>
+
+        <v-tooltip top dark color="#09b">
+          <template v-slot:activator="{ on }">
+            <v-btn
+                  absolute
+                  fab
+                  dark
+                  small
+                  bottom
+                  right
+                  color="#09b"
+                  class="button-plus"
+                  @click="$store.commit('content/ADD_FAQ_ITEM')"
+                   v-on="on"
+            >
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+          </template>
+          <span>Add FAQ item</span>
+        </v-tooltip>
+
       </v-expansion-panels>
       <v-card-text class="text-center">
         <p class="submit-button mx-auto"
@@ -65,6 +107,15 @@
   font-size: 18px!important;
   line-height: 150%;
   color: #2D2D2D!important;
+}
+
+.button-minus {
+  margin-left: -40px;
+  margin-bottom: 48px;
+}
+.button-plus {
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 50%;
 }
 
 @media screen and (max-width: 600px) {
@@ -106,6 +157,9 @@ export default {
     ...mapState('content', ['faq'])
   },
   methods: {
+    removeItem (itemValue) {
+      console.log(itemValue)
+    },
     getAnswerText (num) {
       return this.faq.items[num].answer.split('<br>').join('\n')
     },

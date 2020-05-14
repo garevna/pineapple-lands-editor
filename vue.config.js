@@ -1,3 +1,5 @@
+const Dotenv = require('dotenv-webpack')
+
 module.exports = {
   transpileDependencies: [
     'vuetify'
@@ -11,7 +13,8 @@ module.exports = {
       splitChunks: {
         automaticNameDelimiter: '.'
       }
-    }
+    },
+    plugins: [new Dotenv()]
   },
   pwa: {
     themeColor: '#20731C',

@@ -56,16 +56,18 @@ const actions = {
     // if (!localStorage.getItem('token')) return
     const formData = new FormData()
     formData.set(name, file)
+    let response = null
     try {
-      const response = await (await fetch(endpoint, {
+      response = await (await fetch(endpoint, {
         method: 'POST',
         headers: {
           Authorization: localStorage.getItem('token')
         },
         body: formData
       })).text()
+      console.log(response)
       return response
-    } catch (error) { return null }
+    } catch (error) { console.log(error) }
   },
 
   async SAVE_TOP_PICTURE ({ getters, commit, dispatch }, file) {
@@ -87,7 +89,9 @@ const actions = {
   },
 
   async GET_IMAGES (context, endpoint) {
+    console.log(endpoint)
     const response = await (await fetch(endpoint)).json()
+    console.log(response)
     return response.filter(img => !img.match(/.gitkeep/))
   },
 

@@ -109,6 +109,8 @@ const mutations = {
   UPDATE_TESTIMONIALS: (state, payload) => { state.testimonials[payload.prop] = payload.value },
   UPDATE_FAQ: (state, payload) => { state.faq[payload.prop] = payload.value },
   UPDATE_FAQ_ITEM: (state, payload) => { state.faq.items[payload.num][payload.prop] = payload.value },
+  ADD_FAQ_ITEM: (state) => { state.faq.items.push({ question: '', answer: '' }) },
+  DELETE_FAQ_ITEM: (state, num) => { state.faq.items.splice(num, 1) },
   UPDATE_FOOTER: (state, payload) => { state.footer[payload.prop] = payload.value },
 
   UPDATE_ALL: (state, payload) => { Object.assign(state, payload) }
@@ -129,15 +131,14 @@ const actions = {
     commit('UPDATE_ALL', payload)
   },
 
-  async SAVE_CONTENT (context, endpoint) {
-    const content = { ...state }
+  async SAVE_CONTENT ({ state, dispatch }, endpoint) {
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: localStorage.getItem('token')
       },
-      body: JSON.stringify(content)
+      body: JSON.stringify(state)
     })
     return response.status
   }
