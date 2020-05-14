@@ -1,4 +1,6 @@
-# pineapple.net
+# pineapple-land-editor
+
+#### Dashboard for landing pages of Pineapple.net.au
 
 [**demo**](https://garevna.github.io/pineapple-land-editor/)
 
