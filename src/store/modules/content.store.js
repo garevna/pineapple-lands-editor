@@ -123,7 +123,7 @@ const actions = {
       commit('UPDATE_ALL', response)
       return response
     } catch (error) {
-      console.log('ERROR:\n', error)
+      console.warn('ERROR:\n', error)
       return null
     }
   },

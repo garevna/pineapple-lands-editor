@@ -157,9 +157,6 @@ export default {
     ...mapState('content', ['faq'])
   },
   methods: {
-    removeItem (itemValue) {
-      console.log(itemValue)
-    },
     getAnswerText (num) {
       return this.faq.items[num].answer.split('<br>').join('\n')
     },

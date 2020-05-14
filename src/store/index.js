@@ -93,10 +93,9 @@ export default new Vuex.Store({
           },
           body: null
         })
-        console.log(response)
         commit('SET_AUTH', response.status === 200)
       } catch (err) {
-        console.log(err)
+        console.warn(err)
         commit('SET_AUTH', false)
       }
     },

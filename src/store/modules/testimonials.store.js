@@ -54,7 +54,6 @@ const actions = {
       },
       body: JSON.stringify(state.testimonials)
     })
-    console.log('Testimonials saved: ', response.status)
     return response.status
   }
 }

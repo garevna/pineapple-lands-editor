@@ -65,9 +65,8 @@ const actions = {
         },
         body: formData
       })).text()
-      console.log(response)
       return response
-    } catch (error) { console.log(error) }
+    } catch (error) { console.warn(error) }
   },
 
   async SAVE_TOP_PICTURE ({ getters, commit, dispatch }, file) {
@@ -89,9 +88,7 @@ const actions = {
   },
 
   async GET_IMAGES (context, endpoint) {
-    console.log(endpoint)
     const response = await (await fetch(endpoint)).json()
-    console.log(response)
     return response.filter(img => !img.match(/.gitkeep/))
   },
 
