@@ -27,10 +27,13 @@ import { mapState } from 'vuex'
 export default {
   name: 'Popup',
   computed: {
-    ...mapState(['popup', 'popupTitle', 'popupText'])
+    ...mapState(['popup', 'popupTitle', 'popupText', 'popapAction'])
   },
   methods: {
-
+    action () {
+      this.$emit('update:action', true)
+      this.$store.commit('HIDE_POPUP')
+    }
   }
 }
 </script>

@@ -1,22 +1,9 @@
 <template>
   <v-container fluid class="homefone">
+
     <v-card flat class="transparent mx-auto mt-12 mb-0 text-center" max-width="1360">
-      <v-tooltip top color="info">
-        <template v-slot:activator="{ on }">
-          <v-btn fab dark small color="warning" v-on="on" @click="saveContent">
-            <v-icon>mdi-content-save</v-icon>
-          </v-btn>
-        </template>
-        <span>Save section content</span>
-      </v-tooltip>
       <v-card-title class="text-center" max-width="940">
-        <h2
-            style="width: 100%;
-            text-align: center"
-            ref="testimonialsTitle"
-            contenteditable
-            v-text="content.header"
-        ></h2>
+        <h2 style="width: 100%; text-align: center">{{ content.header }}</h2>
       </v-card-title>
 
       <v-slide-group
@@ -34,7 +21,7 @@
           <v-card
             flat
             class="ma-4"
-            height="370"
+            height="250"
             width="376"
             @click="toggle"
           >
@@ -45,10 +32,9 @@
             >
               <v-scale-transition>
                 <TestimonialsCard
-                      :index="index"
                       :date="testimonial.date"
                       :name="testimonial.name"
-                      :photo.sync="testimonial.photo"
+                      :photo="testimonial.photo"
                       :text="testimonial.text"
                 />
               </v-scale-transition>
@@ -62,7 +48,7 @@
             :continuous="true"
             :show-arrows="true"
             hide-delimiters
-            height="360"
+            height="280"
             width="100%"
             light
             class="testimonials transparent my-10"
@@ -74,7 +60,6 @@
           <v-sheet height="100%" flat tile class="transparent">
             <v-row align="center" justify="center">
               <TestimonialsCard
-                    :index="index"
                     :date="testimonial.date"
                     :name="testimonial.name"
                     :photo="testimonial.photo"
@@ -85,38 +70,18 @@
         </v-carousel-item>
       </v-carousel>
     </v-card>
-
-    <v-tooltip top dark color="#09b">
-      <template v-slot:activator="{ on }">
-        <v-btn
-              absolute
-              fab
-              dark
-              small
-              bottom
-              right
-              color="#09b"
-              class="button-plus"
-              @click="$store.commit('testimonials/ADD_ITEM')"
-               v-on="on"
-        >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-      </template>
-      <span>Add FAQ item</span>
-    </v-tooltip>
-
-    <v-card-text class="text-center text-md-left">
-      <p class="submit-button mx-auto"
-          contenteditable
-          ref="testimonialsButton"
-          v-text="content.button"
+    <v-card-text class="text-center">
+      <v-btn
           color="buttons"
           dark
           rounded
           width="220"
           height="48"
-      ></p>
+          class="submit-button px-auto mx-auto"
+          @click="$emit('update:page', 'plans')"
+      >
+          {{ content.button }}
+      </v-btn>
     </v-card-text>
   </v-container>
 </template>
@@ -170,12 +135,8 @@ export default {
     }
   },
   methods: {
-    saveContent () {
-      this.$store.commit('content/UPDATE_TESTIMONIALS', { prop: 'header', value: this.$refs.testimonialsTitle.innerText })
-      this.$store.commit('content/UPDATE_TESTIMONIALS', { prop: 'button', value: this.$refs.testimonialsButton.innerText })
-      this.$store.commit('SET_POPUP_TITLE', 'SECTION CONTENT')
-      this.$store.commit('SET_POPUP_TEXT', 'Data successfully saved')
-      this.$store.commit('SHOW_POPUP')
+    action () {
+      console.log('Testimonials action')
     }
   },
   mounted () {

@@ -1,94 +1,87 @@
 <template>
   <v-app class="homefone">
-    <v-container fluid class="homefone">
-      <AppHeader :pages="pages" :selected.sync="page"/>
-      <Top />
+    <v-system-bar app fixed color="primary" height="40" width="100%">
+      <v-row d-flex align="center" justify="end" class="mr-10">
+        <v-spacer class="d-none d-lg-flex d-xl-flex"></v-spacer>
 
-      <!-- ============================= USER CONTACT ============================= -->
+        <v-tooltip bottom color="info">
+          <template v-slot:activator="{ on }">
+            <v-btn text color="transparent" v-on="on" @click="$router.push({ name: 'home' })">
+              <v-icon large color="white" v-if="$route.name !== 'home'">mdi-home-circle-outline</v-icon>
+              <v-icon large color="white" v-else>mdi-home-circle</v-icon>
+            </v-btn>
+          </template>
+          <span>Reviews</span>
+        </v-tooltip>
 
-      <v-row justify="center" class="pa-0 ma-0">
-        <v-sheet
-          width="100%"
-          max-width="1440"
-          color="homefone"
-          tile
-          class="mx-auto"
-        >
-          <v-row class="mx-0 px-0">
-            <v-col cols="12" md="6" class="aside-col">
-              <Aside />
-            </v-col>
-            <v-col cols="12" md="6" class="mx-0 px-0">
-              <v-card flat class="transparent mx-0">
-                <!-- <v-img src="@/img/map-picture.svg" height="800" contain style="opacity:0.2;"></v-img> -->
-                <v-card
-                        flat
-                        class="user-contact transparent mx-auto pa-0"
-                        style="margin-bottom: 80px"
-                >
-                  <UserContact />
-                </v-card>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-sheet>
-      </v-row>
+        <v-tooltip bottom color="info">
+          <template v-slot:activator="{ on }">
+            <v-btn text color="transparent" v-on="on" @click="$router.push({ name: 'first' })">
+              <v-icon large color="white" v-if="$route.name !== 'first'">mdi-numeric-1-box-outline</v-icon>
+              <v-icon large color="white" v-else>mdi-numeric-1-box</v-icon>
+            </v-btn>
+          </template>
+          <span>Landing page 1</span>
+        </v-tooltip>
 
-      <!-- ============================= HOW TO CONNECT ============================= -->
-      <v-row width="100%">
-        <HowToConnect :contact.sync="contactUs" :connect.sync="getConnected" />
+        <v-tooltip bottom color="info">
+          <template v-slot:activator="{ on }">
+            <v-btn text color="transparent" v-on="on" @click="$router.push({ name: 'second' })">
+              <v-icon large color="white" v-if="$route.name !== 'second'">mdi-numeric-2-box-outline</v-icon>
+              <v-icon large color="white" v-else>mdi-numeric-2-box</v-icon>
+            </v-btn>
+          </template>
+          <span>Landing page 2</span>
+        </v-tooltip>
+
+        <v-tooltip bottom color="info">
+          <template v-slot:activator="{ on }">
+            <v-btn text color="transparent" v-on="on" @click="$router.push({ name: 'third' })">
+              <v-icon large color="white" v-if="$route.name !== 'third'">mdi-numeric-3-box-outline</v-icon>
+              <v-icon large color="white" v-else>mdi-numeric-3-box</v-icon>
+            </v-btn>
+          </template>
+          <span>Landing page 3</span>
+        </v-tooltip>
+
+        <v-tooltip bottom color="info">
+          <template v-slot:activator="{ on }">
+            <v-btn text color="transparent" v-on="on" @click="$router.push({ name: 'fourth' })">
+              <v-icon large color="white" v-if="$route.name !== 'fourth'">mdi-numeric-4-box-outline</v-icon>
+              <v-icon large color="white" v-else>mdi-numeric-4-box</v-icon>
+            </v-btn>
+          </template>
+          <span>Landing page 4</span>
+        </v-tooltip>
+
+        <v-tooltip bottom color="info">
+          <template v-slot:activator="{ on }">
+            <v-btn text color="transparent" v-on="on" @click="$router.push({ name: 'testimonials' })">
+              <v-icon large color="white" v-if="$route.name !== 'testimonials'">mdi-message-text-outline</v-icon>
+              <v-icon large color="white" v-else>mdi-message-text</v-icon>
+            </v-btn>
+          </template>
+          <span>Reviews</span>
+        </v-tooltip>
       </v-row>
-      <!-- ============================= INTERNET PLANS ============================= -->
-      <v-row width="100%" justify="center">
-        <section id="plans">
-          <div class="base-title">
-            <a href="#plans" class="core-goto"></a>
-            <InternetPlans :page.sync="page"/>
-          </div>
-        </section>
-      </v-row>
-      <!-- ============================= TESTIMONIALS ============================= -->
-      <v-row width="100%">
-        <Testimonials />
-      </v-row>
-      <!-- ============================= FAQ ============================= -->
-      <v-row width="100%">
-        <section id="faq" style="width: 100%">
-          <div class="base-title">
-            <a href="#faq" class="core-goto"></a>
-            <FAQ :page.sync="page"/>
-          </div>
-        </section>
-      </v-row>
-      <!-- ============================= FOOTER ============================= -->
-      <section id="footer" class="homefone">
-        <div class="base-title">
-          <a href="#footer" class="core-goto"></a>
-            <v-row width="100%">
-              <Footer :page.sync="page" :user.sync="user" />
-            </v-row>
-        </div>
-      </section>
+    </v-system-bar>
+
+    <v-container class="homefone mx-auto px-auto">
+      <router-view class="mt-12 mx-0 pa-12"></router-view>
     </v-container>
 
     <!-- ============================= BOTTOM NAV ============================= -->
     <v-bottom-navigation
           fixed
           dark
-          class="buttons"
+          :class="authorized ? 'buttons' : 'warning'"
+          v-if="!authorized"
     >
-
-      <v-btn @click="savePageContent" v-if="authorized">
-        <span>Save</span>
-        <v-icon>mdi-content-save-edit</v-icon>
-      </v-btn>
-
       <v-btn @click="login = true" v-if="!authorized">
         <span>Sign In</span>
         <v-icon>mdi-login</v-icon>
       </v-btn>
     </v-bottom-navigation>
-    <ImageGallery />
     <Popup />
     <Auth :opened.sync="login" />
   </v-app>
@@ -99,6 +92,9 @@ html, body {
   width: 100%;
   max-width: 100%;
   font-family: Gilroy;
+}
+.v-application--wrap {
+  background: #FAFAFA!important;
 }
 
 .container,
@@ -243,93 +239,24 @@ svg.defs-only {
 
 import { mapState, mapGetters, mapActions } from 'vuex'
 
-import AppHeader from '@/components/AppHeader.vue'
-import Top from '@/components/Top.vue'
-import Aside from '@/components/Aside.vue'
-import UserContact from '@/components/UserContact.vue'
-import HowToConnect from '@/components/HowToConnect.vue'
-import Testimonials from '@/components/Testimonials.vue'
-import InternetPlans from '@/components/InternetPlans.vue'
-import FAQ from '@/components/FAQ.vue'
-import Footer from '@/components/Footer.vue'
-
-import ImageGallery from '@/components/editor/ImageGallery.vue'
 import Popup from '@/components/editor/Popup.vue'
 import Auth from '@/components/editor/Auth.vue'
 
 export default {
   name: 'App',
   components: {
-    AppHeader,
-    Top,
-    Aside,
-    UserContact,
-    HowToConnect,
-    Testimonials,
-    InternetPlans,
-    FAQ,
-    Footer,
-    ImageGallery,
     Popup,
     Auth
   },
   data () {
     return {
       page: 0,
-      contactUs: false,
-      getConnected: false,
-      user: {},
       login: false
     }
   },
   computed: {
-    ...mapState(['viewport', 'viewportWidth', 'pages', 'selectors', 'authorized']),
+    ...mapState(['viewport', 'viewportWidth', 'authorized']),
     ...mapGetters('editor', ['contentEndpoint'])
-  },
-  watch: {
-    contactUs (val) {
-      if (val) this.$router.push({ name: 'contact' })
-    },
-    getConnected (val) {
-      if (val) this.$router.push({ name: 'connect' })
-    },
-    business (val) {
-      if (val) {
-        this.page = this.pages.indexOf('Business')
-      }
-    },
-    residential (val) {
-      this.page = this.pages.indexOf('Residential')
-    },
-    page (val) {
-      if (this.selectors[val] === '#connect') {
-        if (this.addressAvalable) {
-          this.$router.push({ name: 'connect' })
-        } else {
-          this.$vuetify.goTo('#check', {
-            duration: 500,
-            offset: 200,
-            easing: 'easeInOutCubic'
-          })
-        }
-        this.page = undefined
-        return
-      }
-      if (this.selectors[val] === '#contact') {
-        this.$router.push({ name: 'contact' })
-        return
-      }
-      if (this.selectors[val] === '#plans') {
-        this.$store.commit('CHANGE_PLAN', this.pages[this.page].toLowerCase())
-      }
-      if (this.selectors[val]) {
-        this.$vuetify.goTo(this.selectors[val], {
-          duration: 500,
-          offset: 0,
-          easing: 'easeInOutCubic'
-        })
-      }
-    }
   },
   methods: {
     ...mapActions({
@@ -338,26 +265,19 @@ export default {
       saveFailure: 'SAVE_FAILURE',
       accessDenied: 'ACCESS_DENIED'
     }),
-    ...mapActions('content', {
-      getContent: 'GET_CONTENT',
-      saveContent: 'SAVE_CONTENT'
-    }),
-    ...mapActions('editor', {
-      getAllPictures: 'GET_ALL_PICTURES',
-      getAllAvatars: 'GET_ALL_AVATARS'
-    }),
-    ...mapActions('testimonials', {
-      saveTestimonials: 'SAVE_CONTENT'
-    }),
     onResize () {
       this.$store.commit('CHANGE_VIEWPORT')
     },
     async savePageContent () {
-      let response = await this.saveTestimonials()
-      console.log('Testimonials content saved: ', response)
+      const pageNum = this.pages.indexOf(this.$route.name)
+      let response = null
+      if (pageNum === 5) {
+        response = await this.saveTestimonials()
+      } else {
+        response = await this.savePageContent()
+      }
 
       response = await this.saveContent(this.contentEndpoint)
-      console.log('Page content saved: ', response)
       const actionName = response === 200 ? 'saveSuccess' : response === 403 || response === 401 ? 'accessDenied' : 'saveFailure'
       this[actionName]()
     }
@@ -366,9 +286,7 @@ export default {
     this.validateToken()
   },
   mounted () {
-    this.getContent()
-    this.getAllPictures()
-    this.getAllAvatars()
+    this.$store.dispatch('testimonials/GET_CONTENT').then(() => console.log(this.$store.state.testimonials.testimonials))
     this.onResize()
     window.addEventListener('resize', this.onResize, { passive: true })
   },

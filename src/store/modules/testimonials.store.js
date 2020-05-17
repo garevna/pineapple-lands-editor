@@ -7,7 +7,7 @@ const state = {
 
 const getters = {
   host: (state, getters, rootState) => rootState.host,
-  db: (state, getters) => `${getters.host}/testimonials`
+  db: (state, getters, rootState) => `${rootState.host}/testimonials`
 }
 
 const mutations = {
@@ -25,7 +25,7 @@ const mutations = {
       date: new Date(),
       name: '',
       text: '',
-      photo: 'https://pineapple-net-land.glitch.me/avatars/default.png'
+      photo: `${state.host}/avatars/default.png`
     })
   },
   REMOVE_ITEM (state, num) {

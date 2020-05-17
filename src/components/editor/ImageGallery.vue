@@ -1,29 +1,29 @@
 <template>
 <v-row justify="center">
   <v-dialog v-model="gallery" fullscreen hide-overlay transition="dialog-bottom-transition">
-    <v-card v-if="pictures" class="pa-4">
+    <v-card v-if="images" class="pa-4">
       <v-toolbar dark color="secondary">
         <v-toolbar-items>
-          <v-btn icon @click="getImages()">
+          <v-btn icon @click="getImages">
             <v-icon large color="#555">mdi-reload</v-icon>
           </v-btn>
         </v-toolbar-items>
         <v-toolbar-title>Select image from below</v-toolbar-title>
         <v-spacer></v-spacer>
           <v-toolbar-items>
-            <v-btn dark text @click="$store.commit('editor/HIDE_GALLERY')">
+            <v-btn dark text @click="$emit('update:activate', false)">
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-toolbar-items>
       </v-toolbar>
       <v-row>
         <v-col
-          v-for="(file, index) in pictures"
+          v-for="(file, index) in images"
           :key="index"
         >
-          <v-card hover class="pa-0" tile>
+          <v-card hover class="pa-0" tile @click="select(index)">
             <v-fab-transition>
-              <v-btn fab icon @click="removePicture(index)">
+              <v-btn fab icon @click="askToRemovePicture(index)">
                 <v-icon color="red darken-2">mdi-delete</v-icon>
               </v-btn>
             </v-fab-transition>
@@ -31,8 +31,6 @@
               <v-img :src="`${staticEndpoint}/${file}`"
                      :max-height="maxHeight"
                      :max-width="maxWidth"
-                     v-model="img"
-                     @click="select(index)"
                      contain
               />
             </v-card-text>
@@ -52,119 +50,102 @@
 
 <script>
 
-import { mapState, mapGetters } from 'vuex'
+// import { mapGetters } from 'vuex'
 
 import RemovePopup from '@/components/editor/RemovePopup.vue'
 
 export default {
   name: 'ImageGallery',
-
   components: {
     RemovePopup
   },
-
-  props: ['image'],
-
+  props: {
+    staticEndpoint: String,
+    endpoint: String,
+    selectedImageURL: String,
+    activate: Boolean,
+    fileLimit: Number,
+    imageSize: Number
+  },
   data: () => ({
-    img: null,
+    images: [],
     removePopupVisible: false,
     confirmRemoving: false,
     details: null,
     removing: null
   }),
-
   computed: {
-    ...mapState('editor', ['gallery', 'selectedImage', 'pictureType', 'galleryPictures', 'galleryAvatars']),
-    ...mapGetters('editor', [
-      'staticPictureEndpoint',
-      'staticAvatarEndpoint',
-      'picturesEndpoint',
-      'avatarsEndpoint',
-      'uploadPictureEndpoint',
-      'uploadAvatarEndpoint'
-    ]),
-    pictures: {
+    gallery: {
       get () {
-        return this.pictureType === 'image' ? this.galleryPictures : this.galleryAvatars
-      },
-      set (payload) {
-
-      }
-    },
-    dialog: {
-      get () {
-        return this.gallery
+        return this.activate
       },
       set (val) {
-        if (val) this.$store.commit('editor/SHOW_GALLERY')
-        else this.$store.commit('editor/HIDE_GALLERY')
+        this.$emit('update:activate', val)
       }
-    },
-    staticEndpoint () {
-      return this.pictureType === 'image' ? this.staticPictureEndpoint : this.staticAvatarEndpoint
-    },
-    dynamicEndpoint () {
-      return this.pictureType === 'image' ? this.picturesEndpoint : this.avatarsEndpoint
-    },
-    fileLimit () {
-      return this.pictureType === 'image' ? 1000000 : 50000
     },
     maxWidth () {
-      return this.pictureType === 'image' ? 300 : 80
+      return this.imageSize || 120
     },
     maxHeight () {
-      return this.pictureType === 'image' ? 300 : 80
-    },
-
-    imageURL: {
-      get () {
-        return this.selectedImage
-      },
-      set (val) {
-        // this.$emit('update:pictureURL', val)
-        this.$store.commit('editor/UPDATE_SELECTED_IMAGE', val)
-      }
+      return this.imageSize || 120
     },
     margin () {
-      return this.pictureType === 'image' ? 0 : '-32px'
-    },
-    removeAction () {
-      return this.pictureType === 'image' ? 'editor/REMOVE_PICTURE' : 'editor/REMOVE_AVATAR'
+      return this.imageType === 'image' ? 0 : '-32px'
     }
   },
-
   watch: {
+    activate (val) {
+      if (val) this.getImages()
+    },
     confirmRemoving (val) {
       if (!val) return
-      this.$store.dispatch(this.removeAction, this.pictures[this.removing])
+      this.removePicture(this.removing)
       this.getImages()
       this.removePopupVisible = false
     }
   },
-
   methods: {
-    select (index) {
-      this.$store.commit('editor/UPDATE_SELECTED_IMAGE', `${this.staticEndpoint}/${this.pictures[index]}`)
-      this.$emit('update:image', this.imageURL)
-      this.$store.commit('editor/HIDE_GALLERY')
-    },
     async getImages () {
-      const action = this.pictureType === 'image' ? 'editor/GET_ALL_PICTURES' : 'editor/GET_ALL_AVATARS'
-      this.pictures = await this.$store.dispatch(action)
+      try {
+        this.images = (await (await fetch(this.endpoint)).json())
+          .filter(img => img !== '.gitkeep')
+        this.ready = true
+      } catch (err) {
+        console.error(err)
+        this.ready = false
+      }
     },
-    removePicture (index) {
+    select (index) {
+      console.log('SELECT!')
+      this.$emit('update:selectedImageURL', `${this.staticEndpoint}/${this.images[index]}`)
+      this.$emit('update:activate', false)
+    },
+    askToRemovePicture (index) {
       this.confirmRemoving = false
       this.removing = index
-      this.details = `<img src="${this.staticEndpoint}/${this.pictures[index]}" width="100"/>`
+      this.details = `<img src="${this.staticEndpoint}/${this.images[index]}" width="120"/>`
       this.removePopupVisible = true
     },
-    selectPicture (index) {
-      this.$store.commit('SET_SELECTED_LOGO', this.pictures[index])
-      this.dialog = false
+    async removePicture (index) {
+      try {
+        const response = await fetch(`${this.endpoint}/${this.images[index]}`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: localStorage.getItem('token')
+          }
+        })
+        console.log(response)
+      } catch (err) {
+        console.error(err)
+        this.ready = false
+      }
     }
   },
   mounted () {
-    if (!this.pictures) this.getImages()
+    console.log('MOUNTED\n', this.images)
+  },
+  beforeDestroy () {
+    console.log('DESTROY GALLERY')
   }
 }
 </script>

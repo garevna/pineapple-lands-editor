@@ -1,5 +1,5 @@
 <template>
-<v-container fluid style="overflow-x: hidden; margin-top: 160px; margin-bottom: 64px;">
+<v-container style="overflow-x: hidden; margin-top: 160px; margin-bottom: 64px; padding: 40px!important;">
   <v-card flat class="mx-auto homefone" width="100%" max-width="1440">
     <v-row align="center" justify="center">
       <v-col sm="12" md="6" class="text-center mx-auto">
@@ -32,10 +32,16 @@
       </v-col>
       <v-col sm="12" md="6">
         <ChangePicture
-              :pictureURL.sync="imageURL"
-              pictureType="image"
+              :gallery.sync="gallery"
               :saveContent.sync="save"
-              section="top"
+        />
+        <ImageGallery
+              :activate.sync="gallery"
+              :staticEndpoint="staticPictureEndpoint"
+              :endpoint="picturesEndpoint"
+              :selectedImageURL.sync="imageURL"
+              :fileLimit="fileLimit"
+              :imageSize="imageSize"
         />
         <v-card flat width="100%" max-width="600" class="transparent">
           <v-img :src="top.pictureURL" max-width="750" class="mx-auto"></v-img>
@@ -54,24 +60,30 @@ p {
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 import ChangePicture from '@/components/editor/ChangePicture.vue'
+import ImageGallery from '@/components/editor/ImageGallery.vue'
 
 export default {
   name: 'Top',
   components: {
-    ChangePicture
+    ChangePicture,
+    ImageGallery
   },
   props: ['page'],
   data () {
     return {
       close: false,
-      save: false
+      save: false,
+      gallery: false,
+      fileLimit: 1000000,
+      imageSize: 360
     }
   },
   computed: {
     ...mapState('content', ['top']),
+    ...mapGetters('editor', ['staticPictureEndpoint', 'picturesEndpoint']),
     imageURL: {
       get () {
         return this.top.pictureURL
@@ -85,6 +97,9 @@ export default {
     }
   },
   watch: {
+    imageURL (val) {
+      console.log('TOP: selected image url is ', val)
+    },
     save (val) {
       if (!val) return
       this.saveContent()

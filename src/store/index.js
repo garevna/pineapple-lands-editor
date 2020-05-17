@@ -7,8 +7,6 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     host: 'https://pineapple-net-land.glitch.me',
-    landhost: `${location.origin}${location.pathname}`,
-    authentificated: false,
     officeAddress: '75 Brighton Road, Elwood VIC 3184',
     officePhone: '1300 857 501',
     officeEmail: 'info@pineapple.net.au',
@@ -20,8 +18,8 @@ export default new Vuex.Store({
     viewportWidth: window.innerWidth,
     viewportHeight: window.innerHeight,
     plan: 'residential',
-    pages: ['Benefits', 'Internet Plans', 'FAQs', 'Contact Us'],
-    selectors: ['benefits', 'plans', 'faq', 'contact'],
+    pages: [],
+    selectors: [],
     popup: false,
     popupTitle: '',
     popupText: '',
@@ -30,10 +28,15 @@ export default new Vuex.Store({
   modules,
 
   getters: {
-    //
+    contentHost: (state) => `${state.host}/content`,
+    testimonialsHost: (state) => `${state.host}/testimonials`
   },
 
   mutations: {
+    UPDATE_PAGES: (state, payload) => {
+      state.pages = payload.pages
+      state.selectors = payload.selectors
+    },
     CHANGE_VIEWPORT: (state) => {
       state.viewport = window.innerWidth >= 1904 ? 'xl'
         : window.innerWidth >= 1264 ? 'lg'

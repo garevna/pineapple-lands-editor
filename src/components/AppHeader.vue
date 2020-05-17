@@ -1,6 +1,6 @@
 <template>
 <v-container fluid>
-  <v-system-bar app fixed color="primary" height="40" width="100%">
+  <!-- <v-system-bar app fixed color="primary" height="40" width="100%">
     <v-row d-flex align="center" justify="end" class="mr-10">
       <v-spacer class="d-none d-lg-flex d-xl-flex"></v-spacer>
       <span width="12" height="12" class="mr-2">
@@ -18,9 +18,9 @@
         </a>
       </span>
     </v-row>
-  </v-system-bar>
+  </v-system-bar> -->
   <!-- Viewport width less then lg -->
-  <v-expansion-panels
+  <!-- <v-expansion-panels
           tile
           flat
           v-model="panel"
@@ -54,7 +54,7 @@
             </v-list>
       </v-expansion-panel-content>
     </v-expansion-panel>
-  </v-expansion-panels>
+  </v-expansion-panels> -->
 
   <!-- Viewport width wider or equal lg -->
     <v-app-bar
@@ -110,41 +110,7 @@
   border: solid 2px #51AD30!important;
   border-radius: 100px!important;
 }
-.system-bar-phone {
-  font-size: 16px;
-  color: #ffffff;
-}
-.burger-menu {
-  height: 48px;
-  min-width: 48px!important;
-  max-width: 64px!important;
-}
-.burger-menu--first, .burger-menu--second,
-.burger-menu-active--first, .burger-menu-active--second {
-  position: absolute;
-  height:3px;
-  background: #20731C;
-  left: 0;
-  transition: all 0.5s;
-}
-.burger-menu--first {
-  width: 32px;
-  top: -8px;
-}
-.burger-menu--second {
-  width: 16px;
-  top: 2px;
-}
-.burger-menu-active--first {
-  top: 0;
-  width: 32px;
-  transform: rotate(-45deg);
-}
-.burger-menu-active--second {
-  top: 0;
-  width: 32px;
-  transform: rotate(45deg);
-}
+
 .main-menu-content {
   background: #FAFAFA!important;
 }

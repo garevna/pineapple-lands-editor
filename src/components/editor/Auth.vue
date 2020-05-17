@@ -81,7 +81,6 @@ export default {
           password: pass.cipher
         })
       })
-      console.log(response)
       if (response.status !== 200) return this.authFail()
       this.authSuccess()
       const token = await response.text()

@@ -1,4 +1,4 @@
-# pineapple-land-editor
+# pineapple-lands-editor
 
 #### Dashboard for landing pages of Pineapple.net.au
 

@@ -29,6 +29,6 @@ module.exports = {
   },
   runtimeCompiler: true,
   publicPath: process.env.NODE_ENV === 'production'
-    ? '/pineapple-land-editor/'
+    ? '/pineapple-lands-editor/'
     : '/'
 }
