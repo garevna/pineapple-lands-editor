@@ -4,44 +4,40 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/pineapple-lands-editor/browserconfig.xml"
   },
   {
-    "revision": "243faab831887e868af1",
-    "url": "/pineapple-lands-editor/css/app.82386233.css"
+    "revision": "4024b7c85bf361960ddb",
+    "url": "/pineapple-lands-editor/css/app.0778ce1f.css"
   },
   {
     "revision": "98a4456176224db470dd",
     "url": "/pineapple-lands-editor/css/chunk-vendors.0f81891b.css"
   },
   {
-    "revision": "1920f5a926ee8b3cf202",
-    "url": "/pineapple-lands-editor/css/first.94ad08a0.css"
+    "revision": "75902ff0a78d0114a37d",
+    "url": "/pineapple-lands-editor/css/first.fourth.second.99ccb9d0.css"
   },
   {
-    "revision": "b4800cb03bdb3d837ca4",
-    "url": "/pineapple-lands-editor/css/first.fourth.second.testimonials.third.97d18121.css"
+    "revision": "5516e992b54eb13ab515",
+    "url": "/pineapple-lands-editor/css/first.fourth.second.testimonials.third.0efb6071.css"
   },
   {
-    "revision": "dc4ac330de8d4072b82d",
-    "url": "/pineapple-lands-editor/css/first.fourth.second.third.60878829.css"
+    "revision": "73635603a3bc00c5f413",
+    "url": "/pineapple-lands-editor/css/first.fourth.second.third.348dbb54.css"
   },
   {
-    "revision": "c4c52de684db478a38cb",
-    "url": "/pineapple-lands-editor/css/first.fourth.third.e1ac35b4.css"
-  },
-  {
-    "revision": "1f2634e588c69fcc09f6",
-    "url": "/pineapple-lands-editor/css/fourth.94ad08a0.css"
+    "revision": "3814a4857d2f0c16ce00",
+    "url": "/pineapple-lands-editor/css/first.fourth.third.103e0add.css"
   },
   {
     "revision": "9ca12a85e2e5bf9ed786",
     "url": "/pineapple-lands-editor/css/home.c7315fda.css"
   },
   {
-    "revision": "99a2fe6c08eacb21a2b6",
-    "url": "/pineapple-lands-editor/css/second.94ad08a0.css"
+    "revision": "ff33d7f22af735555f09",
+    "url": "/pineapple-lands-editor/css/testimonials.fb00bbbd.css"
   },
   {
-    "revision": "26e83d74a9650ca52da3",
-    "url": "/pineapple-lands-editor/css/testimonials.c4f166ef.css"
+    "revision": "3097495bd243b98895bb",
+    "url": "/pineapple-lands-editor/css/third.f909f2ee.css"
   },
   {
     "revision": "3ee088ebf456531c3c79586af139b62f",
@@ -356,6 +352,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/pineapple-lands-editor/img/default.png"
   },
   {
+    "revision": "0f6246a959f5e411fc59e31a1ddc3010",
+    "url": "/pineapple-lands-editor/img/dgtek-logo-white.0f6246a9.svg"
+  },
+  {
     "revision": "ada5061dc20107863af0d42cbf567dda",
     "url": "/pineapple-lands-editor/img/dgtek-logo.ada5061d.png"
   },
@@ -456,52 +456,56 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/pineapple-lands-editor/img/testimonials/default.png"
   },
   {
-    "revision": "465fe5bf0ca3366bbc786664b3df09a4",
+    "revision": "e1af4a33388fa526eb7fea527ca292f7",
     "url": "/pineapple-lands-editor/index.html"
   },
   {
-    "revision": "243faab831887e868af1",
-    "url": "/pineapple-lands-editor/js/app.1828336a.js"
+    "revision": "4024b7c85bf361960ddb",
+    "url": "/pineapple-lands-editor/js/app.5a04d8be.js"
   },
   {
     "revision": "98a4456176224db470dd",
     "url": "/pineapple-lands-editor/js/chunk-vendors.8116e712.js"
   },
   {
-    "revision": "1920f5a926ee8b3cf202",
-    "url": "/pineapple-lands-editor/js/first.b550a143.js"
+    "revision": "cdab82bb4f67f4771adb",
+    "url": "/pineapple-lands-editor/js/first.d24467e9.js"
   },
   {
-    "revision": "b4800cb03bdb3d837ca4",
-    "url": "/pineapple-lands-editor/js/first.fourth.second.testimonials.third.c9c83256.js"
+    "revision": "75902ff0a78d0114a37d",
+    "url": "/pineapple-lands-editor/js/first.fourth.second.e83f36a1.js"
   },
   {
-    "revision": "dc4ac330de8d4072b82d",
-    "url": "/pineapple-lands-editor/js/first.fourth.second.third.af3108b8.js"
+    "revision": "5516e992b54eb13ab515",
+    "url": "/pineapple-lands-editor/js/first.fourth.second.testimonials.third.0059a880.js"
   },
   {
-    "revision": "c4c52de684db478a38cb",
-    "url": "/pineapple-lands-editor/js/first.fourth.third.6c747cc0.js"
+    "revision": "73635603a3bc00c5f413",
+    "url": "/pineapple-lands-editor/js/first.fourth.second.third.2999c58a.js"
   },
   {
-    "revision": "1f2634e588c69fcc09f6",
-    "url": "/pineapple-lands-editor/js/fourth.0952124e.js"
+    "revision": "3814a4857d2f0c16ce00",
+    "url": "/pineapple-lands-editor/js/first.fourth.third.1b93966a.js"
+  },
+  {
+    "revision": "b1792a42206969b5f790",
+    "url": "/pineapple-lands-editor/js/fourth.8cc276d7.js"
   },
   {
     "revision": "9ca12a85e2e5bf9ed786",
     "url": "/pineapple-lands-editor/js/home.a4122402.js"
   },
   {
-    "revision": "99a2fe6c08eacb21a2b6",
-    "url": "/pineapple-lands-editor/js/second.2e0c4a7f.js"
+    "revision": "f484b59d11df2f07a8a1",
+    "url": "/pineapple-lands-editor/js/second.a5e0b0aa.js"
   },
   {
-    "revision": "26e83d74a9650ca52da3",
-    "url": "/pineapple-lands-editor/js/testimonials.000fef40.js"
+    "revision": "ff33d7f22af735555f09",
+    "url": "/pineapple-lands-editor/js/testimonials.2c9a325c.js"
   },
   {
-    "revision": "4a355795f2b167c76d66",
-    "url": "/pineapple-lands-editor/js/third.eb8d0867.js"
+    "revision": "3097495bd243b98895bb",
+    "url": "/pineapple-lands-editor/js/third.a1c6506a.js"
   },
   {
     "revision": "724137cd8228e0b758dc4343ed32f8ec",
