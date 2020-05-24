@@ -177,6 +177,7 @@ export default {
       .then((response) => {
         this.ready = !!response
         document.title = response
+        console.log('******** 2 *********\n', this.$store.state.content)
         this.$store.commit('UPDATE_PAGES', {
           pages: this.$store.state.content.mainNavButtons,
           selectors: this.$store.state.content.selectors

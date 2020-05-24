@@ -9,36 +9,19 @@
                 v-for="(testimonial, index) in testimonials"
                 :key="index"
         >
-                <TestimonialsCard
-                      :index="index"
-                      :date="testimonial.date"
-                      :name="testimonial.name"
-                      :photo.sync="testimonial.photo"
-                      :text="testimonial.text"
-                />
+          <TestimonialsCard :index="index" :content="testimonial" :removed.sync="removed" />
         </v-col>
       </v-row>
+      <v-btn
+            fab
+            dark
+            small
+            color="info"
+            @click.stop="addReview"
+      >
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
     </v-card>
-
-    <v-tooltip top dark color="#09b" v-if="$route.name === 'testimonials'">
-      <template v-slot:activator="{ on }">
-        <v-btn
-              absolute
-              fab
-              dark
-              small
-              bottom
-              right
-              color="#09b"
-              class="button-plus"
-              @click="$store.commit('testimonials/ADD_ITEM')"
-               v-on="on"
-        >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-      </template>
-      <span>Add item</span>
-    </v-tooltip>
 
     <!-- ============================= BOTTOM NAV ============================= -->
     <v-bottom-navigation
@@ -53,7 +36,6 @@
       </v-btn>
     </v-bottom-navigation>
 
-    <ImageGallery />
     <Popup />
   </v-container>
 </template>
@@ -85,40 +67,60 @@
 import { mapState } from 'vuex'
 
 import TestimonialsCard from '@/components/editor/TestimonialsCard.vue'
-import ImageGallery from '@/components/editor/ImageGallery.vue'
 import Popup from '@/components/editor/Popup.vue'
 
 export default {
   name: 'Testimonials',
   components: {
     TestimonialsCard,
-    ImageGallery,
     Popup
   },
   props: ['page'],
-  data: () => ({ model: 0 }),
+  data: () => ({
+    model: 0,
+    testimonials: [],
+    removed: false
+  }),
   computed: {
-    ...mapState('content', {
-      content: 'testimonials'
-    }),
-    ...mapState('testimonials', ['testimonials']),
-    ...mapState(['viewportWidth', 'authorized']),
-    cardWidth () {
-      return this.viewportWidth < 600 ? this.viewportWidth - 100 : 376
+    ...mapState(['authorized'])
+  },
+  watch: {
+    removed (val) {
+      if (typeof val !== 'number') return console.log('Nothing to remove')
+      this.$store.commit('testimonials/REMOVE_ITEM', val)
+      this.testimonials = this.$store.state.testimonials.testimonials
+      this.removed = null
     },
-    textSize () {
-      return this.viewportWidth < 600 ? '12px' : '14px'
+    testimonials: {
+      deep: true,
+      handler () {
+        this.testimonials = this.$store.state.testimonials.testimonials
+      }
     }
   },
   methods: {
-    saveContent () {
-      this.$store.commit('SET_POPUP_TITLE', 'REVIEWS')
-      this.$store.commit('SET_POPUP_TEXT', 'Data successfully saved')
-      this.$store.commit('SHOW_POPUP')
+    addReview () {
+      this.$store.commit('testimonials/ADD_ITEM')
+    },
+    async saveContent () {
+      const response = await this.$store.dispatch('testimonials/SAVE_CONTENT')
+      console.log(response)
+      if (response === 200) {
+        this.$store.commit('SET_POPUP_TITLE', 'REVIEWS')
+        this.$store.commit('SET_POPUP_TEXT', 'Data successfully saved')
+        this.$store.commit('SHOW_POPUP')
+      } else {
+        this.$store.commit('SET_POPUP_TITLE', 'REVIEWS')
+        this.$store.commit('SET_POPUP_TEXT', 'Something wrong...')
+        this.$store.commit('SHOW_POPUP')
+      }
     }
   },
   mounted () {
     this.$store.dispatch('testimonials/GET_CONTENT')
+      .then(() => {
+        this.testimonials = this.$store.state.testimonials.testimonials
+      })
   }
 }
 

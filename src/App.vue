@@ -21,7 +21,7 @@
               <v-icon large color="white" v-else>mdi-numeric-1-box</v-icon>
             </v-btn>
           </template>
-          <span>Landing page 1</span>
+          <span>fast-fibre-internet</span>
         </v-tooltip>
 
         <v-tooltip bottom color="info">
@@ -31,7 +31,7 @@
               <v-icon large color="white" v-else>mdi-numeric-2-box</v-icon>
             </v-btn>
           </template>
-          <span>Landing page 2</span>
+          <span>connect-melbournecbd</span>
         </v-tooltip>
 
         <v-tooltip bottom color="info">
@@ -41,7 +41,7 @@
               <v-icon large color="white" v-else>mdi-numeric-3-box</v-icon>
             </v-btn>
           </template>
-          <span>Landing page 3</span>
+          <span>fibreinternet-melbournecbd</span>
         </v-tooltip>
 
         <v-tooltip bottom color="info">
@@ -106,6 +106,10 @@ html, body {
   max-width: 100%!important;
 }
 
+.v-textarea textarea {
+  line-height: 150%!important;
+}
+
 h1, h2, h3, h4, h5 {
   white-space: normal;
   word-break: normal;
@@ -166,22 +170,15 @@ svg.defs-only {
   overflow: hidden;
 }
 
+.theme--light.v-text-field > .v-input__control > .v-input__slot:before {
+  border-color: #ddd4!important;
+}
+.theme--dark.v-text-field > .v-input__control > .v-input__slot:before {
+  border-color: #fff4;
+}
+
 .user-contact {
   width: 640px;
-}
-.submit-button {
-  font-family: Gilroy;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 16px!important;
-  line-height: 100%;
-  text-transform: uppercase;
-  width: 340px;
-  color: #fff!important;
-  text-align:center!important;
-  background-color: #72BF44;
-  padding: 8px 16px;
-  border-radius: 32px;
 }
 
 @media (max-width: 600px), (max-height: 600px) {
@@ -286,7 +283,7 @@ export default {
     this.validateToken()
   },
   mounted () {
-    this.$store.dispatch('testimonials/GET_CONTENT').then(() => console.log(this.$store.state.testimonials.testimonials))
+    this.$store.dispatch('testimonials/GET_CONTENT')
     this.onResize()
     window.addEventListener('resize', this.onResize, { passive: true })
   },

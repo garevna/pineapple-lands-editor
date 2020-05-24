@@ -23,14 +23,14 @@
         >
           <v-card hover class="pa-0" tile @click="select(index)">
             <v-fab-transition>
-              <v-btn fab icon @click="askToRemovePicture(index)">
+              <v-btn fab icon @click.stop="askToRemovePicture(index)">
                 <v-icon color="red darken-2">mdi-delete</v-icon>
               </v-btn>
             </v-fab-transition>
             <v-card-text>
               <v-img :src="`${staticEndpoint}/${file}`"
-                     :max-height="maxHeight"
-                     :max-width="maxWidth"
+                     :max-height="imageSize"
+                     :max-width="imageSize"
                      contain
               />
             </v-card-text>
@@ -50,7 +50,7 @@
 
 <script>
 
-// import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
 import RemovePopup from '@/components/editor/RemovePopup.vue'
 
@@ -60,12 +60,9 @@ export default {
     RemovePopup
   },
   props: {
-    staticEndpoint: String,
-    endpoint: String,
+    destination: String,
     selectedImageURL: String,
-    activate: Boolean,
-    fileLimit: Number,
-    imageSize: Number
+    activate: Boolean
   },
   data: () => ({
     images: [],
@@ -75,6 +72,35 @@ export default {
     removing: null
   }),
   computed: {
+    ...mapGetters('testimonials', {
+      __uploadAvatar: 'uploadEndpoint',
+      __staticAvatar: 'staticEndpoint',
+      __avatarts: 'avatarsEndpoint'
+    }),
+    ...mapGetters('editor', {
+      __uploadImage: 'uploadImageEndpoint',
+      __staticImage: 'staticImageEndpoint',
+      __images: 'imagesEndpoint',
+      __uploadIcon: 'uploadIconEndpoint',
+      __staticIcon: 'staticIconEndpoint',
+      __icons: 'iconsEndpoint'
+    }),
+
+    uploadEndpoint () {
+      return this.destination === 'avatar' ? this.__uploadAvatar : this.destination === 'image' ? this.__uploadImage : this.__uploadIcon
+    },
+    staticEndpoint () {
+      return this.destination === 'avatar' ? this.__staticAvatar : this.destination === 'image' ? this.__staticImage : this.__staticIcon
+    },
+    endpoint () {
+      return this.destination === 'avatar' ? this.__avatarts : this.destination === 'image' ? this.__images : this.__icons
+    },
+    fileLimit () {
+      return this.destination === 'avatar' ? 50000 : this.destination === 'image' ? 1000000 : 100000
+    },
+    imageSize () {
+      return this.destination === 'avatar' ? 50 : this.destination === 'image' ? 300 : 150
+    },
     gallery: {
       get () {
         return this.activate
@@ -82,15 +108,6 @@ export default {
       set (val) {
         this.$emit('update:activate', val)
       }
-    },
-    maxWidth () {
-      return this.imageSize || 120
-    },
-    maxHeight () {
-      return this.imageSize || 120
-    },
-    margin () {
-      return this.imageType === 'image' ? 0 : '-32px'
     }
   },
   watch: {
@@ -116,8 +133,8 @@ export default {
       }
     },
     select (index) {
-      console.log('SELECT!')
-      this.$emit('update:selectedImageURL', `${this.staticEndpoint}/${this.images[index]}`)
+      const val = `${this.staticEndpoint}/${this.images[index]}`
+      this.$emit('update:selectedImageURL', val)
       this.$emit('update:activate', false)
     },
     askToRemovePicture (index) {
@@ -140,12 +157,6 @@ export default {
         this.ready = false
       }
     }
-  },
-  mounted () {
-    console.log('MOUNTED\n', this.images)
-  },
-  beforeDestroy () {
-    console.log('DESTROY GALLERY')
   }
 }
 </script>

@@ -154,14 +154,10 @@ export default {
       getContent: 'GET_CONTENT',
       saveContent: 'SAVE_CONTENT'
     }),
-    // ...mapActions('editor', {
-    //   getAllPictures: 'GET_ALL_PICTURES'
-    // }),
     ...mapActions('testimonials', {
       getTestimonials: 'GET_CONTENT'
     }),
     async savePageContent () {
-      // let response = await this.saveTestimonials()
       const response = await this.saveContent(1)
       const actionName = response === 200 ? 'saveSuccess' : response === 403 || response === 401 ? 'accessDenied' : 'saveFailure'
       this[actionName]()
@@ -172,16 +168,13 @@ export default {
       .then((response) => {
         this.ready = !!response
         document.title = response
+        console.log('******** 1 *********\n', this.$store.state.content)
         this.$store.commit('UPDATE_PAGES', {
           pages: this.$store.state.content.mainNavButtons,
           selectors: this.$store.state.content.selectors
         })
       })
     this.getTestimonials()
-  },
-  mounted () {
-    // this.getAllPictures()
-    // this.getAllAvatars()
   }
 }
 </script>

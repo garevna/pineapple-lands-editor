@@ -1,81 +1,50 @@
 <template>
     <v-container fluid class="homefone">
         <v-card flat class="transparent text-center mx-auto" width="100%">
-          <v-tooltip top color="info">
-            <template v-slot:activator="{ on }">
-              <v-btn fab dark small color="warning" v-on="on" @click="saveContent">
-                <v-icon>mdi-content-save</v-icon>
-              </v-btn>
-            </template>
-            <span>Save section content</span>
-          </v-tooltip>
-          <v-card-title>
-            <h2
-                ref="howToConnectHeader"
-                contenteditable
-                v-text="howToConnect.header"
-            ></h2>
-          </v-card-title>
+          <v-card-text class="mx-auto text-center">
+            <SubHeader :value.sync="header" class="mx-auto" />
+          </v-card-text>
           <v-card-text>
-            <p
-                ref="howToConnectText"
-                contenteditable
-                v-text="howToConnect.text"
-            ></p>
+            <Paragraph :value.sync="text" />
           </v-card-text>
         </v-card>
 
         <v-container fluid class="mt-5 mb-12">
           <v-card flat class="d-flex flex-wrap justify-center transparent">
             <v-card flat class="card--offer transparent text-center mx-1 mx-sm-10" width="240">
-              <ContactUs :contact.sync="contact" />
+              <v-card flat class="transparent mx-auto text-center">
+                <ChangePicture destination="icon" :pictureURL.sync="iconSrc1" />
+                <v-img :src="howToConnect.items[0].icon" />
+              </v-card>
               <v-card-title>
-                <h3
-                    ref="howToConnectTitle_1"
-                    contenteditable
-                    v-text="howToConnect.items[0].title"
-                ></h3>
+                <SubSubHeader :value.sync="title1" />
               </v-card-title>
               <v-card-text>
-                <p
-                    ref="howToConnectText_1"
-                    contenteditable
-                    v-text="howToConnect.items[0].text"
-                ></p>
+                <Paragraph :value.sync="text1" />
               </v-card-text>
             </v-card>
             <v-card flat class="card--offer transparent text-center mx-1 mx-sm-10" width="240">
-              <GetConnected :contact.sync="contact" />
+              <v-card flat class="transparent mx-auto text-center">
+                <ChangePicture destination="icon" :pictureURL.sync="iconSrc2" />
+                <v-img :src="howToConnect.items[1].icon" />
+              </v-card>
               <v-card-title>
-                <h3
-                  ref="howToConnectTitle_2"
-                  contenteditable
-                  v-text="howToConnect.items[1].title"
-                ></h3>
+                <SubSubHeader :value.sync="title2" />
               </v-card-title>
               <v-card-text>
-                <p
-                    ref="howToConnectText_2"
-                    contenteditable
-                    v-text="howToConnect.items[1].text"
-                ></p>
+                <Paragraph :value.sync="text2" />
               </v-card-text>
             </v-card>
             <v-card flat class="card--offer transparent text-center mx-1 mx-sm-10" width="240">
-              <Enjoy :contact.sync="contact" />
+              <v-card flat class="transparent mx-auto text-center">
+                <ChangePicture destination="icon" :pictureURL.sync="iconSrc3" />
+                <v-img :src="howToConnect.items[2].icon" />
+              </v-card>
               <v-card-title with="100%">
-                <h3
-                    ref="howToConnectTitle_3"
-                    contenteditable
-                    v-text="howToConnect.items[2].title"
-                ></h3>
+                <SubSubHeader :value.sync="title3" />
               </v-card-title>
               <v-card-text>
-                <p
-                    ref="howToConnectText_3"
-                    contenteditable
-                    v-text="howToConnect.items[2].text"
-                ></p>
+                <Paragraph :value.sync="text3" />
               </v-card-text>
             </v-card>
           </v-card>
@@ -104,40 +73,113 @@ h3, p {
 
 import { mapState } from 'vuex'
 
-import ContactUs from '@/components/svg/ContactUs.vue'
-import GetConnected from '@/components/svg/GetConnected.vue'
-import Enjoy from '@/components/svg/Enjoy.vue'
+import SubHeader from '@/components/inputs/SubHeader.vue'
+import SubSubHeader from '@/components/inputs/SubSubHeader.vue'
+import Paragraph from '@/components/inputs/Paragraph.vue'
+import ChangePicture from '@/components/editor/ChangePicture.vue'
 
 export default {
   name: 'HowToConnect',
   props: ['page'],
   components: {
-    ContactUs,
-    GetConnected,
-    Enjoy
+    SubHeader,
+    SubSubHeader,
+    Paragraph,
+    ChangePicture
   },
   data () {
     return {
-      contact: false
+      contact: false,
+      iconSrc1: '',
+      iconSrc2: '',
+      iconSrc3: ''
     }
   },
   computed: {
-    ...mapState('content', ['howToConnect'])
-  },
-  methods: {
-    saveContent () {
-      this.$store.commit('content/UPDATE_CONNECT', { prop: 'header', value: this.$refs.howToConnectHeader.innerText })
-      this.$store.commit('content/UPDATE_CONNECT', { prop: 'text', value: this.$refs.howToConnectText.innerText })
-      this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 0, prop: 'title', value: this.$refs.howToConnectTitle_1.innerText })
-      this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 0, prop: 'text', value: this.$refs.howToConnectText_1.innerText })
-      this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 1, prop: 'title', value: this.$refs.howToConnectTitle_2.innerText })
-      this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 1, prop: 'text', value: this.$refs.howToConnectText_2.innerText })
-      this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 2, prop: 'title', value: this.$refs.howToConnectTitle_3.innerText })
-      this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 2, prop: 'text', value: this.$refs.howToConnectText_3.innerText })
-      this.$store.commit('SET_POPUP_TITLE', 'SECTION CONTENT')
-      this.$store.commit('SET_POPUP_TEXT', 'Data successfully saved')
-      this.$store.commit('SHOW_POPUP')
+    ...mapState('content', ['howToConnect']),
+    header: {
+      get () {
+        return this.howToConnect.header
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_CONNECT', { prop: 'header', value: val })
+      }
+    },
+    text: {
+      get () {
+        return this.howToConnect.text
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_CONNECT', { prop: 'text', value: val })
+      }
+    },
+    title1: {
+      get () {
+        return this.howToConnect.items[0].title
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 0, prop: 'title', value: val })
+      }
+    },
+    title2: {
+      get () {
+        return this.howToConnect.items[1].title
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 1, prop: 'title', value: val })
+      }
+    },
+    title3: {
+      get () {
+        return this.howToConnect.items[2].title
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 2, prop: 'title', value: val })
+      }
+    },
+    text1: {
+      get () {
+        return this.howToConnect.items[0].text
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 0, prop: 'text', value: val })
+      }
+    },
+    text2: {
+      get () {
+        return this.howToConnect.items[1].text
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 1, prop: 'text', value: val })
+      }
+    },
+    text3: {
+      get () {
+        return this.howToConnect.items[2].text
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 2, prop: 'text', value: val })
+      }
     }
+  },
+  watch: {
+    iconSrc1 (val) {
+      console.log('WATCHER: Icon src 1 changed: ', val)
+      this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 0, prop: 'icon', value: val })
+    },
+    iconSrc2 (val) {
+      console.log('WATCHER: Icon src 2 changed: ', val)
+      this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 1, prop: 'icon', value: val })
+    },
+    iconSrc3 (val) {
+      console.log('WATCHER: Icon src 3 changed: ', val)
+      this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 2, prop: 'icon', value: val })
+    }
+  },
+  mounted () {
+    console.log(this.howToConnect.items[0].icon)
+    console.log(this.howToConnect.items[1].icon)
+    console.log(this.howToConnect.items[2].icon)
   }
 }
 </script>

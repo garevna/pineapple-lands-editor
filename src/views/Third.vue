@@ -1,46 +1,57 @@
 <template>
-  <v-container fluid class="homefone">
-      <AppHeader :pages="pages" :selected.sync="section"/>
-      <!-- <Top /> -->
-      <v-card flat class="transparent mx-auto">
-        <v-card-text class="text-center">
-          <h1>{{ top.header }}</h1>
-        </v-card-text>
-      </v-card>
-      <!-- ============================= USER CONTACT ============================= -->
+  <v-container fluid class="homefone" v-if="ready" style="overflow-x: hidden">
+      <AppHeader :pages="pages" :page.sync="page" />
+      <!-- <v-sheet
+        width="100%"
+        max-width="1440"
+        color="homefone"
+        tile
+        class="mx-auto"
+      > -->
+        <section id="top" style="width: 100%">
+          <div class="base-title">
+            <a href="#top" class="core-goto"></a>
+            <Top :page.sync="page" />
+          </div>
+        </section>
 
-      <v-row justify="center" class="pa-0 ma-0">
-        <v-sheet
-          width="100%"
-          max-width="1440"
-          color="homefone"
-          tile
-          class="mx-auto"
-        >
-          <v-row class="mx-0 px-0">
-            <v-col cols="12" md="6" class="aside-col">
-              <Aside />
-            </v-col>
-            <v-col cols="12" md="6" class="mx-0 px-0">
-              <v-card flat class="transparent mx-0">
-                <!-- <v-img src="@/img/map-picture.svg" height="800" contain style="opacity:0.2;"></v-img> -->
-                <v-card
-                        flat
-                        class="user-contact transparent mx-auto pa-0"
-                        style="margin-bottom: 80px"
-                >
-                  <UserContact />
-                </v-card>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-sheet>
-      </v-row>
+      <!-- </v-sheet> -->
+
+      <!-- ============================= LIST ============================= -->
+
+      <section id="list" style="width: 100%">
+        <div class="base-title">
+          <a href="#list" class="core-goto"></a>
+          <List :page.sync="page" />
+        </div>
+      </section>
+
+      <!-- ============================= CREEN SECTION ============================= -->
+      <section id="dgtek" style="width: 100%">
+        <div class="base-title">
+          <a href="#dgtek" class="core-goto"></a>
+          <GreenSection />
+        </div>
+      </section>
 
       <!-- ============================= HOW TO CONNECT ============================= -->
-      <v-row width="100%">
-        <HowToConnect :contact.sync="contactUs" :connect.sync="getConnected" />
-      </v-row>
+
+      <section id="how-to-connect" style="width: 100%">
+        <div class="base-title">
+          <a href="#how-to-connect" class="core-goto"></a>
+          <HowToConnect :page.sync="page" />
+        </div>
+      </section>
+
+      <!-- ============================= TESTIMONIALS ============================= -->
+
+      <section id="testimonials" style="width: 100%">
+        <div class="base-title">
+          <a href="#testimonials" class="core-goto"></a>
+          <Testimonials :page.sync="page"/>
+        </div>
+      </section>
+
       <!-- ============================= INTERNET PLANS ============================= -->
       <v-row width="100%" justify="center">
         <section id="plans">
@@ -49,10 +60,6 @@
             <InternetPlans :page.sync="page"/>
           </div>
         </section>
-      </v-row>
-      <!-- ============================= TESTIMONIALS ============================= -->
-      <v-row width="100%">
-        <Testimonials />
       </v-row>
       <!-- ============================= FAQ ============================= -->
       <v-row width="100%">
@@ -71,102 +78,96 @@
               <Footer :page.sync="page" :user.sync="user" />
             </v-row>
         </div>
-    </section>
-    <ImageGallery />
-    <Popup />
+      </section>
+      <!-- ============================= BOTTOM NAV ============================= -->
+      <v-bottom-navigation
+            fixed
+            dark
+            class="buttons"
+            v-if="authorized"
+      >
+        <v-btn @click="savePageContent" v-if="authorized">
+          <span>Save</span>
+          <v-icon>mdi-content-save-edit</v-icon>
+        </v-btn>
+      </v-bottom-navigation>
   </v-container>
 </template>
 
+<style scoped>
+
+</style>
+
 <script>
 
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 import AppHeader from '@/components/AppHeader.vue'
-// import Top from '@/components/Top.vue'
-import Aside from '@/components/Aside.vue'
-import UserContact from '@/components/UserContact.vue'
+import Top from '@/components/3/Top.vue'
+import List from '@/components/List.vue'
+// import Aside from '@/components/Aside.vue'
+// import UserContact from '@/components/UserContact.vue'
 import HowToConnect from '@/components/HowToConnect.vue'
+import GreenSection from '@/components/GreenSection.vue'
 import Testimonials from '@/components/Testimonials.vue'
 import InternetPlans from '@/components/InternetPlans.vue'
 import FAQ from '@/components/FAQ.vue'
 import Footer from '@/components/Footer.vue'
 
-import ImageGallery from '@/components/editor/ImageGallery.vue'
-import Popup from '@/components/editor/Popup.vue'
-// import Auth from '@/components/editor/Auth.vue'
-
 export default {
-  name: 'First',
+  name: 'App',
   components: {
     AppHeader,
-    // Top,
-    Aside,
-    UserContact,
+    Top,
+    List,
+    // Aside,
+    // UserContact,
     HowToConnect,
+    GreenSection,
     Testimonials,
     InternetPlans,
     FAQ,
-    Footer,
-    ImageGallery,
-    Popup
+    Footer
   },
   data () {
     return {
-      section: null,
-      pages: ['How to connect', 'Reviews', 'Internet Plans'],
-      selectors: ['#connect', '#testimonials', '#plans'],
-      contactUs: false,
-      getConnected: false,
-      user: {}
+      ready: false,
+      pages: [],
+      page: null,
+      user: {
+        name: '',
+        email: '',
+        phone: ''
+      },
+      plans: false
     }
   },
   computed: {
     ...mapState(['viewport', 'viewportWidth', 'authorized']),
-    ...mapGetters('editor', ['contentEndpoint'])
+    ...mapState('content', {
+      title: 'browserTabTitle',
+      subject: 'emailSubject',
+      emailText: 'emailText',
+      // pages: 'mainNavButtons',
+      // selectors: 'selectors',
+      top: 'top',
+      info: 'info',
+      userForm: 'userForm',
+      howToConnect: 'howToConnect',
+      testimonials: 'testimonials',
+      faq: 'faq',
+      footer: 'footer'
+    })
   },
   watch: {
-    contactUs (val) {
-      if (val) this.$router.push({ name: 'contact' })
-    },
-    getConnected (val) {
-      if (val) this.$router.push({ name: 'connect' })
-    },
-    business (val) {
-      if (val) {
-        this.page = this.pages.indexOf('Business')
-      }
-    },
-    residential (val) {
-      this.page = this.pages.indexOf('Residential')
-    },
     page (val) {
-      if (this.selectors[val] === '#connect') {
-        if (this.addressAvalable) {
-          this.$router.push({ name: 'connect' })
-        } else {
-          this.$vuetify.goTo('#check', {
-            duration: 500,
-            offset: 200,
-            easing: 'easeInOutCubic'
-          })
-        }
-        this.page = undefined
-        return
-      }
-      if (this.selectors[val] === '#contact') {
-        this.$router.push({ name: 'contact' })
-        return
-      }
-      if (this.selectors[val] === '#plans') {
-        this.$store.commit('CHANGE_PLAN', this.pages[this.page].toLowerCase())
-      }
-      if (this.selectors[val]) {
-        this.$vuetify.goTo(this.selectors[val], {
-          duration: 500,
-          offset: 0,
-          easing: 'easeInOutCubic'
-        })
-      }
+      if (!val) return
+      this.$vuetify.goTo(val, {
+        duration: 500,
+        offset: 200,
+        easing: 'easeInOutCubic'
+      })
+      this.page = undefined
     }
   },
   methods: {
@@ -180,15 +181,10 @@ export default {
       getContent: 'GET_CONTENT',
       saveContent: 'SAVE_CONTENT'
     }),
-    // ...mapActions('editor', {
-    //   getAllPictures: 'GET_ALL_PICTURES',
-    //   getAllAvatars: 'GET_ALL_AVATARS'
-    // }),
     ...mapActions('testimonials', {
-      saveTestimonials: 'SAVE_CONTENT'
+      getTestimonials: 'GET_CONTENT'
     }),
     async savePageContent () {
-      // let response = await this.saveTestimonials()
       const response = await this.saveContent(3)
       const actionName = response === 200 ? 'saveSuccess' : response === 403 || response === 401 ? 'accessDenied' : 'saveFailure'
       this[actionName]()
@@ -196,11 +192,18 @@ export default {
   },
   beforeMount () {
     this.getContent(3)
-  },
-  mounted () {
-    // this.getContent()
-    // this.getAllPictures()
-    // this.getAllAvatars()
+      .then((response) => {
+        this.ready = !!response
+        document.title = response
+        this.$store.commit('UPDATE_PAGES', {
+          pages: this.$store.state.content.mainNavButtons,
+          selectors: this.$store.state.content.mainNavSectors
+        })
+        this.$store.commit('contact/UPDATE_EMAIL_SUBJECT', this.$store.state.content.emailSubject)
+        this.$store.commit('contact/UPDATE_EMAIL_TEXT', this.$store.state.content.emailText)
+        // this.$store.commit('contact/SET_FIELDS_TO_SHOW', this.$store.state.content.userForm.fieldsToShow)
+      })
+    this.getTestimonials()
   }
 }
 </script>

@@ -7,7 +7,10 @@ const state = {
 
 const getters = {
   host: (state, getters, rootState) => rootState.host,
-  db: (state, getters, rootState) => `${rootState.host}/testimonials`
+  db: (state, getters, rootState) => `${rootState.host}/testimonials`,
+  staticEndpoint: (state, getters, rootState) => `${rootState.host}/avatars`,
+  uploadEndpoint: (state, getters, rootState) => `${rootState.host}/testimonials/avatar`,
+  avatarsEndpoint: (state, getters, rootState) => `${rootState.host}/testimonials/avatars` /* get all avatars, delete avatar */
 }
 
 const mutations = {
@@ -20,22 +23,23 @@ const mutations = {
   UPDATE_DATE (state, payload) {
     state.testimonials[payload.num].date = payload.value
   },
+  UPDATE_PHOTO (state, payload) {
+    state.testimonials[payload.num].photo = payload.value
+  },
   ADD_ITEM (state) {
     state.testimonials.push({
       date: new Date(),
       name: '',
       text: '',
-      photo: `${state.host}/avatars/default.png`
+      photo: `${getters.staticEndpoint}/default.png`
     })
   },
   REMOVE_ITEM (state, num) {
-    state.testimonials.splice(num, 1)
+    state.testimonials = state.testimonials.filter((item, index) => index !== num)
+    console.log(state.testimonials)
   },
   UPDATE_CONTENT (state, payload) {
     state.testimonials = payload
-  },
-  UPDATE_PHOTO (state, payload) {
-    state.testimonials[payload.num].photo = payload.value
   }
 }
 
@@ -55,6 +59,26 @@ const actions = {
       body: JSON.stringify(state.testimonials)
     })
     return response.status
+  },
+
+  async UPLOAD_AVATAR ({ state, getters }, file) {
+    const formData = new FormData()
+    formData.set('avatar', file)
+    let response = null
+    try {
+      response = await fetch(getters.uploadEndpoint, {
+        method: 'POST',
+        headers: {
+          Authorization: localStorage.getItem('token')
+        },
+        body: formData
+      })
+      // console.log(response)
+      // if (response.status !== 200) return null
+      const url = await response.text()
+      console.log(url)
+      return url
+    } catch (error) { return `${getters.staticEndpoint}/default.png` }
   }
 }
 

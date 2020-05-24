@@ -7,9 +7,6 @@
     <v-card-title>
       <h2>FIBRE <span class="green--text">INTERNET PLANS</span></h2>
     </v-card-title>
-    <!-- <v-card-text>
-      <p v-html="internetPlans.text"></p>
-    </v-card-text> -->
 
     <v-card-text width="100%" class="mx-0 px-0 text-center">
       <SwitchMode />
@@ -103,7 +100,7 @@ export default {
   watch: {
     contact (val) {
       if (!val) return
-      this.$emit('update:page', 'contact')
+      this.$emit('update:page', '#footer')
       this.contact = false
     }
   }

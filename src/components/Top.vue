@@ -5,45 +5,21 @@
       <v-col sm="12" md="6" class="text-center mx-auto">
         <v-card flat width="100%" max-width="480" class="transparent mx-auto top-element">
           <v-card-text class="text-center text-md-left">
-            <h1
-                class="text-center text-md-left"
-                v-text="top.header"
-                ref="topHeader"
-                contenteditable
-            >
-            </h1>
+            <TopHeader :value.sync="topHeader" />
           </v-card-text>
           <v-card-text class="mx-auto mx-lg-0">
-            <p
-                class="text-center text-md-left"
-                v-text="top.text"
-                ref="topText"
-                contenteditable
-            ></p>
+            <Paragraph :value.sync="topText" />
           </v-card-text>
           <v-card-text class="text-center text-md-left">
-            <p class="submit-button mx-auto"
-                contenteditable
-                ref="topButton"
-                v-text="top.button"
-            ></p>
+            <Button :value.sync="topButton" />
           </v-card-text>
         </v-card>
       </v-col>
       <v-col sm="12" md="6">
-        <ChangePicture
-              :gallery.sync="gallery"
-              :saveContent.sync="save"
-        />
-        <ImageGallery
-              :activate.sync="gallery"
-              :staticEndpoint="staticPictureEndpoint"
-              :endpoint="picturesEndpoint"
-              :selectedImageURL.sync="imageURL"
-              :fileLimit="fileLimit"
-              :imageSize="imageSize"
-        />
         <v-card flat width="100%" max-width="600" class="transparent">
+
+          <ChangePicture destination="image" :pictureURL.sync="imageSrc" />
+
           <v-img :src="top.pictureURL" max-width="750" class="mx-auto"></v-img>
         </v-card>
       </v-col>
@@ -60,62 +36,68 @@ p {
 
 <script>
 
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 import ChangePicture from '@/components/editor/ChangePicture.vue'
-import ImageGallery from '@/components/editor/ImageGallery.vue'
+import TopHeader from '@/components/inputs/TopHeader.vue'
+import Paragraph from '@/components/inputs/Paragraph.vue'
+import Button from '@/components/inputs/Button.vue'
+
+// import ButtonWithTooltip from '@/components/editor/ButtonWithTooltip.vue'
 
 export default {
   name: 'Top',
   components: {
     ChangePicture,
-    ImageGallery
+    // ButtonWithTooltip,
+    TopHeader,
+    Paragraph,
+    Button
   },
   props: ['page'],
   data () {
     return {
-      close: false,
-      save: false,
-      gallery: false,
-      fileLimit: 1000000,
-      imageSize: 360
+      imageSrc: '',
+      clicked: false
     }
   },
   computed: {
     ...mapState('content', ['top']),
-    ...mapGetters('editor', ['staticPictureEndpoint', 'picturesEndpoint']),
-    imageURL: {
+    topHeader: {
       get () {
-        return this.top.pictureURL
+        return this.top.header
       },
-      set (url) {
-        this.$store.commit('content/UPDATE_TOP', {
-          prop: 'pictureURL',
-          value: url
-        })
+      set (val) {
+        this.$store.commit('content/UPDATE_TOP', { prop: 'header', value: val })
+      }
+    },
+    topText: {
+      get () {
+        return this.top.text
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_TOP', { prop: 'text', value: val })
+      }
+    },
+    topButton: {
+      get () {
+        return this.top.button
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_TOP', { prop: 'button', value: val })
       }
     }
   },
   watch: {
-    imageURL (val) {
-      console.log('TOP: selected image url is ', val)
+    imageSrc (val) {
+      console.log('WATCHER: Image src changed: ', val)
+      this.$store.commit('content/UPDATE_TOP', { prop: 'pictureURL', value: val })
     },
-    save (val) {
+    clicked (val) {
       if (!val) return
-      this.saveContent()
-      this.save = false
-      this.$store.commit('SET_POPUP_TITLE', 'SECTION CONTENT')
-      this.$store.commit('SET_POPUP_TEXT', 'Data successfully saved')
-      this.$store.commit('SHOW_POPUP')
+      console.log('Clicked!')
+      this.clicked = false
     }
-  },
-  methods: {
-    saveContent () {
-      this.$store.commit('content/UPDATE_TOP', { prop: 'header', value: this.$refs.topHeader.innerText })
-      this.$store.commit('content/UPDATE_TOP', { prop: 'text', value: this.$refs.topText.innerText })
-      this.$store.commit('content/UPDATE_TOP', { prop: 'button', value: this.$refs.topButton.innerText })
-    }
-  },
-  mounted () {}
+  }
 }
 </script>

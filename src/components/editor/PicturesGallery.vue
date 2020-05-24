@@ -4,18 +4,15 @@
 
 <script>
 
-import { mapGetters } from 'vuex'
-
 export default {
   name: 'PicturesGallery',
-  props: ['open', 'pictureURL'],
+  props: ['open', 'pictureURL', ''],
   data () {
     return {
       //
     }
   },
   computed: {
-    ...mapGetters('editor', ['hostEndpoint']),
     endpoint () {
       return `${hostEndpoint}/images`
     }
@@ -30,6 +27,9 @@ export default {
   },
   watch: {
 
+  },
+  methods:{
+    ...mapActions('editor', ['GET_'])
   },
   mounted () {
 

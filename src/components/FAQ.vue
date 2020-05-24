@@ -1,20 +1,8 @@
 <template>
   <v-container fluid class="my-12">
     <v-card flat width="100%" max-width="900" class="transparent mx-auto my-10">
-      <v-tooltip top color="info">
-        <template v-slot:activator="{ on }">
-          <v-btn fab dark small color="warning" v-on="on" @click="saveContent">
-            <v-icon>mdi-content-save</v-icon>
-          </v-btn>
-        </template>
-        <span>Save section content</span>
-      </v-tooltip>
       <v-card-title class="text-center mb-12">
-        <h2
-            contenteditable
-            ref="faqHeader"
-            v-text="faq.header"
-        ></h2>
+        <SubHeader :value.sync="header" />
       </v-card-title>
       <v-expansion-panels
             v-model="panel"
@@ -24,7 +12,7 @@
             tile
       >
         <v-expansion-panel
-          v-for="(item,index) in faq.items"
+          v-for="(item,index) in content"
           :key="index"
         >
           <v-expansion-panel-header class="text-left">
@@ -35,10 +23,12 @@
                       absolute
                       fab
                       dark
-                      small
-                      bottom
+                      top
                       left
-                      color="red"
+                      color="error"
+                      width="32"
+                      height="32"
+                      style="margin-top: 48px; margin-left: -40px"
                       :value="index"
                       class="button-minus"
                       @click="$store.commit('content/DELETE_FAQ_ITEM', index)"
@@ -50,7 +40,6 @@
               <span>Remove FAQ item</span>
             </v-tooltip>
             <v-text-field
-                class="contenteditable"
                 :value="item.question"
                 @input="saveQuestion(index, $event)"
             ></v-text-field>
@@ -60,12 +49,20 @@
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <v-textarea
-                class="contenteditable"
                 :value="getAnswerText(index)"
                 @input="saveAnswer(index, $event)"
             ></v-textarea>
           </v-expansion-panel-content>
         </v-expansion-panel>
+
+        <!-- <ButtonWithTooltip
+              :fab="true"
+              :width="48"
+              :height="48"
+              icon="mdi-plus"
+              tooltip="Add FAQ item"
+              color="warning"
+        /> -->
 
         <v-tooltip top dark color="#09b">
           <template v-slot:activator="{ on }">
@@ -76,7 +73,7 @@
                   small
                   bottom
                   right
-                  color="#09b"
+                  color="info"
                   class="button-plus"
                   @click="$store.commit('content/ADD_FAQ_ITEM')"
                    v-on="on"
@@ -88,12 +85,10 @@
         </v-tooltip>
 
       </v-expansion-panels>
+    </v-card>
+    <v-card flat class="transparent mx-auto mt-12 text-center">
       <v-card-text class="text-center">
-        <p class="submit-button mx-auto"
-            contenteditable
-            ref="faqButton"
-            v-text="faq.button"
-        ></p>
+        <Button :value.sync="button" class="mx-auto" />
       </v-card-text>
     </v-card>
   </v-container>
@@ -119,22 +114,12 @@
 }
 
 @media screen and (max-width: 600px) {
-  h2 { margin-left: 20px; }
-  h5 { max-width: 80%; }
   .v-card__text {
     font-size: 14px!important;
   }
 }
 
 @media screen and (max-width: 320px) {
-  h2 {
-    max-width: 280px;
-  }
-  h5 {
-    font-size: 13px;
-    max-width: 280px;
-    line-height: 32px;
-  }
   .v-card__text {
     font-size: 12px!important;
   }
@@ -143,39 +128,72 @@
 
 <script>
 
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
+
+import SubHeader from '@/components/inputs/SubHeader.vue'
+import Button from '@/components/inputs/Button.vue'
+// import ButtonWithTooltip from '@/components/editor/ButtonWithTooltip.vue'
 
 export default {
   name: 'FAQ',
+  components: {
+    // ButtonWithTooltip,
+    SubHeader,
+    Button
+  },
   props: ['page'],
   data () {
     return {
-      panel: null
+      panel: null,
+      faq: null,
+      content: []
     }
   },
   computed: {
-    ...mapState('content', ['faq'])
+    // ...mapState('content', ['faq']),
+    header: {
+      get () {
+        return this.faq ? this.faq.header : ''
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_FAQ', { prop: 'header', value: val })
+      }
+    },
+    button: {
+      get () {
+        return this.faq ? this.faq.button : ''
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_FAQ', { prop: 'button', value: val })
+      }
+    }
+  },
+  watch: {
+    faq: {
+      deep: true,
+      handler (val) {
+        console.log('FAQs:\n', val)
+        this.content = this.faq.items
+      }
+    }
   },
   methods: {
+    getQuestion (num) {
+      return this.content[num].question
+    },
     getAnswerText (num) {
-      return this.faq.items[num].answer.split('<br>').join('\n')
+      return this.content[num].answer.split('<br>').join('\n')
     },
     saveQuestion (index, question) {
       this.$store.commit('content/UPDATE_FAQ_ITEM', { num: index, prop: 'question', value: question })
     },
     saveAnswer (index, answer) {
       this.$store.commit('content/UPDATE_FAQ_ITEM', { num: index, prop: 'answer', value: answer.split('\n').join('<br>') })
-    },
-    saveContent () {
-      this.$store.commit('content/UPDATE_FAQ', { prop: 'header', value: this.$refs.faqHeader.innerText })
-      this.$store.commit('content/UPDATE_FAQ', { prop: 'button', value: this.$refs.faqButton.innerText })
-      // this.faq.items.forEach((item) => {
-      //   this.$store.commit('content/UPDATE_FAQ_ITEM', { prop: 'button', value: this.$refs.item.innerText })
-      // })
-      this.$store.commit('SET_POPUP_TITLE', 'SECTION CONTENT')
-      this.$store.commit('SET_POPUP_TEXT', 'Data successfully saved')
-      this.$store.commit('SHOW_POPUP')
     }
+  },
+  mounted () {
+    this.faq = this.$store.state.content.faq
+    this.content = this.faq.items
   }
 }
 </script>

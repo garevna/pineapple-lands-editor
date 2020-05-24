@@ -20,7 +20,9 @@ const getters = {
 }
 
 const mutations = {
-  UPDATE_USER_INFO: (state, payload) => { state.user[payload.prop] = payload.value }
+  UPDATE_USER_INFO: (state, payload) => { state.user[payload.prop] = payload.value },
+  UPDATE_EMAIL_SUBJECT: (state, payload) => { state.emailSubject = payload },
+  UPDATE_EMAIL_TEXT: (state, payload) => { state.emailText = payload }
 }
 
 const actions = {

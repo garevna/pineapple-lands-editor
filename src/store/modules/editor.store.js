@@ -6,18 +6,21 @@ const state = {
   imageURL: null,
   imageType: 'image',
   section: null,
-  num: null
+  num: null,
+  availableFormFields: ['name', 'email', 'address', 'postcode', 'state', 'phone', 'building', 'apptNumber', 'promocode', 'message']
 }
 
 const getters = {
   hostEndpoint: (state, getters, rootState) => `${rootState.host}`,
-  contentEndpoint: (state, getters, rootState) => `${rootState.host}/content/1`,
-  uploadPictureEndpoint: (state, getters, rootState) => `${rootState.host}/content/picture`,
-  uploadAvatarEndpoint: (state, getters, rootState) => `${rootState.host}/testimonials/avatar`,
-  staticPictureEndpoint: (state, getters, rootState) => `${rootState.host}/images`,
-  staticAvatarEndpoint: (state, getters, rootState) => `${rootState.host}/avatars`,
-  picturesEndpoint: (state, getters, rootState) => `${rootState.host}/content/images`, /* get all images, delete image */
-  avatarsEndpoint: (state, getters, rootState) => `${rootState.host}/testimonials/avatars` /* get all avatars, delete avatar */
+  contentEndpoint: (state, getters, rootState) => `${rootState.host}/content`,
+
+  uploadImageEndpoint: (state, getters, rootState) => `${rootState.host}/content/picture`,
+  staticImageEndpoint: (state, getters, rootState) => `${rootState.host}/images`,
+  imagesEndpoint: (state, getters, rootState) => `${rootState.host}/content/images`, /* get all images, delete image */
+
+  uploadIconEndpoint: (state, getters, rootState) => `${rootState.host}/content/icon`,
+  staticIconEndpoint: (state, getters, rootState) => `${rootState.host}/icons`,
+  iconsEndpoint: (state, getters, rootState) => `${rootState.host}/content/icons` /* get all images, delete image */
 }
 
 const mutations = {
@@ -31,21 +34,38 @@ const mutations = {
 
 const actions = {
 
-  async UPLOAD_IMAGE ({ state, getters }, file) {
-    const name = state.imageType === 'image' ? 'picture' : 'avatar'
+  async UPLOAD_FILE ({ state, getters }, payload) {
+    console.log(payload.destination, '\nFILE:\n', payload.file)
     const formData = new FormData()
-    formData.set(name, file)
+    formData.set(payload.destination === 'image' ? 'picture' : 'icon', payload.file)
     let response = null
+    const endpoint = payload.destination === 'image' ? 'uploadImageEndpoint' : 'uploadIconEndpoint'
     try {
-      response = await (await fetch(getters.uploadEndpoint, {
+      response = await (await fetch(getters[endpoint], {
         method: 'POST',
         headers: {
           Authorization: localStorage.getItem('token')
         },
         body: formData
       })).text()
+      console.log('SERVER RESPONSE: ', response)
       return response
     } catch (error) { return null }
+  },
+
+  async UPLOAD_IMAGE ({ state, dispatch }, file) {
+    const url = await dispatch('UPLOAD_FILE', {
+      destination: 'image',
+      file
+    })
+    return url
+  },
+  async UPLOAD_ICON ({ state, dispatch }, file) {
+    const url = await dispatch('UPLOAD_FILE', {
+      destination: 'icon',
+      file
+    })
+    return url
   }
 }
 

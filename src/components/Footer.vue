@@ -4,11 +4,11 @@
     <v-container fluid class="footer--top-content" :style="{ top: topContentTop }">
       <v-row align="start" justify="center" style="position: absolute; top: 0; left: 0; width: 100%">
         <v-card-title>
-          <h2 class="white-text centered">{{ footer.topHead }}</h2>
+          <h2 class="white-text centered">{{ footer.title }}</h2>
         </v-card-title>
         <v-card-text max-width="100%">
           <h5 class="white-text centered">
-              {{ footer.topText }}
+              {{ footer.text }}
           </h5>
         </v-card-text>
         <v-row class="mx-auto">

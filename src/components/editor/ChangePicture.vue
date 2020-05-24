@@ -14,25 +14,15 @@
           dark
           small
           fab
-          :style="{ marginLeft: margin, marginTop: margin }"
       >
         <v-icon v-if="edit">mdi-close</v-icon>
         <v-icon v-else>mdi-pencil</v-icon>
       </v-btn>
     </template>
 
-    <v-tooltip top color="info" v-if="section !== 'testimonials'">
+    <v-tooltip top color="info" v-if="action">
       <template v-slot:activator="{ on }">
-        <v-btn fab dark small color="warning" v-on="on" @click="$emit('update:saveContent', true)">
-          <v-icon>mdi-content-save</v-icon>
-        </v-btn>
-      </template>
-      <span>Save section content</span>
-    </v-tooltip>
-
-    <v-tooltip top color="info" v-if="section === 'testimonials'">
-      <template v-slot:activator="{ on }">
-        <v-btn fab dark small color="error" v-on="on" @click="$store.commit('testimonials/REMOVE_ITEM', index)">
+        <v-btn fab dark small color="error" v-on="on" @click="$emit('update:perform', index || true)">
           <v-icon>mdi-minus</v-icon>
         </v-btn>
       </template>
@@ -41,7 +31,7 @@
 
     <v-tooltip top color="info">
       <template v-slot:activator="{ on }">
-        <v-btn fab dark small color="deepgreen" @click="$refs.picture.click()" v-on="on">
+        <v-btn fab dark small color="magenta" @click="$refs.picture.click()" v-on="on">
           <v-icon>mdi-file-upload</v-icon>
         </v-btn>
       </template>
@@ -50,7 +40,7 @@
 
     <v-tooltip top color="info">
       <template v-slot:activator="{ on }">
-        <v-btn fab dark small color="red" v-on="on" @click="$emit('update:gallery', true)">
+        <v-btn fab dark small color="warning" v-on="on" @click="gallery = true">
           <v-icon>mdi-image-search</v-icon>
         </v-btn>
       </template>
@@ -61,9 +51,14 @@
         type="file"
         ref="picture"
         style="display: none"
-        @input="uploadPicture($event.target.files[0])"
+        @input="uploadFile($event.target.files[0])"
   >
   <ErrorPopup :visibility.sync="errorPopupVisible" :errorName="errorName" :details="errorStack"/>
+  <ImageGallery
+        :activate.sync="gallery"
+        :destination="destination"
+        :selectedImageURL.sync="imageURL"
+  />
 </div>
 </template>
 
@@ -78,60 +73,80 @@
 
 <script>
 
-import { mapState, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 
+import ImageGallery from '@/components/editor/ImageGallery.vue'
 import ErrorPopup from '@/components/editor/ErrorPopup.vue'
 
 export default {
   name: 'ChangePicture',
   components: {
+    ImageGallery,
     ErrorPopup
   },
-  props: ['index', 'pictureURL', 'pictureType', 'saveContent', 'module'],
+  props: {
+    destination: String, /* required; must be 'image', 'icon' or 'avatar' */
+    pictureURL: String, /* (sync) required; the url of image */
+    index: Number, /* optional; if this is the array element */
+    action: Boolean, /* optional; if we need the additional button */
+    perform: Boolean /* (sync) optional; if the additinal button was clicked */
+  },
   data () {
     return {
       edit: false,
-      imageDialog: false,
       errorPopupVisible: false,
-      removePopupVisible: false,
-      confirmRemoving: false,
-      uploadDailog: false,
       errorName: '',
       errorStack: '',
-      gallery: false
+      gallery: false,
+      availableSections: ['avatar', 'icon', 'image'],
+      availableMethods: ['uploadAvatar', 'uploadIcon', 'uploadImage']
     }
   },
   computed: {
-    ...mapState('editor', ['selectedImage', 'section', 'num']),
-    fileLimit () {
-      return this.pictureType === 'image' ? 1000000 : 50000
+    sectionNum () {
+      return this.availableSections.indexOf(this.destination)
     },
-    margin () {
-      return this.pictureType === 'image' ? 0 : '-32px'
+    method () {
+      return this.availableMethods[this.sectionNum]
+    },
+    error: {
+      get () {
+        if (this.sectionNum !== 2 && !this.index) return 'Index must be defined'
+        return ''
+      },
+      set (val) {
+        this.errorName = 'ERROR'
+        this.errorStack = val
+      }
+    },
+    imageURL: {
+      get () {
+        return this.pictureURL
+      },
+      set (val) {
+        this.$emit('update:pictureURL', val)
+      }
     }
   },
   watch: {
-    selectedImage (val) {
-      console.log(val)
-      console.log(this.index, this.num)
-      console.log(this.section, this.module)
-      if (this.section !== this.module) return
-      if (this.index && this.index !== this.num) return
-      console.log('HERE!')
-      console.log(this.pictureURL)
-      console.log(val)
-      this.$emit('update:pictureURL', val)
-      this.hideGallery()
+    error (val) {
+      if (!val) return
+      this.errorName = 'ERROR'
+      this.errorStack = val
+      this.errorPopupVisible = true
+      this.error = ''
     }
   },
   methods: {
-
     ...mapActions('editor', {
       showGallery: 'SHOW_GALLERY',
       hideGallery: 'HIDE_GALLERY',
-      uploadImage: 'UPLOAD_IMAGE'
+      uploadImage: 'UPLOAD_IMAGE',
+      uploadIcon: 'UPLOAD_ICON'
     }),
-
+    ...mapActions('testimonials', {
+      uploadAvatar: 'UPLOAD_AVATAR'
+    }),
     testFile (file) {
       if (!file.type.startsWith('image')) {
         this.errorName = 'Invalid file type'
@@ -148,25 +163,15 @@ export default {
       return Boolean(file)
     },
 
-    async uploadPicture (file) {
+    async uploadFile (file) {
       if (!this.testFile(file)) return
-      if (!this.pictureType) return
       try {
-        const response = await this.uploadImage(file)
-        this.$emit('update:pictureURL', response)
-      } catch (err) { console.error(err) }
-    },
-
-    async selectFromGallery () {
-      this.showGallery({
-        imageType: this.pictureType,
-        section: 'top'
-      })
+        const url = await this[this.method](file)
+        this.$emit('update:pictureURL', url)
+      } catch (err) {
+        this.error = err.message
+      }
     }
-  },
-
-  mounted () {
-    console.log('PICTURE TYPE: ', this.pictureType)
   }
 }
 </script>

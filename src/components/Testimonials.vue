@@ -1,9 +1,9 @@
 <template>
-  <v-container fluid class="homefone">
-
+  <v-container fluid class="homefone" v-if="testimonials">
     <v-card flat class="transparent mx-auto mt-12 mb-0 text-center" max-width="1360">
       <v-card-title class="text-center" max-width="940">
-        <h2 style="width: 100%; text-align: center">{{ content.header }}</h2>
+        <SubHeader :value.sync="header" class="mx-auto" />
+        <!-- <h2 style="width: 100%; text-align: center">{{ content.header }}</h2> -->
       </v-card-title>
 
       <v-slide-group
@@ -36,6 +36,7 @@
                       :name="testimonial.name"
                       :photo="testimonial.photo"
                       :text="testimonial.text"
+                      :removed.sync="removed"
                 />
               </v-scale-transition>
             </v-row>
@@ -64,6 +65,7 @@
                     :name="testimonial.name"
                     :photo="testimonial.photo"
                     :text="testimonial.text"
+                    :removed.sync="removed"
               />
             </v-row>
           </v-sheet>
@@ -71,33 +73,13 @@
       </v-carousel>
     </v-card>
     <v-card-text class="text-center">
-      <v-btn
-          color="buttons"
-          dark
-          rounded
-          width="220"
-          height="48"
-          class="submit-button px-auto mx-auto"
-          @click="$emit('update:page', 'plans')"
-      >
-          {{ content.button }}
-      </v-btn>
+      <Button :value.sync="content.button" class="mx-auto" />
     </v-card-text>
   </v-container>
 </template>
 
 <style>
-.testimonials .v-btn__content,
-.testimonials .mdi::before,
-.testimonials .mdi-chevron-right::before,
-.testimonials .v-icon::after {
-  color: #fff!important;
-}
 
-.testimonials .theme--light.v-btn.v-btn--icon {
-  background: #7b79!important;
-  color: #fff!important;
-}
 </style>
 
 <style scoped>
@@ -113,25 +95,48 @@
 import { mapState } from 'vuex'
 
 import TestimonialsCard from '@/components/TestimonialsCard.vue'
+import SubHeader from '@/components/inputs/SubHeader.vue'
+import Button from '@/components/inputs/Button.vue'
 
 export default {
   name: 'Testimonials',
   components: {
-    TestimonialsCard
+    TestimonialsCard,
+    SubHeader,
+    Button
   },
   props: ['page'],
-  data: () => ({ model: 0 }),
+  data: () => ({
+    model: 0,
+    removed: null
+  }),
   computed: {
     ...mapState('content', {
       content: 'testimonials'
     }),
     ...mapState('testimonials', ['testimonials']),
     ...mapState(['viewportWidth']),
-    cardWidth () {
-      return this.viewportWidth < 600 ? this.viewportWidth - 100 : 376
+    header: {
+      get () {
+        return this.content.header
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_TESTIMONIALS', {
+          prop: 'header',
+          value: val
+        })
+      }
     },
-    textSize () {
-      return this.viewportWidth < 600 ? '12px' : '14px'
+    button: {
+      get () {
+        return this.content.button
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_TESTIMONIALS', {
+          prop: 'button',
+          value: val
+        })
+      }
     }
   },
   methods: {

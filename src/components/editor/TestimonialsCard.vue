@@ -23,42 +23,27 @@
             prepend-icon="mdi-calendar"
             readonly
             v-on="on"
+            class="testimonial-date"
           ></v-text-field>
         </template>
         <v-date-picker v-model="data" scrollable>
           <v-spacer></v-spacer>
           <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
-          <v-btn text color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
+          <v-btn text color="primary" @click="$refs.dialog.save(data)">OK</v-btn>
         </v-date-picker>
     </v-dialog>
 
     <ChangePicture
-          :gallery.sync="gallery"
-          :saveContent.sync="save"
-    />
-    <ImageGallery
-          :activate.sync="gallery"
-          :staticEndpoint="staticAvatarEndpoint"
-          :endpoint="avatarsEndpoint"
-          :selectedImageURL.sync="photo"
-          :fileLimit="fileLimit"
-          :imageSize="imageSize"
+          destination="avatar"
+          :pictureURL.sync="imageURL"
+          :action="true"
+          :perform.sync="remove"
+          style="position: absolute; top: -32px; left: -32px;"
     />
   </v-card>
 </template>
 
 <style scoped>
-
-.v-input {
-  position: absolute!important;
-  bottom: 4px!important;
-  left: 16px!important;
-  font-size: 14px!important;
-}
-
-p {
-  line-height: 150%!important;
-}
 
 .testimonial-name,
 .testimonial-text,
@@ -81,21 +66,14 @@ p {
   font-weight: bold;
 }
 .testimonial-text {
-  position: absolute;
   top: 80px;
+  left: 16px;
   width: 90%!important;
   text-align: justify;
   font-weight: normal;
 }
-.testimonial-text-ellipsis {
-  position: absolute;
-  top: 166px;
-  left: 10%;
-  text-align: left;
-}
 .testimonial-date {
-  position: absolute;
-  bottom: 4px;
+  bottom: 16px!important;
   left: 24px;
   font-size: 12px;
   font-weight: normal;
@@ -104,51 +82,25 @@ p {
 
 <script>
 
-import { mapState, mapGetters } from 'vuex'
-
 import ChangePicture from '@/components/editor/ChangePicture.vue'
-import ImageGallery from '@/components/editor/ImageGallery.vue'
 
 export default {
   name: 'TestimonialsCard',
   components: {
-    ChangePicture,
-    ImageGallery
+    ChangePicture
   },
-  props: ['index', 'date', 'photo', 'name', 'text'],
+  props: ['index', 'content', 'removed'],
   data: () => ({
     ellipsis: false,
-    cardHeight: '240px',
-    save: false,
+    remove: false,
     menu: false,
-    fileLimit: 50000,
-    imageSize: 64,
+    imageURL: '',
     gallery: false
   }),
   computed: {
-    ...mapState(['viewportWidth']),
-    ...mapGetters('editor', ['staticAvatarEndpoint', 'avatarsEndpoint']),
-    imageURL: {
-      get () {
-        return this.photo
-      },
-      set (url) {
-        console.log('New avatar: ', url)
-        this.$store.commit('testimonials/UPDATE_PHOTO', {
-          num: this.index,
-          value: url
-        })
-      }
-    },
-    cardWidth () {
-      return this.viewportWidth < 600 ? this.viewportWidth - 100 : 376
-    },
-    textSize () {
-      return this.viewportWidth < 600 ? '12px' : '14px'
-    },
     author: {
       get () {
-        return this.name
+        return this.content.name
       },
       set (val) {
         this.$store.commit('testimonials/UPDATE_NAME', { num: this.index, value: val })
@@ -156,7 +108,7 @@ export default {
     },
     message: {
       get () {
-        return this.text
+        return this.content.text
       },
       set (val) {
         this.$store.commit('testimonials/UPDATE_TEXT', { num: this.index, value: val })
@@ -166,7 +118,7 @@ export default {
       get () {
         let d
         try {
-          d = new Date(this.date).toISOString().substr(0, 10)
+          d = new Date(this.content.date).toISOString().substr(0, 10)
         } catch {
           d = new Date().toISOString().substr(0, 10)
         }
@@ -179,27 +131,39 @@ export default {
   },
   watch: {
     imageURL (url) {
-      console.log('New avatar: ', url)
       this.$store.commit('testimonials/UPDATE_PHOTO', {
         num: this.index,
         value: url
       })
     },
-    save (val) {
+    remove (val) {
+      // if (val) this.$store.commit('testimonials/REMOVE_ITEM', this.index)
+      this.$emit('update:removed', this.index)
+      // this.confirmRemoving = false
+      // this.removing = index
+      // this.details = `
+      //   <img src="${this.imageURL}" width="50"/>
+      //   <h3>${this.testimonials[this.index].name}</h3>
+      //   <p>${this.testimonials[this.index].text}</p>
+      //   <p><small>${this.testimonials[this.index].date}</small></p>
+      // `
+      // this.removePopupVisible = true
+    },
+    confirmRemoving (val) {
       if (!val) return
-      this.save = false
-      this.$store.commit('SET_POPUP_TITLE', 'REVIEW\'S CARD CONTENT')
-      this.$store.commit('SET_POPUP_TEXT', 'Data successfully saved')
-      this.$store.commit('SHOW_POPUP')
+      this.removePicture(this.removing)
+      this.getImages()
+      this.removePopupVisible = false
+    },
+    content: {
+      deep: true,
+      handler (val) {
+        this.imageURL = this.content.photo
+      }
     }
   },
   mounted () {
-    const textElement = document.body.appendChild(document.createElement('p'))
-    textElement.style.marginTop = '-1000px'
-    textElement.style.width = (this.cardWidth - 40) + 'px'
-    textElement.textContent = this.text
-    this.ellipsis = textElement.offsetHeight > 86
-    textElement.remove()
+    this.imageURL = this.content.photo
   }
 }
 

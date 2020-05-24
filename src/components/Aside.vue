@@ -4,82 +4,53 @@
         class="aside-card transparent mx-auto my-12"
         width="480"
   >
-    <v-tooltip top color="info">
-      <template v-slot:activator="{ on }">
-        <v-btn fab dark small color="warning" v-on="on" @click="saveContent">
-          <v-icon>mdi-content-save</v-icon>
+    <v-card flat class="transparent">
+      <v-card-title>
+        <SubHeader :value.sync=header />
+      </v-card-title>
+      <v-card-text>
+        <Paragraph :value.sync="text" />
+      </v-card-text>
+      <v-card
+            flat class="ml-4"
+            v-for="(item, index) in offer"
+            :key="index"
+      >
+        <v-btn
+            absolute
+            fab
+            dark
+            small
+            top
+            left
+            color="#900"
+            style="margin-left: -60px; margin-top: 48px"
+            @click="$store.commit('content/REMOVE_OFFER', index)"
+            v-if="info.offer.length > 0"
+        >
+          <v-icon>mdi-minus</v-icon>
         </v-btn>
-      </template>
-      <span>Save section content</span>
-    </v-tooltip>
-    <v-card-title>
-      <h2
-          class="text-left"
-          contenteditable
-          ref="asideHeader"
-          v-text="info.header"
-      ></h2>
-    </v-card-title>
-    <v-card-text>
-      <p
-          class="text-left"
-          contenteditable
-          ref="asideText"
-          v-text="info.text"
-      ></p>
-    </v-card-text>
-    <v-card flat class="ml-4">
-      <h5
-          style="margin-bottom: 16px"
-          v-if="info.offer[0]"
-      >
-        <strong
-            style="color: #72BF44; margin-right: 8px;"
-            contenteditable
-            ref="offerGreen_1"
-            v-text="info.offer[0].greenText"
-        ></strong>
-        <strong
-            contenteditable
-            ref="offerBlack_1"
-            v-text="info.offer[0].blackText"
-        ></strong>
-      </h5>
-      <h5
-          style="margin-bottom: 16px"
-          v-if="info.offer[1]"
-      >
-        <strong
-            style="color: #72BF44; margin-right: 8px;"
-            contenteditable
-            ref="offerGreen_2"
-            v-text="info.offer[1].greenText"
-        ></strong>
-        <strong
-            contenteditable
-            ref="offerBlack_2"
-            v-text="info.offer[1].blackText"
-        ></strong>
-      </h5>
-      <h5
-          style="margin-bottom: 16px"
-          v-if="info.offer[2]"
-      >
-        <strong
-            style="color: #72BF44; margin-right: 8px;"
-            contenteditable
-            ref="offerGreen_3"
-            v-text="info.offer[2].greenText"
-        ></strong>
-        <strong
-            contenteditable
-            ref="offerBlack_3"
-            v-text="info.offer[2].blackText"
-        ></strong>
-      </h5>
-      <v-btn absolute fab dark small bottom right color="warning"
+
+        <v-row>
+          <v-col>
+            <GreenText :index="index" />
+          </v-col>
+          <v-col>
+            <BlackText :index="index" />
+          </v-col>
+        </v-row>
+      </v-card>
+
+      <v-btn
+          absolute
+          fab
+          dark
+          small
+          bottom
+          right
+          color="#09b"
+          style="margin-bottom: -8px"
           @click="addOffer"
-          v-if="!info.offer[2]"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
@@ -113,40 +84,66 @@ strong {
 
 <script>
 
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
+
+import SubHeader from '@/components/inputs/SubHeader.vue'
+import Paragraph from '@/components/inputs/Paragraph.vue'
+import GreenText from '@/components/inputs/GreenText.vue'
+import BlackText from '@/components/inputs/BlackText.vue'
 
 export default {
   name: 'Aside',
+  components: {
+    SubHeader,
+    Paragraph,
+    GreenText,
+    BlackText
+  },
+  data () {
+    return {
+      changed: false,
+      offer: this.$store.state.content.info.offer
+    }
+  },
   computed: {
-    ...mapState('content', ['info'])
+    info () {
+      return this.$store.state.content.info
+    },
+    header: {
+      get () {
+        return this.info.header
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_INFO', { prop: 'header', value: val })
+      }
+    },
+    text: {
+      get () {
+        return this.info.header
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_INFO', { prop: 'text', value: val })
+      }
+    }
+  },
+  watch: {
+    changed (val) {
+      if (!val) return
+      this.offer = this.$store.state.content.info.offer
+      this.changed = false
+    },
+    offer: function (val) {
+      console.log('Info offer changed:\n', val)
+    }
   },
   methods: {
     addOffer () {
       this.$store.commit('content/ADD_OFFER')
+      this.changed = true
     },
-    saveContent () {
-      this.$store.commit('content/UPDATE_INFO', { prop: 'header', value: this.$refs.asideHeader.innerText })
-      this.$store.commit('content/UPDATE_INFO', { prop: 'text', value: this.$refs.asideText.innerText })
-      this.$store.commit('content/UPDATE_OFFER', {
-        num: 0,
-        greenText: this.$refs.offerGreen_1.innerText,
-        blackText: this.$refs.offerBlack_1.innerText
-      })
-      this.$store.commit('content/UPDATE_OFFER', {
-        num: 1,
-        greenText: this.$refs.offerGreen_2.innerText,
-        blackText: this.$refs.offerBlack_2.innerText
-      })
-      if (!this.$refs.offerGreen_3) return
-      this.$store.commit('content/UPDATE_OFFER', {
-        num: 2,
-        greenText: this.$refs.offerGreen_3.innerText,
-        blackText: this.$refs.offerBlack_3.innerText
-      })
-      this.$store.commit('content/FILTER_OFFERS')
-      this.$store.commit('SET_POPUP_TITLE', 'SECTION CONTENT')
-      this.$store.commit('SET_POPUP_TEXT', 'Data successfully saved')
-      this.$store.commit('SHOW_POPUP')
+    removeOffer (index) {
+      this.$store.commit('content/REMOVE_OFFER', index)
+      this.changed = true
     }
   }
 }
