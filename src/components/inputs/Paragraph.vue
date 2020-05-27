@@ -7,6 +7,7 @@
           row-height="24"
           hide-details
           flat
+          prepend-inner-icon="mdi-pencil"
   ></v-textarea>
 </template>
 
@@ -14,6 +15,8 @@
 .paragraph {
   font-size: 16px;
   font-weight: normal;
+  width:80%;
+  margin-left:10%;
 }
 </style>
 

@@ -1,9 +1,10 @@
 <template>
-  <v-textarea
-          class="black-text"
-          v-model="inputValue"
-          hide-details
-  ></v-textarea>
+    <v-textarea
+            class="black-text"
+            v-model="inputValue"
+            hide-details
+            prepend-inner-icon="mdi-pencil"
+    ></v-textarea>
 </template>
 
 <style scoped>

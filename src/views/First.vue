@@ -5,14 +5,7 @@
     <!-- ============================= USER CONTACT ============================= -->
 
       <v-row justify="center" class="pa-0 ma-0">
-        <v-sheet
-          width="100%"
-          max-width="1440"
-          color="homefone"
-          tile
-          class="mx-auto"
-        >
-          <v-row class="mx-0 px-0">
+          <!-- <v-row class="mx-0 px-0"> -->
             <v-col cols="12" md="6" class="aside-col">
               <Aside />
             </v-col>
@@ -28,13 +21,17 @@
                 </v-card>
               </v-card>
             </v-col>
-          </v-row>
-        </v-sheet>
+          <!-- </v-row> -->
       </v-row>
 
       <!-- ============================= HOW TO CONNECT ============================= -->
       <v-row width="100%">
-        <HowToConnect :contact.sync="contactUs" :connect.sync="getConnected" />
+        <section id="how-to-connect">
+          <div class="base-title">
+            <a href="#how-to-connect" class="core-goto"></a>
+            <HowToConnect :contact.sync="contactUs" :connect.sync="getConnected" />
+          </div>
+        </section>
       </v-row>
       <!-- ============================= INTERNET PLANS ============================= -->
       <v-row width="100%" justify="center">
@@ -154,6 +151,9 @@ export default {
       getContent: 'GET_CONTENT',
       saveContent: 'SAVE_CONTENT'
     }),
+    ...mapActions('contact', {
+      userFormConfig: 'UPDATE_USER_FORM_CONFIGURATION'
+    }),
     ...mapActions('testimonials', {
       getTestimonials: 'GET_CONTENT'
     }),
@@ -168,11 +168,13 @@ export default {
       .then((response) => {
         this.ready = !!response
         document.title = response
-        console.log('******** 1 *********\n', this.$store.state.content)
+        this.userFormConfig()
         this.$store.commit('UPDATE_PAGES', {
           pages: this.$store.state.content.mainNavButtons,
-          selectors: this.$store.state.content.selectors
+          selectors: this.$store.state.content.mainNavSectors
         })
+        this.$store.commit('contact/UPDATE_EMAIL_SUBJECT', this.$store.state.content.emailSubject)
+        this.$store.commit('contact/UPDATE_EMAIL_TEXT', this.$store.state.content.emailText)
       })
     this.getTestimonials()
   }

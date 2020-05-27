@@ -1,66 +1,73 @@
 <template>
-  <v-card class="user-info mx-auto pa-6 homefone" width="480">
-    <v-tooltip top color="info">
-      <template v-slot:activator="{ on }">
-        <v-btn fab dark small color="warning" v-on="on" @click="saveContent">
-          <v-icon>mdi-content-save</v-icon>
-        </v-btn>
-      </template>
-      <span>Save section content</span>
-    </v-tooltip>
+  <v-card class="user-info mx-auto my-auto pa-6 homefone" width="480">
     <v-card-title>
-      <h4
-          ref="userContactHeader"
-          contenteditable
-          v-text="userForm.title"
-      ></h4>
+      <SubHeader5 :value.sync="title" />
     </v-card-title>
-    <v-card-text class="mx-0 px-0" width="100%">
-      <v-text-field
-            v-for="(item, prop) in items"
+    <v-card-text class="mx-0 px-0" width="100%" v-if="fields">
+      <v-row
+            v-for="(field, prop) in fields"
             :key="prop"
-            :placeholder="item.placeholder"
-            outlined
-            dense
-            hide-details
-            height="32"
-            class="user-inputs"
-      ></v-text-field>
-      <v-textarea
-            :placeholder="userForm.messagePlaceholder"
-            outlined
-            color="#656565"
-            auto-grow
-            v-model="message"
-            class="user-inputs"
-      ></v-textarea>
+            class="bordered my-0"
+      >
+          <v-col cols="10">
+            <InputWithValidation
+                    v-if="field.type === 'input-with-validation'"
+                    :label="field.placeholder"
+                    :placeholder="field.placeholder"
+                    :propName="prop"
+                    :validator="field.validator"
+                    :value.sync="field.value"
+              />
+              <InputPhoneNumber
+                    v-if="field.type === 'phone-number'"
+                    propName="phone"
+              />
+              <SelectorConfig
+                    v-if="field.type === 'selector'"
+                    :label.sync="field.placeholder"
+                    :values.sync="field.available"
+              />
+              <ComboBoxConfig
+                    v-if="field.type === 'combobox'"
+                    :label.sync="field.placeholder"
+                    :values.sync="field.available"
+              />
+              <InputMessage
+                    v-if="field.type === 'textarea'"
+                    :label.sync="field.placeholder"
+              />
+              <v-divider></v-divider>
+          </v-col>
+          <v-col cols="2">
+            <v-tooltip top color="info">
+              <template v-slot:activator="{ on }">
+                <v-checkbox
+                      name="checks"
+                      :value="prop"
+                      v-model="selected"
+                      color="info"
+                      v-on="on"
+                ></v-checkbox>
+              </template>
+              <span>Select field</span>
+            </v-tooltip>
+          </v-col>
+      </v-row>
     </v-card-text>
     <v-card-actions>
-      <!-- <v-btn
-          color="buttons"
-          dark
-          rounded
-          width="220"
-          height="48"
-          class="submit-button px-auto mx-auto"
-          @click="sendUserRequest"
-      >
-        {{ userForm.button }}
-      </v-btn> -->
-      <p class="submit-button mx-auto"
-          contenteditable
-          ref="userContactButton"
-          v-text="userForm.button"
-      ></p>
+      <Button :value.sync="button" />
     </v-card-actions>
+
+    <Popup :opened.sync="popupOpened" />
+    <PopupError :opened.sync="popupErrorOpened" />
   </v-card>
 </template>
 
 <style scoped>
 
-.v-text-field.v-text-field--enclosed {
+/* .v-text-field.v-text-field--enclosed {
   margin-bottom: 4px!important;
-}
+} */
 
 .user-info {
   width: 640px;
@@ -107,76 +114,138 @@ h4 {
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
+
+import SubHeader5 from '@/components/inputs/SubHeader5.vue'
+import Button from '@/components/inputs/Button.vue'
+
+// import ButtonWithTooltip from '@/components/editor/ButtonWithTooltip.vue'
+
+import SelectorConfig from '@/components/contact/SelectorConfig.vue'
+import ComboBoxConfig from '@/components/contact/ComboBoxConfig.vue'
+import InputWithValidation from '@/components/contact/InputWithValidation.vue'
+import InputPhoneNumber from '@/components/contact/InputPhoneNumber.vue'
+import InputMessage from '@/components/contact/InputMessage.vue'
+
+import Popup from '@/components/contact/Popup.vue'
+import PopupError from '@/components/contact/PopupError.vue'
+
+// const emailValidator = require('email-validator')
 
 export default {
   name: 'UserContact',
+  components: {
+    InputPhoneNumber,
+    InputMessage,
+    InputWithValidation,
+    SelectorConfig,
+    ComboBoxConfig,
+    Popup,
+    PopupError,
+    SubHeader5,
+    Button
+  },
   data () {
     return {
-      message: '',
-      items: {
-        name: {
-          value: '',
-          placeholder: 'Full name*'
-        },
-        email: {
-          value: '',
-          placeholder: 'Email*'
-        },
-        //   address: {
-        //     value: '',
-        //     placeholder: 'Address*',
-        //     error: false,
-        //     color: '',
-        //     validationIcon: '',
-        //     validator () { this.error = this.value.length < 5 }
-        //   },
-        //   postcode: {
-        //     value: '',
-        //     placeholder: 'Postcode*',
-        //     error: false,
-        //     color: '',
-        //     validationIcon: '',
-        //     validator () {
-        //       this.error = !Number(this.value) || Number(this.value) < 3000 || Number(this.value) > 9999
-        //     }
-        //   },
-        //   state: {
-        //     value: '',
-        //     placeholder: 'State*',
-        //     error: false,
-        //     color: '',
-        //     validationIcon: '',
-        //     validator () { this.error = this.value.length < 5 }
-        //   },
-        phone: {
-          value: '',
-          placeholder: 'Phone'
+      popupOpened: false,
+      popupErrorOpened: false,
+      selected: [],
+      clicked: false
+    }
+  },
+  computed: {
+    ...mapState('content', ['userForm']),
+    ...mapState('contact', {
+      fields: 'contactFormFields'
+    }),
+
+    title: {
+      get () {
+        return this.userForm.title
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_USER_FORM', {
+          prop: 'title',
+          value: val
+        })
+      }
+    },
+    button: {
+      get () {
+        return this.userForm.button
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_USER_FORM', {
+          prop: 'button',
+          value: val
+        })
+      }
+    }
+  },
+  watch: {
+    selected (selectedFields) {
+      const option = 'show'
+      for (const field in this.fields) {
+        const value = selectedFields.indexOf(field) !== -1
+        this.$store.commit('content/UPDATE_USER_FORM_FIELD_OPTION', { field, option, value })
+        this.$store.commit('contact/UPDATE_FIELD', { field, prop: option, value })
+      }
+    },
+    fields: {
+      deep: true,
+      handler (val) {
+        for (const field in val) {
+          if (val[field].available) {
+            this.$store.commit('content/UPDATE_USER_FORM_FIELD_OPTION', {
+              field,
+              option: 'available',
+              value: val[field].available
+            })
+          }
+          if (val[field].placeholder) {
+            this.$store.commit('content/UPDATE_USER_FORM_FIELD_OPTION', {
+              field,
+              option: 'placeholder',
+              value: val[field].placeholder
+            })
+          }
+          for (const prop in val[field]) {
+            this.$store.commit('contact/UPDATE_FIELD', {
+              field,
+              prop,
+              value: val[field][prop]
+            })
+          }
         }
       }
     }
   },
-  computed: {
-    ...mapState('content', ['userForm'])
-  },
   methods: {
+    ...mapActions('contact', {
+      sendEmail: 'SEND_EMAIL'
+    }),
     initFields () {
-      for (const item in this.items) {
-        this.items[item].value = ''
-      }
-      this.message = ''
+      this.$store.commit('contact/CLEAR_ALL_FIELDS')
     },
-    saveContent () {
-      this.$store.commit('content/UPDATE_USER_FORM', { prop: 'title', value: this.$refs.userContactHeader.innerText })
-      this.$store.commit('content/UPDATE_USER_FORM', { prop: 'button', value: this.$refs.userContactButton.innerText })
-      this.$store.commit('content/UPDATE_USER_FORM', { prop: 'messagePlaceholder', value: this.message })
-      this.$store.commit('SET_POPUP_TITLE', 'SECTION CONTENT')
-      this.$store.commit('SET_POPUP_TEXT', 'Data successfully saved')
-      this.$store.commit('SHOW_POPUP')
+
+    async sendUserRequest () {
+      if (await this.sendEmail()) this.popupOpened = true
+      else this.popupErrorOpened = true
     }
   },
   mounted () {
-    this.initFields()
+    const fields = this.userForm.fieldsToShow
+    this.selected = []
+    for (const field in fields) {
+      for (const prop in fields[field]) {
+        this.$store.commit('contact/UPDATE_FIELD', {
+          field,
+          prop,
+          value: fields[field][prop]
+        })
+      }
+      if (fields[field].show) this.selected.push(field)
+    }
   }
 }
 

@@ -4,6 +4,7 @@
           v-model="inputValue"
           hide-details
           color="#72BF44"
+          prepend-inner-icon="mdi-pencil"
   ></v-text-field>
 </template>
 

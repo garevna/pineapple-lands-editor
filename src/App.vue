@@ -110,6 +110,16 @@ html, body {
   line-height: 150%!important;
 }
 
+.theme--light.v-icon.v-icon {
+  font-size: 20px!important;
+  color: #09b!important;
+}
+
+.theme--light.v-system-bar .v-icon {
+  font-size: 22px!important;
+  color: #fff!important;
+}
+
 h1, h2, h3, h4, h5 {
   white-space: normal;
   word-break: normal;

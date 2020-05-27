@@ -36,6 +36,10 @@ const mutations = {
 
   /* ========================== USER FORM ========================== */
   UPDATE_USER_FORM: (state, payload) => { state.userForm[payload.prop] = payload.value },
+  UPDATE_USER_FORM_FIELD_VALUE: (state, payload) => { state.userForm[payload.prop].value = payload.value },
+  UPDATE_USER_FORM_FIELD_OPTION: (state, payload) => {
+    state.userForm.fieldsToShow[payload.field][payload.option] = payload.value
+  },
 
   /* ======================= HOW TO CONNECT ======================= */
   UPDATE_CONNECT: (state, payload) => { state.howToConnect[payload.prop] = payload.value },
@@ -86,12 +90,8 @@ const actions = {
       return null
     }
   },
-  // SET_PAGE_FIELDS ({ commit }, payload) {
-  //   commit('UPDATE_ALL', payload)
-  // },
 
   async SAVE_CONTENT ({ state, getters, dispatch }, route) {
-    console.log(JSON.parse(JSON.stringify(state)))
     const response = await fetch(`${getters.pageContentEndpoint}/${route}`, {
       method: 'POST',
       headers: {

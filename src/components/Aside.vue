@@ -23,12 +23,14 @@
             small
             top
             left
-            color="#900"
-            style="margin-left: -60px; margin-top: 48px"
+            color="delete"
+            width="28"
+            height="28"
+            style="margin-left: -40px; margin-top: 48px"
             @click="$store.commit('content/REMOVE_OFFER', index)"
             v-if="info.offer.length > 0"
         >
-          <v-icon>mdi-minus</v-icon>
+          <v-icon>$delete</v-icon>
         </v-btn>
 
         <v-row>

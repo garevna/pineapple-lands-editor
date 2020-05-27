@@ -12,7 +12,7 @@
 </template>
 
 <style scoped>
-.h3 {
+.h5 {
   font-size: 28px;
   font-weight: 900;
   width:80%;
@@ -26,7 +26,7 @@ export default {
   props: ['value', 'className'],
   computed: {
     classExpression () {
-      return `${this.className ? this.className : ''} h3 mx-auto`
+      return `${this.className ? this.className : ''} h5 mx-auto`
     },
     inputValue: {
       get () {

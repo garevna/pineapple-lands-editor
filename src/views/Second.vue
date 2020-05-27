@@ -153,6 +153,9 @@ export default {
       saveFailure: 'SAVE_FAILURE',
       accessDenied: 'ACCESS_DENIED'
     }),
+    ...mapActions('contact', {
+      userFormConfig: 'UPDATE_USER_FORM_CONFIGURATION'
+    }),
     ...mapActions('content', {
       getContent: 'GET_CONTENT',
       saveContent: 'SAVE_CONTENT'
@@ -177,11 +180,13 @@ export default {
       .then((response) => {
         this.ready = !!response
         document.title = response
-        console.log('******** 2 *********\n', this.$store.state.content)
+        this.userFormConfig()
         this.$store.commit('UPDATE_PAGES', {
           pages: this.$store.state.content.mainNavButtons,
-          selectors: this.$store.state.content.selectors
+          selectors: this.$store.state.content.mainNavSectors
         })
+        this.$store.commit('contact/UPDATE_EMAIL_SUBJECT', this.$store.state.content.emailSubject)
+        this.$store.commit('contact/UPDATE_EMAIL_TEXT', this.$store.state.content.emailText)
       })
     this.getTestimonials()
   },

@@ -1,7 +1,7 @@
 <template>
   <v-card flat class="transparent mx-auto text-center">
     <ButtonWithTooltip
-          icon="mdi-cog"
+          icon="$config"
           :fab="true"
           :text="null"
           tooltip="Define action (go to)"
@@ -18,6 +18,7 @@
             class="submit-button mx-auto"
             v-model="inputValue"
             hide-details
+            prepend-inner-icon="mdi-pencil"
       ></v-text-field>
     </v-card-text>
   </v-card>

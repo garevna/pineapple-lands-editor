@@ -23,7 +23,7 @@
     <v-tooltip top color="info" v-if="action">
       <template v-slot:activator="{ on }">
         <v-btn fab dark small color="error" v-on="on" @click="$emit('update:perform', index || true)">
-          <v-icon>mdi-minus</v-icon>
+          <v-icon>$delete</v-icon>
         </v-btn>
       </template>
       <span>Remove current item</span>

@@ -1,15 +1,17 @@
 <template>
   <v-container fluid fill-height class="homefone" style="position: relative; margin-bottom: -10px; margin-top: 50px;">
     <FooterFone :footerHeight="footerHeight" />
-    <v-container fluid class="footer--top-content" :style="{ top: topContentTop }">
+    <v-card class="footer--top-content" :style="{ top: topContentTop }">
       <v-row align="start" justify="center" style="position: absolute; top: 0; left: 0; width: 100%">
-        <v-card-title>
-          <h2 class="white-text centered">{{ footer.title }}</h2>
-        </v-card-title>
+        <v-card-text class="mx-auto text-center">
+          <SubHeader :value.sync="title" className="footer" />
+          <!-- <h2 class="white-text centered">{{ footer.title }}</h2> -->
+        </v-card-text>
         <v-card-text max-width="100%">
-          <h5 class="white-text centered">
+          <SubHeader5 :value.sync="text" className="footer" />
+          <!-- <h5 class="white-text centered">
               {{ footer.text }}
-          </h5>
+          </h5> -->
         </v-card-text>
         <v-row class="mx-auto">
           <v-col cols="12" class="mx-auto">
@@ -75,7 +77,7 @@
           </v-col>
         </v-row>
       </v-row>
-    </v-container>
+    </v-card>
 
     <FooterBottomContent v-if="viewportWidth >= 770" />
     <FooterBottomContentSmall  v-if="viewportWidth < 770" class="footer--bottom-content-small"/>
@@ -151,6 +153,9 @@ import FooterFone from '@/components/footer/FooterFone.vue'
 import FooterBottomContent from '@/components/footer/BottomContent.vue'
 import FooterBottomContentSmall from '@/components/footer/BottomContentSmall.vue'
 
+import SubHeader from '@/components/inputs/SubHeader.vue'
+import SubHeader5 from '@/components/inputs/SubHeader5.vue'
+
 const emailValidator = require('email-validator')
 
 export default {
@@ -158,7 +163,9 @@ export default {
   components: {
     FooterFone,
     FooterBottomContentSmall,
-    FooterBottomContent
+    FooterBottomContent,
+    SubHeader,
+    SubHeader5
   },
   props: ['user', 'page'],
   data () {
@@ -177,6 +184,28 @@ export default {
   computed: {
     ...mapState(['viewportWidth']),
     ...mapState('content', ['footer', 'subject']),
+    title: {
+      get () {
+        return this.footer.title
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_FOOTER', {
+          prop: 'title',
+          value: val
+        })
+      }
+    },
+    text: {
+      get () {
+        return this.footer.text
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_FOOTER', {
+          prop: 'text',
+          value: val
+        })
+      }
+    },
     topContentTop () {
       return this.viewportWidth < 420 ? '80px' : this.viewportWidth > 1904 ? '288px' : '198px'
     },

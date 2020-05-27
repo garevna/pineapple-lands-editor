@@ -7,6 +7,7 @@
           :row-height="48"
           hide-details
           flat
+          prepend-inner-icon="mdi-pencil"
   ></v-textarea>
 </template>
 

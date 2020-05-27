@@ -34,7 +34,7 @@
                       @click="$store.commit('content/DELETE_FAQ_ITEM', index)"
                       v-on="on"
                 >
-                  <v-icon>mdi-minus</v-icon>
+                  <v-icon>$delete</v-icon>
                 </v-btn>
               </template>
               <span>Remove FAQ item</span>
@@ -42,6 +42,7 @@
             <v-text-field
                 :value="item.question"
                 @input="saveQuestion(index, $event)"
+                prepend-inner-icon="mdi-pencil"
             ></v-text-field>
             <template v-slot:actions>
               <v-icon color="#444">$expand</v-icon>
@@ -51,6 +52,7 @@
             <v-textarea
                 :value="getAnswerText(index)"
                 @input="saveAnswer(index, $event)"
+                prepend-inner-icon="mdi-pencil"
             ></v-textarea>
           </v-expansion-panel-content>
         </v-expansion-panel>
@@ -172,7 +174,6 @@ export default {
     faq: {
       deep: true,
       handler (val) {
-        console.log('FAQs:\n', val)
         this.content = this.faq.items
       }
     }

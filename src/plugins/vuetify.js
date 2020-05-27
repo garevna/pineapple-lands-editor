@@ -8,8 +8,20 @@ export default new Vuetify({
   icons: {
     iconfont: 'mdi',
     values: {
-      expand: 'mdi-expand-more',
-      home: 'mdi-home-circle'
+      expand: 'mdi-chevron-down',
+      valid: 'mdi-check-bold',
+      invalid: 'mdi-alert-outline',
+      home: 'mdi-home-circle',
+      config: 'mdi-cog',
+      search: 'mdi-image-search',
+      upload: 'mdi-file-upload',
+      first: 'mdi-numeric-1-circle-outline',
+      second: 'mdi-numeric-2-circle-outline',
+      third: 'mdi-numeric-3-circle-outline',
+      fourth: 'mdi-numeric-4-circle-outline',
+      fifth: 'mdi-numeric-5-circle-outline',
+      delete: 'mdi-delete-forever',
+      add: 'mdi-plus-thick'
     }
   },
   theme: {
@@ -23,6 +35,7 @@ export default new Vuetify({
         homefone: '#FAFAFA',
         plansfone: '#E5FDD7',
         warning: '#FA0',
+        delete: '#a00',
         error: '#900',
         info: '#09b',
         magenta: '#f0f'
@@ -36,6 +49,7 @@ export default new Vuetify({
         homefone: '#FAFAFA',
         plansfone: '#E5FDD7',
         warning: '#FA0',
+        delete: '#a00',
         error: '#900',
         info: '#09b',
         magenta: '#f0f'

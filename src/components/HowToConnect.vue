@@ -175,11 +175,6 @@ export default {
       console.log('WATCHER: Icon src 3 changed: ', val)
       this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 2, prop: 'icon', value: val })
     }
-  },
-  mounted () {
-    console.log(this.howToConnect.items[0].icon)
-    console.log(this.howToConnect.items[1].icon)
-    console.log(this.howToConnect.items[2].icon)
   }
 }
 </script>
