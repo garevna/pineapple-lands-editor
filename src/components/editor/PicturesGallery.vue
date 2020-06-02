@@ -15,7 +15,7 @@ export default {
   computed: {
     endpoint () {
       return `${hostEndpoint}/images`
-    }
+    },
     gallery: {
       get () {
         return this.open

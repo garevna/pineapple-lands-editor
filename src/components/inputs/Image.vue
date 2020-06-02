@@ -23,7 +23,7 @@ export default {
   props: ['imageSrc', 'destination'],
   data () {
     return {
-      gallery: false,
+      gallery: false
 
     }
   },

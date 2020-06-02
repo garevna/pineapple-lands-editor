@@ -22,30 +22,30 @@ export default {
     file: File,
     label: String,
     source: String,
-    src: String,
+    src: String
   },
   data: () => ({
-    img: null,
+    img: null
   }),
   computed: {
-    error() {
+    error () {
       return Boolean(this.setHint())
-    },
+    }
   },
   methods: {
-    async upload() {
+    async upload () {
       if (!this.img || this.error) return
       this.$emit('update:file', this.img)
       this.$emit('update:source', 'client')
       this.$emit('update:src', URL.createObjectURL(this.img))
     },
-    setHint() {
+    setHint () {
       if (this.source !== 'client') return ''
       if (!this.file || !(this.file instanceof File)) return ''
       if (this.file.size > this.limit) return 'File is too large'
       if (!this.file.type.match(/image/)) return 'Invalid file type'
       return ''
-    },
-  },
+    }
+  }
 }
 </script>

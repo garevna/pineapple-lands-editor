@@ -1,0 +1,17 @@
+domain: pa.pineapple.net.au
+slug: pa-pineapple-net-au
+
+ingress:
+  rateLimit: 1200
+
+uploadSize: 1M
+
+image:
+  repository: registry.gitlab.com/dgtek.net/pa.pineapple.net.au
+  pullPolicy: IfNotPresent
+  name: pa-pineapple-net-au
+  port: 80
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
