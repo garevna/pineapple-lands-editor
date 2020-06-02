@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 
 export default {
   name: 'PicturesGallery',
@@ -14,6 +15,7 @@ export default {
   },
   computed: {
     endpoint () {
+      /* eslint-disable no-undef */
       return `${hostEndpoint}/images`
     },
     gallery: {
@@ -28,7 +30,7 @@ export default {
   watch: {
 
   },
-  methods:{
+  methods: {
     ...mapActions('editor', ['GET_'])
   },
   mounted () {
