@@ -1,8 +1,8 @@
-# pineapple-lands-editor
+# Pineapple lands editor
 
-#### Dashboard for landing pages of Pineapple.net.au
+#### Dashboard for landing pages of pineapple.net.au
 
-[**demo**](https://garevna.github.io/pineapple-land-editor/)
+[**Release**](https://pa.pineapple.net.au)
 
 ## Project setup
 ```

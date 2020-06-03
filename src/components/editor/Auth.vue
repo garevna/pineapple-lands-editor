@@ -35,21 +35,33 @@
 import { mapGetters, mapActions } from 'vuex'
 
 const crypto = require('cryptico')
-const keyRSA = crypto.generateRSAKey(process.env.VUE_APP_SECRET, 1024)
-const publicKey = crypto.publicKeyString(keyRSA)
+// console.log(process.env.VUE_APP_SECRET)
+// const keyRSA = crypto.generateRSAKey(process.env.VUE_APP_SECRET, 1024)
+// const publicKey = crypto.publicKeyString(keyRSA)
 
 export default {
   name: 'Auth',
   props: ['opened', 'auth'],
   data () {
     return {
+      secret: process.env.VUE_APP_SECRET,
+
       login: '',
       password: '',
       submit: null
     }
   },
   computed: {
-    ...mapGetters('editor', ['hostEndpoint'])
+    ...mapGetters('editor', ['hostEndpoint']),
+    keyRSA () {
+      console.log('SECRET: ', this.secret)
+      console.log('RSA KEY: ', crypto.generateRSAKey(this.secret, 1024))
+      return crypto.generateRSAKey(this.secret, 1024)
+    },
+    publicKey () {
+      console.log('PUBLIC KEY: ', crypto.publicKeyString(this.keyRSA))
+      return crypto.publicKeyString(this.keyRSA)
+    }
   },
   methods: {
     ...mapActions({
@@ -65,8 +77,8 @@ export default {
       this.$emit('update:opened', false)
     },
     validate: async function () {
-      const userlogin = crypto.encrypt(this.login, publicKey)
-      const pass = crypto.encrypt(this.password, publicKey)
+      const userlogin = crypto.encrypt(this.login, this.publicKey)
+      const pass = crypto.encrypt(this.password, this.publicKey)
       this.login = ''
       this.password = ''
       if (!userlogin.status || !pass.status) return this.authFail()
@@ -90,6 +102,9 @@ export default {
   },
   mounted () {
     this.submit = this.validate.bind(this)
+    console.log('CRIPTO: ', crypto.encrypt)
+    console.log(process.env.VUE_APP_SECRET)
+    console.log(this.secret)
   }
 }
 </script>
