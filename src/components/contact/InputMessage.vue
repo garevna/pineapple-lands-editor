@@ -1,6 +1,6 @@
 <template>
   <v-textarea
-        :placeholder="label"
+        :placeholder="field.placeholder"
         outlined
         color="#656565"
         style="margin-top:16px;"
@@ -17,20 +17,23 @@
 
 export default {
   name: 'InputMessage',
-  props: ['label'],
+  props: ['fieldIndex'],
   data () {
     return {
       //
     }
   },
   computed: {
+    field () {
+      return this.$store.state.contact.contactFormFields[this.fieldIndex]
+    },
     message: {
       get () {
-        return this.$store.state.contact.contactFormFields.message.value
+        return this.field.value
       },
       set (val) {
         this.$store.commit('contact/UPDATE_USER_INFO', {
-          field: 'message',
+          num: this.fieldIndex,
           value: val
         })
       }

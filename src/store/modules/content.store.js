@@ -1,7 +1,23 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
 
-const state = {}
+const state = {
+  browserTabTitle: 'pineapple.net',
+  emailSubject: 'pineapple.net.au',
+  emailText: 'Thank you for your interest in Pineapple NET! A member of our team will be in touch shortly.',
+  mainNavButtons: [],
+  mainNavSectors: [],
+  top: {},
+  info: {},
+  list: {},
+  faq: {},
+  plans: {},
+  testimonials: {},
+  greenSection: {},
+  howToConnect: {},
+  footer: {},
+  userForm: {}
+}
 
 const getters = {
   pageContentEndpoint: (state, getters, rootState) => `${rootState.host}/content`,
@@ -10,7 +26,7 @@ const getters = {
 
 const mutations = {
   UPDATE_PAGE_NUM: (state, payload) => { state.pageNum = payload },
-  UPDATE_TOP: (state, payload) => { console.log(payload.prop, payload.value); state.top[payload.prop] = payload.value },
+  UPDATE_TOP: (state, payload) => { state.top[payload.prop] = payload.value },
   UPDATE_INFO: (state, payload) => { state.info[payload.prop] = payload.value },
 
   UPDATE_OFFER: (state, payload) => {
@@ -35,10 +51,13 @@ const mutations = {
   },
 
   /* ========================== USER FORM ========================== */
-  UPDATE_USER_FORM: (state, payload) => { state.userForm[payload.prop] = payload.value },
+  // UPDATE_USER_FORM: (state, payload) => { state.userForm[payload.prop] = payload.value },
   UPDATE_USER_FORM_FIELD_VALUE: (state, payload) => { state.userForm[payload.prop].value = payload.value },
   UPDATE_USER_FORM_FIELD_OPTION: (state, payload) => {
-    state.userForm.fieldsToShow[payload.field][payload.option] = payload.value
+    state.userForm.fieldsToShow[payload.num][payload.option] = payload.value
+  },
+  UPDATE_USER_FORM_FIELDS: (state, payload) => {
+    state.userForm.fieldsToShow = JSON.parse(JSON.stringify(payload))
   },
 
   /* ======================= HOW TO CONNECT ======================= */
@@ -76,7 +95,19 @@ const mutations = {
 
   UPDATE_FOOTER: (state, payload) => { state.footer[payload.prop] = payload.value },
 
-  UPDATE_ALL: (state, payload) => { Object.assign(state, payload) }
+  UPDATE_ALL: (state, payload) => {
+    for (const field in payload) {
+      if (typeof payload[field] !== 'object') {
+        state[field] = payload[field] || state[field]
+      } else {
+        if (Array.isArray(payload[field])) {
+          state[field] = Object.assign([], payload[field])
+        } else {
+          state[field] = Object.assign({}, payload[field])
+        }
+      }
+    }
+  }
 }
 
 const actions = {
@@ -84,7 +115,12 @@ const actions = {
     try {
       const response = await (await fetch(`${getters.pageContentEndpoint}/${route}`)).json()
       commit('UPDATE_ALL', response)
-      return response
+      commit('contact/UPDATE_EMAIL_SUBJECT', response.emailSubject, { root: true })
+      commit('contact/UPDATE_EMAIL_TEXT', response.emailText, { root: true })
+      if (!response.userForm) return response.browserTabTitle
+      await dispatch('contact/SET_FIELDS_TO_SHOW', response.userForm.fieldsToShow, { root: true })
+      commit('SET_CURRENT_LAND', route, { root: true })
+      return response.browserTabTitle
     } catch (error) {
       console.warn('ERROR:\n', error)
       return null
@@ -100,7 +136,6 @@ const actions = {
       },
       body: JSON.stringify(state)
     })
-    console.log(response.status)
     return response.status
   }
 }

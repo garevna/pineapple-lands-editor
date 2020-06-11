@@ -1,152 +1,74 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
 
-const emailValidator = require('email-validator')
-
 const state = {
-  contactFormFields: {
-    name: {
-      type: 'input-with-validation',
-      placeholder: 'Full name*',
-      validator: val => val.length > 2,
-      configured: false,
-      value: '',
-      error: false,
-      show: false
-    },
-    email: {
-      type: 'input-with-validation',
-      placeholder: 'Email*',
-      validator: emailValidator.validate,
-      configured: false,
-      value: '',
-      error: false,
-      show: false
-    },
-    phone: {
-      type: 'phone-number',
-      placeholder: 'Phone*',
-      configured: false,
-      value: '',
-      error: false,
-      show: false
-    },
-    address: {
-      type: 'input-with-validation',
-      placeholder: 'Address*',
-      validator: val => val.length > 5,
-      configured: false,
-      value: '',
-      error: false,
-      show: false
-    },
-    postcode: {
-      type: 'input-with-validation',
-      placeholder: 'Postcode*',
-      validator: val => Number(val) && Number(val) >= 3000 && Number(val) < 9999,
-      configured: false,
-      value: '',
-      error: false,
-      show: false
-    },
-    state: {
-      type: 'selector',
-      placeholder: 'State*',
-      available: ['VIC', 'NSW', 'ACT', 'QLD', 'SA', 'WA', 'TAS', 'NT'],
-      configured: true,
-      value: '',
-      error: false,
-      show: false
-    },
-    list: {
-      type: 'selector',
-      placeholder: '?..',
-      available: [],
-      configured: true,
-      value: '',
-      error: false,
-      show: false
-    },
-    number: {
-      type: 'input-with-validation',
-      placeholder: '?..',
-      validator: val => val.match(/^[0-9]*$/),
-      configured: true,
-      value: '',
-      error: false,
-      show: false
-    },
-    combo: {
-      type: 'combobox',
-      placeholder: '...',
-      available: [],
-      validator: function (val) { return this.available.indexOf(val) !== -1 },
-      configured: true,
-      value: '',
-      error: false,
-      show: false
-    },
-    message: {
-      type: 'textarea',
-      placeholder: 'Enquiry',
-      configured: false,
-      value: '',
-      error: false,
-      show: false
-    }
-  }
+  contactFormFields: []
 }
 
 const getters = {
   endpoint: (state, getters, rootState) => rootState.contactEndpoint,
   pages: (state, getters, rootState) => rootState.pages.filter(item => item !== 'Contact Us'),
-  selectors: (state, getters, rootState) => rootState.selectors.filter(item => item !== '#contact')
+  selectors: (state, getters, rootState) => rootState.selectors.filter(item => item !== '#contact'),
+  types: (state, getters, rootState) => rootState.fieldTypes,
+  validators: (state, getters, rootState) => rootState.validators
 }
 
 const mutations = {
   UPDATE_USER_INFO: (state, payload) => {
-    state.contactFormFields[payload.field].value = payload.value
+    state.contactFormFields[payload.num].value = payload.value
   },
   UPDATE_EMAIL_SUBJECT: (state, payload) => { state.emailSubject = payload },
   UPDATE_EMAIL_TEXT: (state, payload) => { state.emailText = payload },
-  SET_FIELDS_TO_SHOW: (state, payload) => { state.fieldsToShow = payload },
   UPDATE_FIELD: (state, payload) => {
-    state.contactFormFields[payload.field][payload.prop] = payload.value
+    state.contactFormFields[payload.num][payload.prop] = payload.value
   },
   CREATE_MESSAGE: (state) => {
-    // const phoneValue = state.ucontactFormFields.phone.show ? `<h4>Phone: ${state.contactFormFields.phone.value}</h4>` : ''
-    // const addressValue = state.contactFormFields.address.show ? `<p>Address: ${state.contactFormFields.address.value}</p>` : ''
-    // const postcodeValue = state.contactFormFields.postcode.show ? `<p>Postcode: ${state.contactFormFields.postcode.value}</p>` : ''
-    // const stateValue = state.contactFormFields.state.show ? `<p>State: ${state.contactFormFields.state.value}</p>` : ''
-    // const listValue = state.contactFormFields.list.show ? `<p>${state.contactFormFields.list.placeholder}: ${state.contactFormFields.list.value}</p>` : ''
-    // const numberValue = state.contactFormFields.number.show ? `<p>${state.contactFormFields.number.placeholder}: ${state.contactFormFields.number.value}</p>` : ''
-    // const comboValue = state.contactFormFields.combo.show ? `<p>${state.contactFormFields.combo.placeholder}: ${state.contactFormFields.combo.value}</p>` : ''
     let details = ''
-    for (const field in state.contactFormFields) {
-      details += state.contactFormFields[field].show ? `<p>${state.contactFormFields[field].placeholder}: ${state.contactFormFields[field].value}</p>` : ''
+    let message = ''
+    for (const field of state.contactFormFields) {
+      if (field.type === 'message') {
+        message = `
+          <h4>Message:</h4>
+          <p>${field.value.split('\n').join('<br>')}</p>
+        `
+      } else details += `<p>${field.placeholder}: ${field.value}</p>`
     }
+
     state.messageForMail = `
       <p>${state.emailText}</p>
-      <h3>Name: ${state.contactFormFields.name.value}</h3>
-      <h4>Email: ${state.contactFormFields.email.value}</h4>
       <fieldset>
         <legend>Details:</legend>
         ${details}
       </fieldset>
-      <h4>Message:</h4>
-      <p>${state.userInfo.message.split('\n').join('<br>')}</p>
+      ${message}
     `
   },
+  SET_ERROR: (state, payload) => {
+    state.contactFormFields[payload.num].error = payload.value
+  },
   CLEAR_ALL_FIELDS: (state) => {
-    for (const field in state.contactFormFields) {
-      state.contactFormFields[field].value = ''
-      state.contactFormFields[field].error = false
+    for (const index in state.contactFormFields) {
+      state.contactFormFields[index].value = ''
+      state.contactFormFields[index].error = false
     }
   }
 }
 
 const actions = {
 
+  SET_FIELDS_TO_SHOW ({ state, getters }, payload) {
+    state.contactFormFields = payload.map((field) => {
+      return {
+        type: getters.types[field.type],
+        placeholder: field.placeholder,
+        required: field.required,
+        value: '',
+        validator: getters.validators[field.type],
+        error: false,
+        available: field.type === 'state' ? ['VIC', 'NSW', 'ACT', 'QLD', 'SA', 'WA', 'TAS', 'NT'] : field.available || null
+      }
+    })
+  },
   async SEND_EMAIL ({ state, commit }) {
     let error = false
     for (const field in state.contactFormFields) {

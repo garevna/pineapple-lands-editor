@@ -11,7 +11,7 @@
               <v-icon large color="white" v-else>mdi-home-circle</v-icon>
             </v-btn>
           </template>
-          <span>Reviews</span>
+          <span>Overall about landing pages</span>
         </v-tooltip>
 
         <v-tooltip bottom color="info">
@@ -21,7 +21,7 @@
               <v-icon large color="white" v-else>mdi-numeric-1-box</v-icon>
             </v-btn>
           </template>
-          <span>fast-fibre-internet</span>
+          <span>Landing page 1</span>
         </v-tooltip>
 
         <v-tooltip bottom color="info">
@@ -31,7 +31,7 @@
               <v-icon large color="white" v-else>mdi-numeric-2-box</v-icon>
             </v-btn>
           </template>
-          <span>connect-melbournecbd</span>
+          <span>Landing page 2</span>
         </v-tooltip>
 
         <v-tooltip bottom color="info">
@@ -41,7 +41,7 @@
               <v-icon large color="white" v-else>mdi-numeric-3-box</v-icon>
             </v-btn>
           </template>
-          <span>fibreinternet-melbournecbd</span>
+          <span>Landing page 3</span>
         </v-tooltip>
 
         <v-tooltip bottom color="info">
@@ -291,6 +291,7 @@ export default {
   },
   beforeMount () {
     this.validateToken()
+    document.title = 'CRM'
   },
   mounted () {
     this.$store.dispatch('testimonials/GET_CONTENT')

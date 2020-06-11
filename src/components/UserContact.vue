@@ -3,63 +3,50 @@
     <v-card-title>
       <SubHeader5 :value.sync="title" />
     </v-card-title>
-    <v-card-text class="mx-0 px-0" width="100%" v-if="fields">
+    <v-tooltip top color="info">
+        <template v-slot:activator="{ on }">
+          <v-spacer></v-spacer>
+          <v-btn icon large color="info" v-on="on" @click.stop="dialog = true">
+            <v-icon large style="font-size: 48px!important">mdi-playlist-edit</v-icon>
+          </v-btn>
+        </template>
+        <span>Customize Contact Form</span>
+    </v-tooltip>
+    <v-card-text class="mx-0 px-0" width="100%">
       <v-row
-            v-for="(field, prop) in fields"
-            :key="prop"
+            v-for="(field, index) in fields"
+            :key="index"
             class="bordered my-0"
       >
-          <v-col cols="10">
             <InputWithValidation
                     v-if="field.type === 'input-with-validation'"
-                    :label="field.placeholder"
-                    :placeholder="field.placeholder"
-                    :propName="prop"
-                    :validator="field.validator"
-                    :value.sync="field.value"
+                    :fieldIndex="index"
               />
               <InputPhoneNumber
                     v-if="field.type === 'phone-number'"
-                    propName="phone"
+                    :fieldIndex="index"
               />
-              <SelectorConfig
+              <Selector
                     v-if="field.type === 'selector'"
-                    :label.sync="field.placeholder"
-                    :values.sync="field.available"
+                    :fieldIndex="index"
               />
-              <ComboBoxConfig
+              <Combo
                     v-if="field.type === 'combobox'"
-                    :label.sync="field.placeholder"
-                    :values.sync="field.available"
+                    :fieldIndex="index"
               />
               <InputMessage
                     v-if="field.type === 'textarea'"
-                    :label.sync="field.placeholder"
+                    :fieldIndex="index"
               />
-              <v-divider></v-divider>
-          </v-col>
-          <v-col cols="2">
-            <v-tooltip top color="info">
-              <template v-slot:activator="{ on }">
-                <v-checkbox
-                      name="checks"
-                      :value="prop"
-                      v-model="selected"
-                      color="info"
-                      v-on="on"
-                ></v-checkbox>
-              </template>
-              <span>Select field</span>
-            </v-tooltip>
-          </v-col>
       </v-row>
     </v-card-text>
     <v-card-actions>
-      <Button :value.sync="button" />
+      <Button :value.sync="button" :hideConfig="true" />
     </v-card-actions>
 
     <Popup :opened.sync="popupOpened" />
     <PopupError :opened.sync="popupErrorOpened" />
+    <UserFormCustomization :dialog.sync="dialog" />
   </v-card>
 </template>
 
@@ -119,10 +106,10 @@ import { mapState, mapActions } from 'vuex'
 import SubHeader5 from '@/components/inputs/SubHeader5.vue'
 import Button from '@/components/inputs/Button.vue'
 
-// import ButtonWithTooltip from '@/components/editor/ButtonWithTooltip.vue'
+import UserFormCustomization from '@/components/editor/UserFormCustomization.vue'
 
-import SelectorConfig from '@/components/contact/SelectorConfig.vue'
-import ComboBoxConfig from '@/components/contact/ComboBoxConfig.vue'
+import Selector from '@/components/contact/Selector.vue'
+import Combo from '@/components/contact/Combo.vue'
 import InputWithValidation from '@/components/contact/InputWithValidation.vue'
 import InputPhoneNumber from '@/components/contact/InputPhoneNumber.vue'
 import InputMessage from '@/components/contact/InputMessage.vue'
@@ -135,11 +122,12 @@ import PopupError from '@/components/contact/PopupError.vue'
 export default {
   name: 'UserContact',
   components: {
+    UserFormCustomization,
     InputPhoneNumber,
     InputMessage,
     InputWithValidation,
-    SelectorConfig,
-    ComboBoxConfig,
+    Selector,
+    Combo,
     Popup,
     PopupError,
     SubHeader5,
@@ -147,18 +135,16 @@ export default {
   },
   data () {
     return {
+      dialog: false,
       popupOpened: false,
       popupErrorOpened: false,
-      selected: [],
-      clicked: false
+      clicked: false,
+      fields: this.$store.state.contact.contactFormFields
     }
   },
   computed: {
     ...mapState('content', ['userForm']),
-    ...mapState('contact', {
-      fields: 'contactFormFields'
-    }),
-
+    ...mapState('contact', ['contactFormFields']),
     title: {
       get () {
         return this.userForm.title
@@ -183,40 +169,11 @@ export default {
     }
   },
   watch: {
-    selected (selectedFields) {
-      const option = 'show'
-      for (const field in this.fields) {
-        const value = selectedFields.indexOf(field) !== -1
-        this.$store.commit('content/UPDATE_USER_FORM_FIELD_OPTION', { field, option, value })
-        this.$store.commit('contact/UPDATE_FIELD', { field, prop: option, value })
-      }
-    },
-    fields: {
+    contactFormFields: {
       deep: true,
+      immediate: true,
       handler (val) {
-        for (const field in val) {
-          if (val[field].available) {
-            this.$store.commit('content/UPDATE_USER_FORM_FIELD_OPTION', {
-              field,
-              option: 'available',
-              value: val[field].available
-            })
-          }
-          if (val[field].placeholder) {
-            this.$store.commit('content/UPDATE_USER_FORM_FIELD_OPTION', {
-              field,
-              option: 'placeholder',
-              value: val[field].placeholder
-            })
-          }
-          for (const prop in val[field]) {
-            this.$store.commit('contact/UPDATE_FIELD', {
-              field,
-              prop,
-              value: val[field][prop]
-            })
-          }
-        }
+        this.fields = JSON.parse(JSON.stringify(this.$store.state.contact.contactFormFields))
       }
     }
   },
@@ -234,18 +191,7 @@ export default {
     }
   },
   mounted () {
-    const fields = this.userForm.fieldsToShow
-    this.selected = []
-    for (const field in fields) {
-      for (const prop in fields[field]) {
-        this.$store.commit('contact/UPDATE_FIELD', {
-          field,
-          prop,
-          value: fields[field][prop]
-        })
-      }
-      if (fields[field].show) this.selected.push(field)
-    }
+    this.fields = JSON.parse(JSON.stringify(this.$store.state.contact.contactFormFields))
   }
 }
 

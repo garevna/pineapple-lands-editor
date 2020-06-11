@@ -1,6 +1,6 @@
 <template>
     <InputWithValidation
-        :placeholder="label"
+        :placeholder="field.placeholder"
         propName="combo"
         :validator="validate"
     />
@@ -18,13 +18,16 @@ export default {
   components: {
     InputWithValidation
   },
-  props: ['label', 'values'],
+  props: ['fieldIndex'],
   data () {
     return {
 
     }
   },
   computed: {
+    field () {
+      return this.$store.state.contact.contactFormFields[this.fieldIndex]
+    },
     fieldLabel: {
       get () {
         return this.label

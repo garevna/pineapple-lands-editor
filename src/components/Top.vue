@@ -11,7 +11,7 @@
             <Paragraph :value.sync="topText" />
           </v-card-text>
           <v-card-text class="text-center text-md-left">
-            <Button :value.sync="topButton" />
+            <Button :value.sync="topButton" :goto.sync="topButtonGoto" />
           </v-card-text>
         </v-card>
       </v-col>
@@ -20,7 +20,7 @@
 
           <ChangePicture destination="image" :pictureURL.sync="imageSrc" />
 
-          <v-img :src="top.pictureURL" max-width="750" class="mx-auto"></v-img>
+          <v-img :src="top ? top.pictureURL : null" max-width="750" class="mx-auto"></v-img>
         </v-card>
       </v-col>
     </v-row>
@@ -65,7 +65,7 @@ export default {
     ...mapState('content', ['top']),
     topHeader: {
       get () {
-        return this.top.header
+        return this.top ? this.top.header : ''
       },
       set (val) {
         this.$store.commit('content/UPDATE_TOP', { prop: 'header', value: val })
@@ -73,7 +73,7 @@ export default {
     },
     topText: {
       get () {
-        return this.top.text
+        return this.top ? this.top.text : ''
       },
       set (val) {
         this.$store.commit('content/UPDATE_TOP', { prop: 'text', value: val })
@@ -81,21 +81,27 @@ export default {
     },
     topButton: {
       get () {
-        return this.top.button
+        return this.top ? this.top.button : ''
       },
       set (val) {
         this.$store.commit('content/UPDATE_TOP', { prop: 'button', value: val })
+      }
+    },
+    topButtonGoto: {
+      get () {
+        return this.top ? this.top.goto : ''
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_TOP', { prop: 'goto', value: val })
       }
     }
   },
   watch: {
     imageSrc (val) {
-      console.log('WATCHER: Image src changed: ', val)
       this.$store.commit('content/UPDATE_TOP', { prop: 'pictureURL', value: val })
     },
     clicked (val) {
       if (!val) return
-      console.log('Clicked!')
       this.clicked = false
     }
   }

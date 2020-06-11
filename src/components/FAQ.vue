@@ -90,7 +90,7 @@
     </v-card>
     <v-card flat class="transparent mx-auto mt-12 text-center">
       <v-card-text class="text-center">
-        <Button :value.sync="button" class="mx-auto" />
+        <Button :value.sync="button" :goto.sync="goto" class="mx-auto" />
       </v-card-text>
     </v-card>
   </v-container>
@@ -167,6 +167,14 @@ export default {
       },
       set (val) {
         this.$store.commit('content/UPDATE_FAQ', { prop: 'button', value: val })
+      }
+    },
+    goto: {
+      get () {
+        return this.faq && this.faq.goto ? this.faq.goto : ''
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_FAQ', { prop: 'goto', value: val })
       }
     }
   },

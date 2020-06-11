@@ -42,7 +42,7 @@
 <script>
 
 export default {
-  name: 'InputWithValidation',
+  name: 'Combo',
   props: ['fieldIndex'],
   data () {
     return {
@@ -50,7 +50,8 @@ export default {
       errorColor: '#FF0E00',
       validColor: '#4CAF50',
       color: '#656565',
-      validationIcon: ''
+      validationIcon: '',
+      available: null
     }
   },
   computed: {
@@ -71,10 +72,9 @@ export default {
   },
   methods: {
     validate (val) {
-      this.error = !this.field.validator(val)
-      this.$store.commit('contact/UPDATE_FIELD', {
+      this.error = this.field.available.indexOf(val) === -1
+      this.$store.commit('contact/SET_ERROR', {
         num: this.fieldIndex,
-        prop: 'error',
         value: this.error
       })
       this.color = val.length === 0 ? this.normalColor : this.error ? this.errorColor : this.validColor

@@ -35,9 +35,6 @@
 import { mapGetters, mapActions } from 'vuex'
 
 const crypto = require('cryptico')
-// console.log(process.env.VUE_APP_SECRET)
-// const keyRSA = crypto.generateRSAKey(process.env.VUE_APP_SECRET, 1024)
-// const publicKey = crypto.publicKeyString(keyRSA)
 
 export default {
   name: 'Auth',
@@ -45,7 +42,6 @@ export default {
   data () {
     return {
       secret: process.env.VUE_APP_SECRET,
-
       login: '',
       password: '',
       submit: null
@@ -54,12 +50,9 @@ export default {
   computed: {
     ...mapGetters('editor', ['hostEndpoint']),
     keyRSA () {
-      console.log('SECRET: ', this.secret)
-      console.log('RSA KEY: ', crypto.generateRSAKey(this.secret, 1024))
       return crypto.generateRSAKey(this.secret, 1024)
     },
     publicKey () {
-      console.log('PUBLIC KEY: ', crypto.publicKeyString(this.keyRSA))
       return crypto.publicKeyString(this.keyRSA)
     }
   },
@@ -102,9 +95,6 @@ export default {
   },
   mounted () {
     this.submit = this.validate.bind(this)
-    console.log('CRIPTO: ', crypto.encrypt)
-    console.log(process.env.VUE_APP_SECRET)
-    console.log(this.secret)
   }
 }
 </script>

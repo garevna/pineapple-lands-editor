@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <h2>Info about landing pages</h2>
+    <h2 style="color: #09b">Overall about landing pages</h2>
     <v-row>
       <v-col
             cols="12"
@@ -14,7 +14,10 @@
 </template>
 
 <style>
-
+.v-btn.v-size--large {
+  font-size: 1.2rem!important;
+  font-weight: bold;
+}
 </style>
 
 <script>

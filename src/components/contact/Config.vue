@@ -1,25 +1,36 @@
 <template>
-  <v-dialog v-model="dialog" persistent max-width="600px">
+  <v-dialog v-model="dialog" persistent max-width="600px" v-if="field">
     <v-card class="pa-8">
       <v-card-title>
-        <p style="text-align: left; color: #09b">Define the name for the field (it will be shown as field label)</p>
+        <h3 style="text-align: left; color: #09b">
+          {{ field.type }}
+        </h3>
       </v-card-title>
       <v-card-text>
+        <p style="text-align: left; color: #09b">
+          Define the name for the field (it will be shown as field label)
+        </p>
         <v-text-field
-              label="Field label"
-              v-model="fieldLabel"
-              prompt="Field label"
+              label="Field label (prompt text)"
+              v-model="field.placeholder"
+              prompt="Field label (prompt text)"
               prepend-inner-icon="mdi-pencil"
         ></v-text-field>
       </v-card-text>
-      <v-card-title>
+      <v-card-text>
+        <v-checkbox v-model="field.required" class="mx-2" label="Required"></v-checkbox>
+      </v-card-text>
+      <v-card-title v-if="field.type === 'combo' || field.type === 'list'">
         <p style="color: #09b">Define the set of available values</p>
       </v-card-title>
-      <v-card-text>
+      <v-card-text v-if="field.type === 'combo' || field.type === 'list'">
         <v-simple-table dense>
           <template v-slot:default>
             <tbody dense>
-              <tr v-for="(item, index) in list" :key="index">
+              <tr v-if="field.available.length === 0">
+                <td>(Empty)</td>
+              </tr>
+              <tr v-for="(item, index) in field.available" :key="index">
                 <td width="10%">
                   <v-btn
                          dark
@@ -28,13 +39,13 @@
                          width="28"
                          height="28"
                          color="delete"
-                         @click.stop="list.splice(index, 1)"
+                         @click.stop="field.available.splice(index, 1)"
                   >
                     <v-icon>$delete</v-icon>
                   </v-btn>
                 </td>
                 <td width="80%">
-                  <v-text-field v-model="list[index]"></v-text-field>
+                  <v-text-field v-model="field.available[index]"></v-text-field>
                 </td>
                 <td width="10%"></td>
               </tr>
@@ -47,7 +58,7 @@
                          dark
                          small
                          color="info"
-                         @click.stop="list.push('...')"
+                         @click.stop="field.available.push('...')"
                   >
                     <v-icon>mdi-plus</v-icon>
                   </v-btn>
@@ -75,39 +86,33 @@
 
 <script>
 
-// import ButtonWithTooltip from '@/components/editor/ButtonWithTooltip.vue'
-
 export default {
   name: 'Config',
-  components: {
-    // ButtonWithTooltip
-  },
-  props: ['dialog', 'label', 'values'],
+  props: ['dialog', 'fieldIndex'],
   data () {
     return {
-      list: []
-    }
-  },
-  computed: {
-    fieldLabel: {
-      get () {
-        return this.label
-      },
-      set (val) {
-        this.$emit('update:label', val)
-      }
+      field: null
     }
   },
   watch: {
-    list: {
+    field: {
       deep: true,
       handler (val) {
-        this.$emit('update:values', val)
+        console.log('Field handler:\n', val)
+        for (const prop in val) {
+          this.$store.commit('content/UPDATE_USER_FORM_FIELD_OPTION', {
+            num: this.fieldIndex,
+            prop,
+            value: val[prop]
+          })
+        }
       }
     }
   },
   mounted () {
-    this.list = this.values || ['...']
+    this.field = this.$store.state.content.userForm.fieldsToShow[this.fieldIndex]
+    delete this.field.undefined
+    console.log('Config mounted: ', this.field)
   }
 }
 </script>

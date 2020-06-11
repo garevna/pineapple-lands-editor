@@ -53,21 +53,20 @@
 
 <script>
 
-import { mapState } from 'vuex'
-
 export default {
   name: 'InputPhoneNumber',
+  props: ['fieldIndex'],
   computed: {
-    ...mapState('contact', {
-      phone: 'contactFormFields.phone.value'
-    }),
+    field () {
+      return this.$store.state.contact.contactFormFields[this.fieldIndex]
+    },
     phoneNumber: {
       get () {
-        return this.$store.state.contact.contactFormFields.phone.value
+        return this.field.value
       },
       set (val) {
         this.$store.commit('contact/UPDATE_USER_INFO', {
-          field: 'phone',
+          num: this.fieldIndex,
           value: val
         })
       }
@@ -76,7 +75,7 @@ export default {
   methods: {
     test (res) {
       this.$store.commit('contact/UPDATE_FIELD', {
-        field: 'phone',
+        num: this.index,
         prop: 'error',
         value: !res.isValid
       })

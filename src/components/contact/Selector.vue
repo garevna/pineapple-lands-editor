@@ -1,11 +1,11 @@
 <template>
   <v-select
-      :items="values"
+      :items="field.available"
       outlined
       hide-details
       class="combo-box-input"
       v-model="selected"
-      :label="label"
+      :label="field.placeholder"
   ></v-select>
 </template>
 
@@ -20,21 +20,25 @@
 
 export default {
   name: 'Selector',
-  props: ['label', 'values'],
+  props: ['fieldIndex'],
   data () {
     return {
       //
     }
   },
   computed: {
+    field () {
+      return this.$store.state.contact.contactFormFields[this.fieldIndex]
+    },
     selected: {
       get () {
-        return this.propName
+        console.log(this.field.value)
+        return this.field.value
       },
       set (val) {
         console.log('SELECTED: ', val)
         this.$store.commit('contact/UPDATE_USER_INFO', {
-          field: 'list',
+          num: this.fieldIndex,
           value: val
         })
       }

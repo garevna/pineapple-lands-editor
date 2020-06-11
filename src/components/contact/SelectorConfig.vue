@@ -14,10 +14,7 @@
       />
       <h5>{{ fieldLabel }}</h5>
     </v-card-title>
-    <Selector
-            :label="fieldLabel"
-            :values="fieldValues"
-    />
+    <Selector :fieldIndex="fieldIndex" />
     <Config :dialog.sync="config" :label.sync="fieldLabel" :values.sync="fieldValues" />
   </v-card>
 </template>
@@ -38,7 +35,7 @@ export default {
     Config,
     ButtonWithTooltip
   },
-  props: ['label', 'values'],
+  props: ['fieldIndex'],
   data () {
     return {
       clicked: false,

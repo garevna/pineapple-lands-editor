@@ -1,44 +1,53 @@
 <template>
   <v-container fluid class="homefone" v-if="ready">
     <AppHeader :page.sync="page" />
-    <Top />
+
+    <!-- ============================= TOP ============================= -->
+    <section id="top">
+      <div class="base-title">
+        <a href="#top" class="core-goto"></a>
+        <Top />
+      </div>
+    </section>
     <!-- ============================= USER CONTACT ============================= -->
-
-      <v-row justify="center" class="pa-0 ma-0">
-          <!-- <v-row class="mx-0 px-0"> -->
-            <v-col cols="12" md="6" class="aside-col">
-              <Aside />
-            </v-col>
-            <v-col cols="12" md="6" class="mx-0 px-0">
-              <v-card flat class="transparent mx-0">
-                <!-- <v-img src="@/img/map-picture.svg" height="800" contain style="opacity:0.2;"></v-img> -->
-                <v-card
-                        flat
-                        class="user-contact transparent mx-auto pa-0"
-                        style="margin-bottom: 80px"
-                >
-                  <UserContact />
-                </v-card>
+    <section id="contact" style="width: 100%">
+      <div class="base-title">
+        <a href="#contact" class="core-goto"></a>
+        <v-row justify="center" class="pa-0 ma-0">
+          <v-col cols="12" md="6" class="aside-col">
+            <Aside />
+          </v-col>
+          <v-col cols="12" md="6" class="mx-0 px-0">
+            <v-card flat class="transparent mx-0">
+              <v-card
+                      flat
+                      class="user-contact transparent mx-auto pa-0"
+                      style="margin-bottom: 80px"
+              >
+                <UserContact />
               </v-card>
-            </v-col>
-          <!-- </v-row> -->
-      </v-row>
+            </v-card>
+          </v-col>
+        </v-row>
+      </div>
+    </section>
 
-      <!-- ============================= HOW TO CONNECT ============================= -->
-      <v-row width="100%">
-        <section id="how-to-connect">
-          <div class="base-title">
-            <a href="#how-to-connect" class="core-goto"></a>
-            <HowToConnect :contact.sync="contactUs" :connect.sync="getConnected" />
-          </div>
-        </section>
-      </v-row>
-      <!-- ============================= INTERNET PLANS ============================= -->
+    <!-- ============================= HOW TO CONNECT ============================= -->
+    <v-row width="100%" justify="center">
+      <section id="how-to-connect">
+        <div class="base-title">
+          <a href="#how-to-connect" class="core-goto"></a>
+          <HowToConnect :contact.sync="contactUs" :connect.sync="getConnected" />
+        </div>
+      </section>
+    </v-row>
+
+    <!-- ============================= INTERNET PLANS ============================= -->
       <v-row width="100%" justify="center">
         <section id="plans">
           <div class="base-title">
             <a href="#plans" class="core-goto"></a>
-            <InternetPlans :page.sync="page"/>
+            <InternetPlans :page.sync="page" />
           </div>
         </section>
       </v-row>
@@ -113,7 +122,6 @@ export default {
     InternetPlans,
     FAQ,
     Footer,
-    // ImageGallery,
     Popup
   },
   data () {
@@ -167,14 +175,6 @@ export default {
     this.getContent(1)
       .then((response) => {
         this.ready = !!response
-        document.title = response
-        this.userFormConfig()
-        this.$store.commit('UPDATE_PAGES', {
-          pages: this.$store.state.content.mainNavButtons,
-          selectors: this.$store.state.content.mainNavSectors
-        })
-        this.$store.commit('contact/UPDATE_EMAIL_SUBJECT', this.$store.state.content.emailSubject)
-        this.$store.commit('contact/UPDATE_EMAIL_TEXT', this.$store.state.content.emailText)
       })
     this.getTestimonials()
   }

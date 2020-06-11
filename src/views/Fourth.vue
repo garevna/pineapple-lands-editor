@@ -1,41 +1,56 @@
 <template>
-  <v-container fluid class="homefone">
-      <AppHeader :pages="pages" :selected.sync="page"/>
-      <Top />
+  <v-app class="homefone">
+    <v-container fluid class="homefone" v-if="ready">
+      <AppHeader :page.sync="page"/>
+      <v-sheet
+        width="100%"
+        max-width="1440"
+        color="homefone"
+        tile
+        class="mx-auto"
+      >
+        <Top :page.sync="page" />
+      </v-sheet>
 
       <!-- ============================= USER CONTACT ============================= -->
 
-      <v-row justify="center" class="pa-0 ma-0">
-        <v-sheet
-          width="100%"
-          max-width="1440"
-          color="homefone"
-          tile
-          class="mx-auto"
-        >
-          <v-row class="mx-0 px-0">
-            <v-col cols="12" md="6" class="aside-col">
-              <Aside />
-            </v-col>
-            <v-col cols="12" md="6" class="mx-0 px-0">
-              <v-card flat class="transparent mx-0">
-                <!-- <v-img src="@/img/map-picture.svg" height="800" contain style="opacity:0.2;"></v-img> -->
+      <section id="contact" style="width: 100%">
+        <div class="base-title">
+          <a href="#contact" class="core-goto"></a>
+
+          <v-sheet
+              width="100%"
+              max-width="1440"
+              color="homefone"
+              tile
+              class="mx-auto"
+          >
+            <v-row align="center" justify="center" class="pa-0 my-12">
+              <v-col cols="12" md="6" class="aside-col">
+                <Aside />
+              </v-col>
+              <v-col cols="12" md="6" class="mx-0 px-0">
                 <v-card
-                        flat
-                        class="user-contact transparent mx-auto pa-0"
-                        style="margin-bottom: 80px"
+                      flat
+                      class="user-contact transparent mx-auto pa-0"
+                      style="margin-bottom: 80px"
                 >
                   <UserContact />
                 </v-card>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-sheet>
-      </v-row>
+              </v-col>
+            </v-row>
+          </v-sheet>
+        </div>
+      </section>
 
       <!-- ============================= HOW TO CONNECT ============================= -->
       <v-row width="100%">
-        <HowToConnect :contact.sync="contactUs" :connect.sync="getConnected" />
+        <section id="how-to-connect" style="width: 100%">
+          <div class="base-title">
+            <a href="#how-to-connect" class="core-goto"></a>
+            <HowToConnect :page.sync="page" />
+          </div>
+        </section>
       </v-row>
       <!-- ============================= INTERNET PLANS ============================= -->
       <v-row width="100%" justify="center">
@@ -48,7 +63,12 @@
       </v-row>
       <!-- ============================= TESTIMONIALS ============================= -->
       <v-row width="100%">
-        <Testimonials />
+        <section id="testimonials" style="width: 100%">
+          <div class="base-title">
+            <a href="#testimonials" class="core-goto"></a>
+            <Testimonials :page.sync="page"/>
+          </div>
+        </section>
       </v-row>
       <!-- ============================= FAQ ============================= -->
       <v-row width="100%">
@@ -68,9 +88,23 @@
             </v-row>
         </div>
       </section>
-      <ImageGallery />
+
+      <!-- ============================= BOTTOM NAV ============================= -->
+      <v-bottom-navigation
+            fixed
+            dark
+            class="buttons"
+            v-if="authorized"
+      >
+        <v-btn @click="savePageContent" v-if="authorized">
+          <span>Save</span>
+          <v-icon>mdi-content-save-edit</v-icon>
+        </v-btn>
+      </v-bottom-navigation>
+
       <Popup />
-  </v-container>
+    </v-container>
+  </v-app>
 </template>
 
 <script>
@@ -87,12 +121,10 @@ import InternetPlans from '@/components/InternetPlans.vue'
 import FAQ from '@/components/FAQ.vue'
 import Footer from '@/components/Footer.vue'
 
-import ImageGallery from '@/components/editor/ImageGallery.vue'
 import Popup from '@/components/editor/Popup.vue'
-// import Auth from '@/components/editor/Auth.vue'
 
 export default {
-  name: 'First',
+  name: 'Fourth',
   components: {
     AppHeader,
     Top,
@@ -103,7 +135,6 @@ export default {
     InternetPlans,
     FAQ,
     Footer,
-    ImageGallery,
     Popup
   },
   data () {
@@ -111,7 +142,7 @@ export default {
       section: null,
       contactUs: false,
       getConnected: false,
-      user: {}
+      ready: false
     }
   },
   computed: {
@@ -168,15 +199,10 @@ export default {
       getContent: 'GET_CONTENT',
       saveContent: 'SAVE_CONTENT'
     }),
-    // ...mapActions('editor', {
-    //   getAllPictures: 'GET_ALL_PICTURES',
-    //   getAllAvatars: 'GET_ALL_AVATARS'
-    // }),
     ...mapActions('testimonials', {
-      saveTestimonials: 'SAVE_CONTENT'
+      getTestimonials: 'GET_CONTENT'
     }),
     async savePageContent () {
-      // let response = await this.saveTestimonials()
       const response = await this.saveContent(4)
       const actionName = response === 200 ? 'saveSuccess' : response === 403 || response === 401 ? 'accessDenied' : 'saveFailure'
       this[actionName]()
@@ -184,10 +210,10 @@ export default {
   },
   beforeMount () {
     this.getContent(4)
-  },
-  mounted () {
-    // this.getAllPictures()
-    // this.getAllAvatars()
+      .then((response) => {
+        this.ready = !!response
+      })
+    this.getTestimonials()
   }
 }
 </script>

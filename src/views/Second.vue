@@ -179,14 +179,6 @@ export default {
     this.getContent(2)
       .then((response) => {
         this.ready = !!response
-        document.title = response
-        this.userFormConfig()
-        this.$store.commit('UPDATE_PAGES', {
-          pages: this.$store.state.content.mainNavButtons,
-          selectors: this.$store.state.content.mainNavSectors
-        })
-        this.$store.commit('contact/UPDATE_EMAIL_SUBJECT', this.$store.state.content.emailSubject)
-        this.$store.commit('contact/UPDATE_EMAIL_TEXT', this.$store.state.content.emailText)
       })
     this.getTestimonials()
   },

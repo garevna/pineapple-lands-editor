@@ -73,7 +73,7 @@
       </v-carousel>
     </v-card>
     <v-card-text class="text-center">
-      <Button :value.sync="content.button" class="mx-auto" />
+      <Button :value.sync="content.button" :goto.sync="goto" class="mx-auto" />
     </v-card-text>
   </v-container>
 </template>
@@ -134,6 +134,17 @@ export default {
       set (val) {
         this.$store.commit('content/UPDATE_TESTIMONIALS', {
           prop: 'button',
+          value: val
+        })
+      }
+    },
+    goto: {
+      get () {
+        return this.content.goto
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_TESTIMONIALS', {
+          prop: 'goto',
           value: val
         })
       }

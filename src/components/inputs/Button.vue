@@ -1,26 +1,43 @@
 <template>
   <v-card flat class="transparent mx-auto text-center">
-    <ButtonWithTooltip
-          icon="$config"
-          :fab="true"
-          :text="null"
-          tooltip="Define action (go to)"
-          :width="32"
-          :height="32"
-          :bottom="-40"
-          :left="-280"
-          color="#f0f"
-          :clicked.sync="clicked"
-    />
-    <v-card-text class="mx-auto text-center">
-      <v-text-field
-            dark
-            class="submit-button mx-auto"
-            v-model="inputValue"
-            hide-details
-            prepend-inner-icon="mdi-pencil"
-      ></v-text-field>
-    </v-card-text>
+    <v-row style="margin-top: 16px; margin-left: 20px!important" v-if="!hideConfig">
+        <span style="margin-top: 16px"><small>{{ goto }}</small></span>
+        <v-menu bottom left>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              fab
+              color="#09b"
+              icon
+              v-on="on"
+            >
+              <v-icon large>
+                mdi-gesture-tap-button
+              </v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(section, i) in sections"
+              :key="i"
+              @click="selectSection(i)"
+            >
+              <v-list-item-title>
+                {{ section }}
+              </v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+
+      </v-row>
+      <v-row>
+        <v-text-field
+              dark
+              class="submit-button mx-auto"
+              v-model="inputValue"
+              hide-details
+              prepend-inner-icon="mdi-pencil"
+        ></v-text-field>
+    </v-row>
   </v-card>
 </template>
 
@@ -43,20 +60,25 @@
 
 <script>
 
-import ButtonWithTooltip from '@/components/editor/ButtonWithTooltip.vue'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Button',
-  components: {
-    ButtonWithTooltip
-  },
-  props: ['value', 'click'],
+  props: ['value', 'goto', 'hideConfig'],
   data () {
     return {
       clicked: false
     }
   },
   computed: {
+    ...mapState(['currentLand']),
+    ...mapState('editor', ['configs']),
+    sections () {
+      return this.configs[this.currentLand - 1].map(item => item.title)
+    },
+    jumps () {
+      return this.configs[this.currentLand - 1].map(item => item.value)
+    },
     inputValue: {
       get () {
         return this.value
@@ -66,11 +88,9 @@ export default {
       }
     }
   },
-  watch: {
-    clicked (val) {
-      if (!val) return
-      this.$emit('update:click', true)
-      this.clicked = false
+  methods: {
+    selectSection (num) {
+      this.$emit('update:goto', this.jumps[num])
     }
   }
 }

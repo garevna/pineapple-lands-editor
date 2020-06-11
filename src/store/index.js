@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import modules from './modules'
 
+const emailValidator = require('email-validator')
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -23,7 +25,42 @@ export default new Vuex.Store({
     popup: false,
     popupTitle: '',
     popupText: '',
-    authorized: false
+    authorized: false,
+    numberOfLands: 4,
+    currentLand: null,
+    fieldTypes: {
+      text: 'input-with-validation',
+      number: 'input-with-validation',
+      email: 'input-with-validation',
+      phone: 'phone-number',
+      state: 'selector',
+      postcode: 'input-with-validation',
+      list: 'selector',
+      combo: 'combobox',
+      message: 'textarea'
+    },
+    validators: {
+      text: val => val.length > 2,
+      number: val => val.match(/^[0-9]*$/),
+      email: emailValidator.validate,
+      phone: null,
+      state: null,
+      postcode: val => Number(val) && Number(val) >= 3000 && Number(val) < 9999,
+      list: null,
+      combo: function (val) { return this.available.indexOf(val) !== -1 },
+      message: val => val.length >= 5
+    },
+    description: {
+      text: 'Simple text',
+      number: 'Simple number',
+      email: 'Email',
+      phone: 'Phone',
+      state: 'State',
+      postcode: 'Postcode',
+      list: 'Select from a list',
+      combo: 'Combobox input',
+      message: 'Message'
+    }
   },
   modules,
 
@@ -33,6 +70,7 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    SET_CURRENT_LAND: (state, num) => { state.currentLand = num },
     UPDATE_PAGES: (state, payload) => {
       state.pages = payload.pages
       state.selectors = payload.selectors

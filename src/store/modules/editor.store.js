@@ -7,7 +7,129 @@ const state = {
   imageType: 'image',
   section: null,
   num: null,
-  availableFormFields: ['name', 'email', 'address', 'postcode', 'state', 'phone', 'building', 'apptNumber', 'promocode', 'message']
+  availableFormFields: ['name', 'email', 'address', 'postcode', 'state', 'phone', 'list', 'number', 'combo', 'message'],
+  configs: [
+    [
+      {
+        title: 'Top of the page',
+        value: '#top'
+      },
+      {
+        title: 'Benefits',
+        value: '#benefits'
+      },
+      {
+        title: 'Contact form',
+        value: '#contact'
+      },
+      {
+        title: 'How To Connect',
+        value: '#how-to-connect'
+      },
+      {
+        title: 'Internet Plans',
+        value: '#plans'
+      },
+      {
+        title: 'Reviews',
+        value: '#testimonials'
+      },
+      {
+        title: 'FAQs',
+        value: '#faq'
+      },
+      {
+        title: 'Footer',
+        value: '#footer'
+      }
+    ],
+    [
+      {
+        title: 'Top of the page',
+        value: '#top'
+      },
+      {
+        title: 'Reviews',
+        value: '#testimonials'
+      },
+      {
+        title: 'Contact form',
+        value: '#contact'
+      },
+      {
+        title: 'FAQs',
+        value: '#faq'
+      },
+      {
+        title: 'Footer',
+        value: '#footer'
+      }
+    ],
+    [
+      {
+        title: 'Top of the page',
+        value: '#top'
+      },
+      {
+        title: 'List (just after top)',
+        value: '#list'
+      },
+      {
+        title: 'Powered by DGtek',
+        value: '#dgtek'
+      },
+      {
+        title: 'How To Connect',
+        value: '#how-to-connect'
+      },
+      {
+        title: 'Reviews',
+        value: '#testimonials'
+      },
+      {
+        title: 'Internet Plans',
+        value: '#plans'
+      },
+      {
+        title: 'FAQs',
+        value: '#faq'
+      },
+      {
+        title: 'Footer with contact form',
+        value: '#footer'
+      }
+    ],
+    [
+      {
+        title: 'Top of the page',
+        value: '#top'
+      },
+      {
+        title: 'Contact form',
+        value: '#contact'
+      },
+      {
+        title: 'How To Connect',
+        value: '#how-to-connect'
+      },
+      {
+        title: 'Internet Plans',
+        value: '#plans'
+      },
+      {
+        title: 'Reviews',
+        value: '#testimonials'
+      },
+      {
+        title: 'FAQs',
+        value: '#faq'
+      },
+      {
+        title: 'Footer with contact form',
+        value: '#footer'
+      }
+    ]
+  ]
 }
 
 const getters = {
@@ -35,7 +157,6 @@ const mutations = {
 const actions = {
 
   async UPLOAD_FILE ({ state, getters }, payload) {
-    console.log(payload.destination, '\nFILE:\n', payload.file)
     const formData = new FormData()
     formData.set(payload.destination === 'image' ? 'picture' : 'icon', payload.file)
     let response = null
@@ -48,7 +169,6 @@ const actions = {
         },
         body: formData
       })).text()
-      console.log('SERVER RESPONSE: ', response)
       return response
     } catch (error) { return null }
   },
