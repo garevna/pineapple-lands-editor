@@ -2,11 +2,11 @@
 
 #### Dashboard for landing pages of Pineapple.net.au
 
-[**demo**](https://garevna.github.io/pineapple-land-editor/)
+[**demo**](https://garevna.github.io/pineapple-lands-editor/)
 
 ## Project setup
 ```
-npm install
+yarn install
 ```
 
 ### Compiles and hot-reloads for development

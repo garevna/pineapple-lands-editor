@@ -11,7 +11,7 @@
               <v-icon large color="white" v-else>mdi-home-circle</v-icon>
             </v-btn>
           </template>
-          <span>Reviews</span>
+          <span>Pages configuration</span>
         </v-tooltip>
 
         <v-tooltip bottom color="info">

@@ -54,6 +54,7 @@ const state = {
       placeholder: 'State*',
       available: ['VIC', 'NSW', 'ACT', 'QLD', 'SA', 'WA', 'TAS', 'NT'],
       configured: true,
+      validator: function (val) { console.log(this.available); return this.available.indexOf(val) !== -1 },
       value: '',
       error: false,
       show: false

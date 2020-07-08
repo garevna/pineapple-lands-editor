@@ -10,6 +10,7 @@ const getters = {
 
 const mutations = {
   UPDATE_PAGE_NUM: (state, payload) => { state.pageNum = payload },
+  // UPDATE_NAV_BUTTONS: (state, payload) => { state. }
   UPDATE_TOP: (state, payload) => { console.log(payload.prop, payload.value); state.top[payload.prop] = payload.value },
   UPDATE_INFO: (state, payload) => { state.info[payload.prop] = payload.value },
 
@@ -75,7 +76,7 @@ const mutations = {
   },
 
   UPDATE_FOOTER: (state, payload) => { state.footer[payload.prop] = payload.value },
-
+  UPDATE_NAV_BUTTONS: (state, payload) => { state.mainNavButtons = payload },
   UPDATE_ALL: (state, payload) => { Object.assign(state, payload) }
 }
 
@@ -83,6 +84,7 @@ const actions = {
   async GET_CONTENT ({ getters, commit, dispatch }, route) {
     try {
       const response = await (await fetch(`${getters.pageContentEndpoint}/${route}`)).json()
+      console.log(response)
       commit('UPDATE_ALL', response)
       return response
     } catch (error) {

@@ -27,15 +27,20 @@
     <v-card-text class="">
       <h5 class="mx-8 mb-8">Main Nav Panel Buttons</h5>
       <v-text-field
-              v-for="(button, index) in mainNavButtons"
+              v-for="(button, index) in navigationButtons"
               :key="index"
               outlined
               dense
               hide-details
               width="120"
-              v-model="mainNavButtons[index]"
+              v-model="navigationButtons[index]"
               class="px-12"
       ></v-text-field>
+      <!-- <v-select
+          :items="mainNavSectors"
+          v-model=""
+          label="Go to"
+      ></v-select> -->
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
@@ -46,7 +51,7 @@
 
 <script>
 
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'LandInfoCard',
@@ -59,10 +64,11 @@ export default {
       browserTabTitle: '',
       emailSubject: '',
       emailText: '',
-      mainNavButtons: []
+      navigationButtons: []
     }
   },
   computed: {
+    ...mapState('content', ['mainNavButtons', 'mainNavSectors']),
     ...mapGetters(['contentHost']),
     endpoint () {
       return `${this.contentHost}/${this.index}`
@@ -74,7 +80,7 @@ export default {
       this.browserTabTitle = browserTabTitle
       this.emailSubject = emailSubject
       this.emailText = emailText
-      this.mainNavButtons = mainNavButtons
+      this.navigationButtons = mainNavButtons
       this.header = top.header
     },
     async saveData () {
@@ -83,8 +89,9 @@ export default {
         browserTabTitle: this.browserTabTitle,
         emailSubject: this.emailSubject,
         emailText: this.emailText,
-        mainNavButtons: this.mainNavButtons
+        mainNavButtons: this.navigationButtons
       })
+      if (!localStorage.getItem('token')) return
       const response = await fetch(this.endpoint, {
         method: 'POST',
         headers: {
@@ -97,7 +104,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this.endpoint)
     this.getData()
   }
 }

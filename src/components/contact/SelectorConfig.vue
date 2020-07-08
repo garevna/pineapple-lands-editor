@@ -61,9 +61,6 @@ export default {
       set (val) {
         this.$emit('update:values', val)
       }
-    },
-    tooltip () {
-      return this.config ? 'Hide customization' : 'Customize the field'
     }
   },
   watch: {

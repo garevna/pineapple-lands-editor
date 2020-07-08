@@ -1,4 +1,4 @@
-const Dotenv = require('dotenv-webpack')
+// const Dotenv = require('dotenv-webpack')
 
 module.exports = {
   transpileDependencies: [
@@ -13,8 +13,9 @@ module.exports = {
       splitChunks: {
         automaticNameDelimiter: '.'
       }
-    },
-    plugins: [new Dotenv()]
+    }
+    // ,
+    // plugins: [new Dotenv()]
   },
   pwa: {
     themeColor: '#20731C',
