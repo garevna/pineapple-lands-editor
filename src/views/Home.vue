@@ -4,7 +4,7 @@
     <v-row>
       <v-col
             cols="12"
-            v-for="cardNum in [1, 2, 3, 4]"
+            v-for="cardNum in [1, 2, 3, 4, 5]"
             :key="cardNum"
         >
           <LandInfoCard :index="cardNum" />

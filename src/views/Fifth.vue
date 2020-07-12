@@ -52,15 +52,6 @@
           </div>
         </section>
       </v-row>
-      <!-- ============================= INTERNET PLANS ============================= -->
-      <v-row width="100%" justify="center">
-        <section id="plans">
-          <div class="base-title">
-            <a href="#plans" class="core-goto"></a>
-            <InternetPlans :page.sync="page"/>
-          </div>
-        </section>
-      </v-row>
       <!-- ============================= TESTIMONIALS ============================= -->
       <v-row width="100%">
         <section id="testimonials" style="width: 100%">
@@ -117,14 +108,13 @@ import Aside from '@/components/Aside.vue'
 import UserContact from '@/components/UserContact.vue'
 import HowToConnect from '@/components/HowToConnect.vue'
 import Testimonials from '@/components/Testimonials.vue'
-import InternetPlans from '@/components/InternetPlans.vue'
 import FAQ from '@/components/FAQ.vue'
 import Footer from '@/components/Footer.vue'
 
 import Popup from '@/components/editor/Popup.vue'
 
 export default {
-  name: 'Fourth',
+  name: 'Fifth',
   components: {
     AppHeader,
     Top,
@@ -132,7 +122,6 @@ export default {
     UserContact,
     HowToConnect,
     Testimonials,
-    InternetPlans,
     FAQ,
     Footer,
     Popup
@@ -178,9 +167,6 @@ export default {
         this.$router.push({ name: 'contact' })
         return
       }
-      if (this.selectors[val] === '#plans') {
-        this.$store.commit('CHANGE_PLAN', this.pages[this.page].toLowerCase())
-      }
       if (this.selectors[val]) {
         this.$vuetify.goTo(this.selectors[val], {
           duration: 500,
@@ -205,13 +191,13 @@ export default {
       getTestimonials: 'GET_CONTENT'
     }),
     async savePageContent () {
-      const response = await this.saveContent(4)
+      const response = await this.saveContent(5)
       const actionName = response === 200 ? 'saveSuccess' : response === 403 || response === 401 ? 'accessDenied' : 'saveFailure'
       this[actionName]()
     }
   },
   beforeMount () {
-    this.getContent(4)
+    this.getContent(5)
       .then((response) => {
         this.ready = !!response
       })

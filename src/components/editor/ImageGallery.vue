@@ -125,7 +125,7 @@ export default {
     async getImages () {
       try {
         this.images = (await (await fetch(this.endpoint)).json())
-          .filter(img => img !== '.gitkeep')
+          .filter(img => img !== '.gitkeep' && img !== 'logo.png' && img !== 'facebook.png' && img !== 'linkedin.png')
         this.ready = true
       } catch (err) {
         console.error(err)

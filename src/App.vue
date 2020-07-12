@@ -6,7 +6,7 @@
 
         <v-tooltip bottom color="info">
           <template v-slot:activator="{ on }">
-            <v-btn text color="transparent" v-on="on" @click="$router.push({ name: 'home' })">
+            <v-btn text color="transparent" v-on="on" @click="$route.name === 'home' || $router.push({ name: 'home' })">
               <v-icon large color="white" v-if="$route.name !== 'home'">mdi-home-circle-outline</v-icon>
               <v-icon large color="white" v-else>mdi-home-circle</v-icon>
             </v-btn>
@@ -16,7 +16,7 @@
 
         <v-tooltip bottom color="info">
           <template v-slot:activator="{ on }">
-            <v-btn text color="transparent" v-on="on" @click="$router.push({ name: 'first' })">
+            <v-btn text color="transparent" v-on="on" @click="$route.name === 'first' || $router.push({ name: 'first' })">
               <v-icon large color="white" v-if="$route.name !== 'first'">mdi-numeric-1-box-outline</v-icon>
               <v-icon large color="white" v-else>mdi-numeric-1-box</v-icon>
             </v-btn>
@@ -26,7 +26,7 @@
 
         <v-tooltip bottom color="info">
           <template v-slot:activator="{ on }">
-            <v-btn text color="transparent" v-on="on" @click="$router.push({ name: 'second' })">
+            <v-btn text color="transparent" v-on="on" @click="$route.name === 'second' || $router.push({ name: 'second' })">
               <v-icon large color="white" v-if="$route.name !== 'second'">mdi-numeric-2-box-outline</v-icon>
               <v-icon large color="white" v-else>mdi-numeric-2-box</v-icon>
             </v-btn>
@@ -36,7 +36,7 @@
 
         <v-tooltip bottom color="info">
           <template v-slot:activator="{ on }">
-            <v-btn text color="transparent" v-on="on" @click="$router.push({ name: 'third' })">
+            <v-btn text color="transparent" v-on="on" @click="$route.name === 'third' || $router.push({ name: 'third' })">
               <v-icon large color="white" v-if="$route.name !== 'third'">mdi-numeric-3-box-outline</v-icon>
               <v-icon large color="white" v-else>mdi-numeric-3-box</v-icon>
             </v-btn>
@@ -46,12 +46,22 @@
 
         <v-tooltip bottom color="info">
           <template v-slot:activator="{ on }">
-            <v-btn text color="transparent" v-on="on" @click="$router.push({ name: 'fourth' })">
+            <v-btn text color="transparent" v-on="on" @click="$route.name === 'fourth' || $router.push({ name: 'fourth' })">
               <v-icon large color="white" v-if="$route.name !== 'fourth'">mdi-numeric-4-box-outline</v-icon>
               <v-icon large color="white" v-else>mdi-numeric-4-box</v-icon>
             </v-btn>
           </template>
           <span>Landing page 4</span>
+        </v-tooltip>
+
+        <v-tooltip bottom color="info">
+          <template v-slot:activator="{ on }">
+            <v-btn text color="transparent" v-on="on" @click="$route.name === 'fifth' || $router.push({ name: 'fifth' })">
+              <v-icon large color="white" v-if="$route.name !== 'fifth'">mdi-numeric-5-box-outline</v-icon>
+              <v-icon large color="white" v-else>mdi-numeric-5-box</v-icon>
+            </v-btn>
+          </template>
+          <span>Landing page 5</span>
         </v-tooltip>
 
         <v-tooltip bottom color="info">
@@ -108,6 +118,7 @@ html, body {
 
 .v-textarea textarea {
   line-height: 150%!important;
+  word-break: normal!important;
 }
 
 .theme--light.v-icon.v-icon {

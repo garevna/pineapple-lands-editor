@@ -10,124 +10,48 @@ const state = {
   availableFormFields: ['name', 'email', 'address', 'postcode', 'state', 'phone', 'list', 'number', 'combo', 'message'],
   configs: [
     [
-      {
-        title: 'Top of the page',
-        value: '#top'
-      },
-      {
-        title: 'Benefits',
-        value: '#benefits'
-      },
-      {
-        title: 'Contact form',
-        value: '#contact'
-      },
-      {
-        title: 'How To Connect',
-        value: '#how-to-connect'
-      },
-      {
-        title: 'Internet Plans',
-        value: '#plans'
-      },
-      {
-        title: 'Reviews',
-        value: '#testimonials'
-      },
-      {
-        title: 'FAQs',
-        value: '#faq'
-      },
-      {
-        title: 'Footer',
-        value: '#footer'
-      }
+      { title: 'Top of the page', value: '#top' },
+      { title: 'Benefits', value: '#benefits' },
+      { title: 'Contact form', value: '#contact' },
+      { title: 'How To Connect', value: '#how-to-connect' },
+      { title: 'Internet Plans', value: '#plans' },
+      { title: 'Reviews', value: '#testimonials' },
+      { title: 'FAQs', value: '#faq' },
+      { title: 'Footer', value: '#footer' }
     ],
     [
-      {
-        title: 'Top of the page',
-        value: '#top'
-      },
-      {
-        title: 'Reviews',
-        value: '#testimonials'
-      },
-      {
-        title: 'Contact form',
-        value: '#contact'
-      },
-      {
-        title: 'FAQs',
-        value: '#faq'
-      },
-      {
-        title: 'Footer',
-        value: '#footer'
-      }
+      { title: 'Top of the page', value: '#top' },
+      { title: 'Reviews', value: '#testimonials' },
+      { title: 'Contact form', value: '#contact' },
+      { title: 'FAQs', value: '#faq' },
+      { title: 'Footer', value: '#footer' }
     ],
     [
-      {
-        title: 'Top of the page',
-        value: '#top'
-      },
-      {
-        title: 'List (just after top)',
-        value: '#list'
-      },
-      {
-        title: 'Powered by DGtek',
-        value: '#dgtek'
-      },
-      {
-        title: 'How To Connect',
-        value: '#how-to-connect'
-      },
-      {
-        title: 'Reviews',
-        value: '#testimonials'
-      },
-      {
-        title: 'Internet Plans',
-        value: '#plans'
-      },
-      {
-        title: 'FAQs',
-        value: '#faq'
-      },
-      {
-        title: 'Footer with contact form',
-        value: '#footer'
-      }
+      { title: 'Top of the page', value: '#top' },
+      { title: 'List (just after top)', value: '#list' },
+      { title: 'Powered by DGtek', value: '#dgtek' },
+      { title: 'How To Connect', value: '#how-to-connect' },
+      { title: 'Reviews', value: '#testimonials' },
+      { title: 'Internet Plans', value: '#plans' },
+      { title: 'FAQs', value: '#faq' },
+      { title: 'Footer with contact form', value: '#footer' }
     ],
     [
-      {
-        title: 'Top of the page',
-        value: '#top'
-      },
-      {
-        title: 'Contact form',
-        value: '#contact'
-      },
-      {
-        title: 'How To Connect',
-        value: '#how-to-connect'
-      },
-      {
-        title: 'Internet Plans',
-        value: '#plans'
-      },
-      {
-        title: 'Reviews',
-        value: '#testimonials'
-      },
-      {
-        title: 'FAQs',
-        value: '#faq'
-      },
-      {
-        title: 'Footer with contact form',
-        value: '#footer'
-      }
+      { title: 'Top of the page', value: '#top' },
+      { title: 'Contact form', value: '#contact' },
+      { title: 'How To Connect', value: '#how-to-connect' },
+      { title: 'Internet Plans', value: '#plans' },
+      { title: 'Reviews', value: '#testimonials' },
+      { title: 'FAQs', value: '#faq' },
+      { title: 'Footer with contact form', value: '#footer' }
+    ],
+    [
+      { title: 'Top of the page', value: '#top' },
+      { title: 'Contact form', value: '#contact' },
+      { title: 'How To Connect', value: '#how-to-connect' },
+      { title: 'Reviews', value: '#testimonials' },
+      { title: 'FAQs', value: '#faq' },
+      { title: 'Footer with contact form', value: '#footer' }
     ]
   ]
 }

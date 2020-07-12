@@ -26,7 +26,7 @@ export default new Vuex.Store({
     popupTitle: '',
     popupText: '',
     authorized: false,
-    numberOfLands: 4,
+    numberOfLands: 5,
     currentLand: null,
     fieldTypes: {
       text: 'input-with-validation',
