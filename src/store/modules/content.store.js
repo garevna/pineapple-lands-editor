@@ -77,6 +77,8 @@ const mutations = {
   ADD_FAQ_ITEM: (state) => { state.faq.items.push({ question: 'Question?', answer: 'Answer...' }) },
   DELETE_FAQ_ITEM: (state, num) => { state.faq.items.splice(num, 1) },
 
+  /* ======================= DISCLAIMER ========================== */
+  UPDATE_DISCLAIMER: (state, payload) => { state.disclaimer[payload.prop] = payload.value },
   /* ======================= LIST ========================== */
   UPDATE_LIST: (state, payload) => { state.list[payload.prop] = payload.value },
   UPDATE_LIST_ITEM: (state, payload) => { state.list.items[payload.num][payload.prop] = payload.value },

@@ -9,6 +9,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     host: 'https://api.pineapple.net.au',
+    generalInfoEndpoint: 'https://api.pineapple.net.au/content/general',
     officeAddress: '75 Brighton Road, Elwood VIC 3184',
     officePhone: '1300 857 501',
     officeEmail: 'info@pineapple.net.au',
@@ -16,7 +17,6 @@ export default new Vuex.Store({
     linkedIn: 'https://www.linkedin.com/company/pineapplenet/',
     faceBook: 'https://www.facebook.com/PineappleNetAU/',
     contactEndpoint: '',
-    viewport: 'lg',
     viewportWidth: window.innerWidth,
     viewportHeight: window.innerHeight,
     plan: 'residential',
@@ -70,16 +70,13 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    UPDATE_GENERAL_INFO: (state, payload) => { state[payload.prop] = payload.value },
     SET_CURRENT_LAND: (state, num) => { state.currentLand = num },
     UPDATE_PAGES: (state, payload) => {
       state.pages = payload.pages
       state.selectors = payload.selectors
     },
     CHANGE_VIEWPORT: (state) => {
-      state.viewport = window.innerWidth >= 1904 ? 'xl'
-        : window.innerWidth >= 1264 ? 'lg'
-          : window.innerWidth >= 960 ? 'md'
-            : window.innerWidth >= 600 ? 'sm' : 'xs'
       state.viewportWidth = window.innerWidth
       state.viewportHeight = window.innerHeight
     },
@@ -122,6 +119,17 @@ export default new Vuex.Store({
   },
 
   actions: {
+
+    async GET_GENERAL_INFO ({ state, commit }) {
+      const generalInfo = await (await fetch(state.generalInfoEndpoint)).json()
+      for (const field in generalInfo) {
+        commit('SET_PROPERTY', {
+          object: state,
+          propertyName: field,
+          value: generalInfo[field]
+        })
+      }
+    },
 
     async VALIDATE_TOKEN ({ state, commit }) {
       const token = localStorage.getItem('token')

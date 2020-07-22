@@ -3,6 +3,7 @@
 /* eslint-disable no-shadow */
 
 const state = {
+  endpoint: 'https://api.pineapple.net.au/content/plans',
   plans: {
     residential: [
       { upload: 50, download: 50, price: 50, selected: false },
@@ -37,7 +38,42 @@ const getters = {
   tarif: (state, getters) => state.plans[getters.plan].find(item => item.selected)
 }
 
+const mutations = {
+  CHANGE_PLAN (state, payload) {
+    state.plans[payload.plan][payload.index][payload.prop] = payload.value
+  }
+}
+
 const actions = {
+
+  async GET_DATA ({ state, commit }) {
+    const { plans } = await (await fetch(state.endpoint)).json()
+    for (const plan in plans) {
+      plans[plan].forEach((item, index) => {
+        for (const prop in item) {
+          commit('CHANGE_PLAN', {
+            plan,
+            index,
+            prop,
+            value: item[prop]
+          })
+        }
+      })
+    }
+    return state.plans
+  },
+
+  async saveData ({ state }) {
+    const response = await fetch(state.endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: localStorage.getItem('token')
+      },
+      body: JSON.stringify(state.plans)
+    })
+    return response
+  },
 
   SELECT_PLAN ({ commit }, payload) {
     commit('CHANGE_PLAN', payload, { root: true })
@@ -59,5 +95,6 @@ export default {
   namespaced: true,
   state,
   getters,
+  mutations,
   actions
 }

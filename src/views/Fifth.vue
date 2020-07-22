@@ -70,6 +70,15 @@
           </div>
         </section>
       </v-row>
+      <!-- ============================= DISCLAIMER ============================= -->
+      <v-row width="100%">
+        <section id="disclaimer" style="width: 100%">
+          <div class="base-title">
+            <a href="#disclaimer" class="core-goto"></a>
+            <Disclaimer :page.sync="page"/>
+          </div>
+        </section>
+      </v-row>
       <!-- ============================= FOOTER ============================= -->
       <section id="footer" class="homefone">
         <div class="base-title">
@@ -103,12 +112,13 @@
 import { mapState, mapGetters, mapActions } from 'vuex'
 
 import AppHeader from '@/components/AppHeader.vue'
-import Top from '@/components/Top.vue'
+import Top from '@/components/5/Top.vue'
 import Aside from '@/components/Aside.vue'
 import UserContact from '@/components/UserContact.vue'
 import HowToConnect from '@/components/HowToConnect.vue'
 import Testimonials from '@/components/Testimonials.vue'
 import FAQ from '@/components/FAQ.vue'
+import Disclaimer from '@/components/Disclaimer.vue'
 import Footer from '@/components/Footer.vue'
 
 import Popup from '@/components/editor/Popup.vue'
@@ -123,6 +133,7 @@ export default {
     HowToConnect,
     Testimonials,
     FAQ,
+    Disclaimer,
     Footer,
     Popup
   },

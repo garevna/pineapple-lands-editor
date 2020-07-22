@@ -110,18 +110,6 @@ export default {
           return false
         })
       }
-    },
-    mainNavButtons: {
-      deep: true,
-      handler (val) {
-        console.log('Main Nav Buttons:\n', val)
-      }
-    },
-    mainNavSectors: {
-      deep: true,
-      handler (val) {
-        console.log('Main Nav Sectors:\n', val)
-      }
     }
   },
   methods: {
@@ -131,7 +119,7 @@ export default {
     },
     async getData () {
       const response = await (await fetch(this.endpoint)).json()
-      console.log(response)
+      // console.log(response)
       this.browserTabTitle = response.browserTabTitle
       this.emailSubject = response.emailSubject
       this.emailText = response.emailText
@@ -156,7 +144,7 @@ export default {
         },
         body: JSON.stringify(pageContent)
       })
-      console.log('Save data:\n', response)
+      console.log('Data has been saved:\n', response)
     }
   },
   mounted () {

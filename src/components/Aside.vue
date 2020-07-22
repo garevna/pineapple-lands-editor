@@ -121,7 +121,7 @@ export default {
     },
     text: {
       get () {
-        return this.info.header
+        return this.info.text
       },
       set (val) {
         this.$store.commit('content/UPDATE_INFO', { prop: 'text', value: val })

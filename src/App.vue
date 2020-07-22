@@ -1,80 +1,6 @@
 <template>
   <v-app class="homefone">
-    <v-system-bar app fixed color="primary" height="40" width="100%">
-      <v-row d-flex align="center" justify="end" class="mr-10">
-        <v-spacer class="d-none d-lg-flex d-xl-flex"></v-spacer>
-
-        <v-tooltip bottom color="info">
-          <template v-slot:activator="{ on }">
-            <v-btn text color="transparent" v-on="on" @click="$route.name === 'home' || $router.push({ name: 'home' })">
-              <v-icon large color="white" v-if="$route.name !== 'home'">mdi-home-circle-outline</v-icon>
-              <v-icon large color="white" v-else>mdi-home-circle</v-icon>
-            </v-btn>
-          </template>
-          <span>Overall about landing pages</span>
-        </v-tooltip>
-
-        <v-tooltip bottom color="info">
-          <template v-slot:activator="{ on }">
-            <v-btn text color="transparent" v-on="on" @click="$route.name === 'first' || $router.push({ name: 'first' })">
-              <v-icon large color="white" v-if="$route.name !== 'first'">mdi-numeric-1-box-outline</v-icon>
-              <v-icon large color="white" v-else>mdi-numeric-1-box</v-icon>
-            </v-btn>
-          </template>
-          <span>Landing page 1</span>
-        </v-tooltip>
-
-        <v-tooltip bottom color="info">
-          <template v-slot:activator="{ on }">
-            <v-btn text color="transparent" v-on="on" @click="$route.name === 'second' || $router.push({ name: 'second' })">
-              <v-icon large color="white" v-if="$route.name !== 'second'">mdi-numeric-2-box-outline</v-icon>
-              <v-icon large color="white" v-else>mdi-numeric-2-box</v-icon>
-            </v-btn>
-          </template>
-          <span>Landing page 2</span>
-        </v-tooltip>
-
-        <v-tooltip bottom color="info">
-          <template v-slot:activator="{ on }">
-            <v-btn text color="transparent" v-on="on" @click="$route.name === 'third' || $router.push({ name: 'third' })">
-              <v-icon large color="white" v-if="$route.name !== 'third'">mdi-numeric-3-box-outline</v-icon>
-              <v-icon large color="white" v-else>mdi-numeric-3-box</v-icon>
-            </v-btn>
-          </template>
-          <span>Landing page 3</span>
-        </v-tooltip>
-
-        <v-tooltip bottom color="info">
-          <template v-slot:activator="{ on }">
-            <v-btn text color="transparent" v-on="on" @click="$route.name === 'fourth' || $router.push({ name: 'fourth' })">
-              <v-icon large color="white" v-if="$route.name !== 'fourth'">mdi-numeric-4-box-outline</v-icon>
-              <v-icon large color="white" v-else>mdi-numeric-4-box</v-icon>
-            </v-btn>
-          </template>
-          <span>Landing page 4</span>
-        </v-tooltip>
-
-        <v-tooltip bottom color="info">
-          <template v-slot:activator="{ on }">
-            <v-btn text color="transparent" v-on="on" @click="$route.name === 'fifth' || $router.push({ name: 'fifth' })">
-              <v-icon large color="white" v-if="$route.name !== 'fifth'">mdi-numeric-5-box-outline</v-icon>
-              <v-icon large color="white" v-else>mdi-numeric-5-box</v-icon>
-            </v-btn>
-          </template>
-          <span>Landing page 5</span>
-        </v-tooltip>
-
-        <v-tooltip bottom color="info">
-          <template v-slot:activator="{ on }">
-            <v-btn text color="transparent" v-on="on" @click="$router.push({ name: 'testimonials' })">
-              <v-icon large color="white" v-if="$route.name !== 'testimonials'">mdi-message-text-outline</v-icon>
-              <v-icon large color="white" v-else>mdi-message-text</v-icon>
-            </v-btn>
-          </template>
-          <span>Reviews</span>
-        </v-tooltip>
-      </v-row>
-    </v-system-bar>
+    <MainNavigationDriver :land.sync="land" />
 
     <v-container class="homefone mx-auto px-auto">
       <router-view class="mt-12 mx-0 pa-12"></router-view>
@@ -97,7 +23,7 @@
   </v-app>
 </template>
 
-<style lang="scss">
+<style>
 html, body {
   width: 100%;
   max-width: 100%;
@@ -255,6 +181,8 @@ svg.defs-only {
 
 <script>
 
+import MainNavigationDriver from '@/components/MainNavigationDriver.vue'
+
 import { mapState, mapGetters, mapActions } from 'vuex'
 
 import Popup from '@/components/editor/Popup.vue'
@@ -263,13 +191,15 @@ import Auth from '@/components/editor/Auth.vue'
 export default {
   name: 'App',
   components: {
+    MainNavigationDriver,
     Popup,
     Auth
   },
   data () {
     return {
       page: 0,
-      login: false
+      login: false,
+      land: null
     }
   },
   computed: {
@@ -281,7 +211,8 @@ export default {
       validateToken: 'VALIDATE_TOKEN',
       saveSuccess: 'SAVE_SUCCESS',
       saveFailure: 'SAVE_FAILURE',
-      accessDenied: 'ACCESS_DENIED'
+      accessDenied: 'ACCESS_DENIED',
+      getGeneralInfo: 'GET_GENERAL_INFO'
     }),
     onResize () {
       this.$store.commit('CHANGE_VIEWPORT')
@@ -302,6 +233,7 @@ export default {
   },
   beforeMount () {
     this.validateToken()
+    this.getGeneralInfo()
     document.title = 'CRM'
   },
   mounted () {
