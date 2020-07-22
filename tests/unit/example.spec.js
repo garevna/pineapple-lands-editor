@@ -1,10 +1,10 @@
 import { shallowMount } from '@vue/test-utils'
-import CardsShow from '@/components/CardsShow.vue'
+import ErrorPopup from '@/components/editor/ErrorPopup.vue'
 
-describe('CardsShow.vue', () => {
+describe('ErrorPopup.vue', () => {
   it('renders props.msg when passed', () => {
     const msg = 'new message'
-    const wrapper = shallowMount(CardsShow, {
+    const wrapper = shallowMount(ErrorPopup, {
       propsData: { msg }
     })
     expect(wrapper.text()).toMatch(msg)
