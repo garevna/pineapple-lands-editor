@@ -22,7 +22,7 @@
             <v-icon large color="white" v-else>mdi-home-circle</v-icon>
           </v-btn>
         </template>
-        <span>Overall about landing pages</span>
+        <span>General Info About Pineapple NET</span>
       </v-tooltip>
 
       <v-menu

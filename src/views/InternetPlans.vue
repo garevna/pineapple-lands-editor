@@ -107,7 +107,6 @@ export default {
   },
   beforeMount () {
     this.getData().then((response) => {
-      console.log(response)
       this.ready = true
     })
   }

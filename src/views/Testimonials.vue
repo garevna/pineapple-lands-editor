@@ -104,7 +104,6 @@ export default {
     },
     async saveContent () {
       const response = await this.$store.dispatch('testimonials/SAVE_CONTENT')
-      console.log(response)
       if (response === 200) {
         this.$store.commit('SET_POPUP_TITLE', 'REVIEWS')
         this.$store.commit('SET_POPUP_TEXT', 'Data successfully saved')
