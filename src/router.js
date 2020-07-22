@@ -38,7 +38,7 @@ const routes = [
   {
     path: '/overall',
     name: 'overall',
-    component: () => import(/* webpackChunkName: "testimonials" */ '@/views/LandsOveral.vue')
+    component: () => import(/* webpackChunkName: "overall" */ '@/views/LandsOveral.vue')
   },
   {
     path: '/testimonials',
@@ -48,7 +48,7 @@ const routes = [
   {
     path: '/plans',
     name: 'plans',
-    component: () => import(/* webpackChunkName: "testimonials" */ '@/views/InternetPlans.vue')
+    component: () => import(/* webpackChunkName: "plans" */ '@/views/InternetPlans.vue')
   }
 ]
 
