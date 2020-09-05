@@ -21,6 +21,21 @@ const routes = [
     component: () => import(/* webpackChunkName: "second" */ '@/views/Second.vue')
   },
   {
+    path: '/2-1',
+    name: 'second-1',
+    component: () => import(/* webpackChunkName: "second-1" */ '@/components/2/Page-1.vue')
+  },
+  {
+    path: '/2-2',
+    name: 'second-2',
+    component: () => import(/* webpackChunkName: "second-2" */ '@/components/2/Page-2.vue')
+  },
+  {
+    path: '/2-3',
+    name: 'second-3',
+    component: () => import(/* webpackChunkName: "second-3" */ '@/components/2/Page-3.vue')
+  },
+  {
     path: '/3',
     name: 'third',
     component: () => import(/* webpackChunkName: "third" */ '@/views/Third.vue')

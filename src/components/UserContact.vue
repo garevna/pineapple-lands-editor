@@ -12,12 +12,9 @@
         </template>
         <span>Customize Contact Form</span>
     </v-tooltip>
-    <v-card-text class="mx-0 px-0" width="100%">
-      <v-row
-            v-for="(field, index) in fields"
-            :key="index"
-            class="bordered my-0"
-      >
+
+    <v-card-text class="mx-0 px-0" width="100%" v-if="fields">
+      <div v-for="(field, index) in fields" :key="index">
             <InputWithValidation
                     v-if="field.type === 'input-with-validation'"
                     :fieldIndex="index"
@@ -34,12 +31,26 @@
                     v-if="field.type === 'combobox'"
                     :fieldIndex="index"
               />
+              <DateInput
+                    :field="field"
+                    :value.sync="field.value"
+                    :error.sync="field.error"
+                    v-if="field.type === 'date-input'"
+              />
+              <TimeInput
+                    :field="field"
+                    :value.sync="field.value"
+                    :error.sync="field.error"
+                    v-if="field.type === 'time-input'"
+              />
               <InputMessage
                     v-if="field.type === 'textarea'"
                     :fieldIndex="index"
               />
-      </v-row>
+      <!-- </v-row> -->
+      </div>
     </v-card-text>
+
     <v-card-actions>
       <Button :value.sync="button" :hideConfig="true" />
     </v-card-actions>
@@ -112,6 +123,8 @@ import Selector from '@/components/contact/Selector.vue'
 import Combo from '@/components/contact/Combo.vue'
 import InputWithValidation from '@/components/contact/InputWithValidation.vue'
 import InputPhoneNumber from '@/components/contact/InputPhoneNumber.vue'
+import DateInput from '@/components/contact/DateInput.vue'
+import TimeInput from '@/components/contact/TimeInput.vue'
 import InputMessage from '@/components/contact/InputMessage.vue'
 
 import Popup from '@/components/contact/Popup.vue'
@@ -128,6 +141,8 @@ export default {
     InputWithValidation,
     Selector,
     Combo,
+    DateInput,
+    TimeInput,
     Popup,
     PopupError,
     SubHeader5,

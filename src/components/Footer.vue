@@ -5,13 +5,9 @@
       <v-row align="start" justify="center" style="position: absolute; top: 0; left: 0; width: 100%">
         <v-card-text class="mx-auto text-center">
           <SubHeader :value.sync="title" className="footer" />
-          <!-- <h2 class="white-text centered">{{ footer.title }}</h2> -->
         </v-card-text>
         <v-card-text max-width="100%">
           <SubHeader5 :value.sync="text" className="footer" />
-          <!-- <h5 class="white-text centered">
-              {{ footer.text }}
-          </h5> -->
         </v-card-text>
         <v-row class="mx-auto">
           <v-col cols="12" class="mx-auto">
@@ -26,8 +22,6 @@
                       outlined
                       dark
                       color="#fff"
-                      v-model="name"
-                      :rules="[rules.required]"
                 ></v-text-field>
               </v-card>
               <v-card flat class="transparent mx-1 my-1" v-if="viewportWidth > 420">
@@ -40,8 +34,6 @@
                       outlined
                       dark
                       color="#fff"
-                      v-model="email"
-                      :rules="[rules.required, rules.email]"
                 ></v-text-field>
               </v-card>
               <v-card flat class="transparent mx-1 my-1" v-if="viewportWidth > 420">
@@ -54,7 +46,6 @@
                       outlined
                       dark
                       color="#fff"
-                      v-model="phone"
                       style="font-size: 16px"
                       background-color="transparent"
                 ></v-text-field>
@@ -69,7 +60,6 @@
                     hide-details
                     rounded
                     light
-                    @click="submit"
                     style="color: #20731C"
                 >Get started</v-btn>
               </v-card>
@@ -147,7 +137,7 @@
 
 <script>
 
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
 import FooterFone from '@/components/footer/FooterFone.vue'
 import FooterBottomContent from '@/components/footer/BottomContent.vue'
@@ -155,8 +145,6 @@ import FooterBottomContentSmall from '@/components/footer/BottomContentSmall.vue
 
 import SubHeader from '@/components/inputs/SubHeader.vue'
 import SubHeader5 from '@/components/inputs/SubHeader5.vue'
-
-const emailValidator = require('email-validator')
 
 export default {
   name: 'Footer',
@@ -172,36 +160,32 @@ export default {
     return {
       name: '',
       email: '',
-      phone: '',
-      send: false,
-      rules: {
-        required: value => !!value || 'Required',
-        email: () => emailValidator.validate(this.email) ? true : 'Invalid email'
-      },
-      popupOpened: false
+      phone: ''
     }
   },
   computed: {
     ...mapState(['viewportWidth']),
-    ...mapState('content', ['footer', 'subject']),
+    ...mapState('content', ['footer']),
     title: {
       get () {
-        return this.footer.title
+        return this.footer.title ? this.footer.title : this.footer.topHead ? this.footer.topHead
+          : 'READY TO GET STARTED?'
       },
       set (val) {
         this.$store.commit('content/UPDATE_FOOTER', {
-          prop: 'title',
+          prop: this.footer.title ? 'title' : 'topHead',
           value: val
         })
       }
     },
     text: {
       get () {
-        return this.footer.text
+        return this.footer.text ? this.footer.text : this.footer.topText ? this.footer.topText
+          : 'Leave your inquiry and we\'ll get back to you within 24 hours on business days'
       },
       set (val) {
         this.$store.commit('content/UPDATE_FOOTER', {
-          prop: 'text',
+          prop: this.footer.text ? 'text' : 'topText',
           value: val
         })
       }
@@ -214,29 +198,6 @@ export default {
     },
     footerHeight () {
       return this.viewportWidth < 420 ? 680 : this.viewportWidth > 1904 ? 980 : 860
-    }
-  },
-  methods: {
-    ...mapActions('contact', { sendEmail: 'SEND_EMAIL' }),
-    initFields () {
-      this.name = ''
-      this.email = ''
-      this.phone = ''
-    },
-    submit () {
-      if (!this.name || !this.phone || !emailValidator.validate(this.email)) {
-        this.$emit('update:page', 'contact')
-        return
-      }
-      this.popupOpened = true
-      this.sendEmail({
-        subject: this.subject,
-        name: this.name,
-        email: this.email,
-        phone: this.phone,
-        message: 'Get Started'
-      })
-      this.initFields()
     }
   }
 }

@@ -1,30 +1,27 @@
 <template>
-  <v-card max-width="700" class="mx-auto mb-12 pa-5">
+  <v-card max-width="900" class="mx-auto mb-12 pa-5">
+    <p>{{ 'https://' + url }}</p>
     <v-card-title class="primary text-center">
-      <v-row>
-        <v-col cols="2">
-          <h2 style="color: #fff">{{index}}</h2>
-        </v-col>
-        <v-col cols="10">
-          <h3 style="color: #fff">
-            {{ header }}
-          </h3>
-        </v-col>
-      </v-row>
+      <h4 style="color: #fff">
+          {{ header }}
+      </h4>
     </v-card-title>
     <v-divider></v-divider>
     <v-card-text>
       <v-text-field
+              v-if="browserTabTitle"
               label="Browser tab title"
               outlined
               v-model="browserTabTitle"
       ></v-text-field>
       <v-text-field
+              v-if="emailSubject"
               label="Email subject"
               outlined
               v-model="emailSubject"
       ></v-text-field>
       <v-text-field
+              v-if="emailText"
               label="Email text for user"
               outlined
               v-model="emailText"
@@ -71,9 +68,7 @@ export default {
   components: {
     ButtonConfig
   },
-  props: {
-    index: Number
-  },
+  props: ['route', 'url'],
   data () {
     return {
       header: '',
@@ -88,16 +83,27 @@ export default {
   computed: {
     ...mapGetters(['contentHost']),
     endpoint () {
-      return `${this.contentHost}/${this.index}`
+      return `${this.contentHost}/${this.route}`
     },
     sections () {
-      return this.$store.state.editor.configs[this.index - 1].map(item => item.title)
+      if (typeof this.route === 'string') {
+        return this.$store.state.editor.subPagesConfigs[this.route.slice(-1) - 1].map(item => item.title)
+      }
+      return this.$store.state.editor.configs[this.route - 1].map(item => item.title)
     },
     jumps () {
-      return this.$store.state.editor.configs[this.index - 1].map(item => item.value)
+      if (typeof this.route === 'string') {
+        return this.$store.state.editor.subPagesConfigs[this.route.slice(-1) - 1].map(item => item.value)
+      }
+      return this.$store.state.editor.configs[this.route - 1].map(item => item.value)
     }
   },
   watch: {
+    route (val) {
+      if (val) {
+        this.getData()
+      }
+    },
     remove: {
       deep: true,
       handler (val) {

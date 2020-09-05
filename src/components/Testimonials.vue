@@ -73,7 +73,7 @@
       </v-carousel>
     </v-card>
     <v-card-text class="text-center">
-      <Button :value.sync="content.button" :goto.sync="goto" class="mx-auto" />
+      <Button :value.sync="content.button" :goto.sync="goto" class="mx-auto" style="max-width: 480px" />
     </v-card-text>
   </v-container>
 </template>

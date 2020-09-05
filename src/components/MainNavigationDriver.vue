@@ -75,7 +75,8 @@
         temporary
         width="480"
     >
-      <v-list nav dense>
+      <ListOfLands :drawer.sync="drawer" :nav="true" />
+      <!-- <v-list nav dense>
         <v-list-item-group
               v-model="group"
               active-class="info--text text--info"
@@ -105,54 +106,54 @@
               <v-list-item-title @click="$route.name === item.route || $router.push({ name: item.route })">
                 {{ item.title }}
               </v-list-item-title>
+              <v-card flat class="transparent ml-2" v-if="item.childs">
+                <v-list nav dense>
+                  <v-list-item-group
+                        v-model="secondLandPage"
+                        active-class="info--text text--info"
+                  >
+                    <v-list-item
+                           v-for="(subpage, num) in item.childs"
+                           :key="num"
+                           @click="selected = num + 1"
+                    >
+                      <v-list-item-icon>
+                        <v-icon color="green">mdi-pencil-circle</v-icon>
+                      </v-list-item-icon>
+
+                      <v-list-item-content>
+                        <v-list-item-title @click="$route.name === subpage.route || $router.push({ name: subpage.route })">
+                          {{ subpage.title }}
+                        </v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list-item-group>
+                </v-list>
+              </v-card>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
-      </v-list>
+      </v-list> -->
     </v-navigation-drawer>
   </v-container>
 </template>
 
-<style>
-.v-list--dense .v-list-item .v-list-item__title,
-.v-list-item--dense .v-list-item__title {
-  font-size: 16px!important;
-}
-</style>
-
 <script>
+
+import ListOfLands from '@/components/editor/ListOfLands.vue'
 
 export default {
   name: 'MainNavigationDriver',
+  components: {
+    ListOfLands
+  },
   props: ['land'],
   data () {
     return {
       drawer: false,
       group: null,
       selected: undefined,
-      items: [
-        {
-          title: 'fast-fibre-internet.pineapple.net.au',
-          route: 'first'
-        },
-        {
-          title: 'connect-melbournecbd.pineapple.net.au',
-          route: 'second',
-          multipage: true
-        },
-        {
-          title: 'fibreinternet-melbournecbd.pineapple.net.au',
-          route: 'third'
-        },
-        {
-          title: 'refer-a-friend.pineapple.net.au',
-          route: 'fourth'
-        },
-        {
-          title: 'nbn.pineapple.net.au',
-          route: 'fifth'
-        }
-      ]
+      secondLandPage: undefined
     }
   },
   watch: {

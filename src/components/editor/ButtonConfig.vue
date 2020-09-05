@@ -17,14 +17,14 @@
                 <v-icon>$delete</v-icon>
               </v-btn>
             </td>
-            <td width="360">
+            <td width="400">
               <v-card-text>
                 <v-text-field
                         outlined
                         dense
                         hide-details
                         label="Button text"
-                        width="120"
+                        width="400"
                         v-model="text"
                         class="px-12"
                 ></v-text-field>

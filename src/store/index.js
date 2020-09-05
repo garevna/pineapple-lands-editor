@@ -37,6 +37,8 @@ export default new Vuex.Store({
       postcode: 'input-with-validation',
       list: 'selector',
       combo: 'combobox',
+      date: 'date-input',
+      time: 'time-input',
       message: 'textarea'
     },
     validators: {
@@ -47,6 +49,8 @@ export default new Vuex.Store({
       state: null,
       postcode: val => Number(val) && Number(val) >= 3000 && Number(val) < 9999,
       list: null,
+      date: null,
+      time: null,
       combo: function (val) { return this.available.indexOf(val) !== -1 },
       message: val => val.length >= 5
     },
@@ -59,8 +63,57 @@ export default new Vuex.Store({
       postcode: 'Postcode',
       list: 'Select from a list',
       combo: 'Combobox input',
+      date: 'Date',
+      time: 'Time',
       message: 'Message'
-    }
+    },
+    lands: [
+      {
+        title: 'fast-fibre-internet.pineapple.net.au',
+        route: 'first',
+        short: 1
+      },
+      {
+        title: 'connect-melbournecbd.pineapple.net.au',
+        route: 'second',
+        short: 2,
+        childs: [
+          {
+            title: 'conservatory',
+            route: 'second-1',
+            short: '2-1',
+            url: 'connect-melbournecbd.pineapple.net.au/conservatory'
+          },
+          {
+            title: 'qv1',
+            route: 'second-2',
+            short: '2-2',
+            url: 'connect-melbournecbd.pineapple.net.au/qv1'
+          },
+          {
+            title: 'aurora',
+            route: 'second-3',
+            short: '2-3',
+            url: 'connect-melbournecbd.pineapple.net.au/aurora'
+          }
+        ]
+      },
+      {
+        title: 'fibreinternet-melbournecbd.pineapple.net.au',
+        route: 'third',
+        short: 3
+      },
+      {
+        title: 'refer-a-friend.pineapple.net.au',
+        route: 'fourth',
+        short: 4
+      },
+      {
+        title: 'nbn.pineapple.net.au',
+        route: 'fifth',
+        short: 5
+      }
+    ]
   },
   modules,
 

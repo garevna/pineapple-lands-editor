@@ -12,15 +12,18 @@
           <TestimonialsCard :index="index" :content="testimonial" :removed.sync="removed" />
         </v-col>
       </v-row>
-      <v-btn
-            fab
-            dark
-            small
-            color="info"
-            @click.stop="addReview"
-      >
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
+      <v-row justify="center">
+        <v-btn
+              fab
+              dark
+              small
+              max-width="320"
+              color="info"
+              @click.stop="addReview"
+        >
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </v-row>
     </v-card>
 
     <!-- ============================= BOTTOM NAV ============================= -->

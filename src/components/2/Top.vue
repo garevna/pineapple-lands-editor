@@ -1,54 +1,29 @@
 <template>
-<v-container fluid style="overflow-x: hidden; margin-top: 160px; margin-bottom: 64px;">
-  <v-card flat class="mx-auto homefone" width="100%" max-width="1440">
-    <v-row align="center" justify="center">
-      <v-col sm="12" md="6" class="text-center mx-auto">
-        <v-card flat width="100%" max-width="480" class="transparent mx-auto">
-          <v-card-text class="text-center text-md-left">
-            <h1
-                class="text-center text-md-left"
-                v-text="top.header"
-                ref="topHeader"
-                contenteditable
-            ></h1>
-          </v-card-text>
-          <v-card-text class="mx-auto mx-lg-0">
-            <p
-                class="text-center text-md-left"
-                v-text="top.text"
-                ref="topText"
-                contenteditable
-            ></p>
-          </v-card-text>
-          <v-card-text class="text-center text-md-left">
-            <p class="submit-button mx-auto"
-                contenteditable
-                ref="topButton"
-                v-text="top.button"
-            ></p>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col sm="12" md="6" order="first" order-sm="last">
-        <ChangePicture
-              :gallery.sync="gallery"
-              :action.sync="save"
-        />
-        <ImageGallery
-              :activate.sync="gallery"
-              :staticEndpoint="staticEndpoint"
-              :endpoint="imagesEndpoint"
-              :selectedImageURL.sync="imageURL"
-              :fileLimit="fileLimit"
-              :imageSize="imageSize"
-        />
-        <v-card flat width="100%" max-width="600" class="transparent">
-          <v-img :src="top.pictureURL" max-width="750" class="mx-auto"></v-img>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-card>
-</v-container>
+  <v-container fluid style="overflow-x: hidden; margin-top: 80px; margin-bottom: 64px;">
+    <v-card flat tile class="mx-auto homefone" width="100%" max-width="1180">
+      <v-row align="center" justify="center">
+        <v-col sm="12" md="6">
+          <v-card flat tile width="100%" max-width="480" class="transparent left-col">
+            <v-card-text class="text-center text-lg-left">
+              <SubHeader :value.sync=header />
+            </v-card-text>
+            <v-card-text class="mx-auto mx-lg-0">
+              <Paragraph :value.sync="text" />
+            </v-card-text>
+            <v-card-text class="text-center text-md-left">
+              <Button :value.sync="topButton" :goto.sync="topButtonGoto" />
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-col sm="12" md="6" order="first" order-md="last" class="right-col mx-auto">
+          <v-row justify="end" align="end" style="position: relative;">
+            <ChangePicture destination="image" :pictureURL.sync="imageSrc" />
+          </v-row>
+          <TopPicture :url="top.pictureURL" class="top-picture" />
+        </v-col>
+      </v-row>
+    </v-card>
+  </v-container>
 </template>
 
 <style scoped>
@@ -71,12 +46,65 @@ p {
 
 import { mapState, mapGetters } from 'vuex'
 
+import TopPicture from '@/components/2/TopPicture.vue'
+import ChangePicture from '@/components/editor/ChangePicture.vue'
+import SubHeader from '@/components/inputs/SubHeader.vue'
+import Paragraph from '@/components/inputs/Paragraph.vue'
+import Button from '@/components/inputs/Button.vue'
+
 export default {
   name: 'Top',
+  components: {
+    TopPicture,
+    ChangePicture,
+    SubHeader,
+    Paragraph,
+    Button
+  },
   props: ['page'],
+  data: () => ({
+    imageSrc: ''
+  }),
   computed: {
-    ...mapState('content', ['top']),
-    ...mapGetters(['familyPicture'])
+    ...mapState('content', ['top', 'mainNavButtons']),
+    ...mapGetters(['familyPicture']),
+    header: {
+      get () {
+        return this.top.header
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_TOP', { prop: 'header', value: val })
+      }
+    },
+    text: {
+      get () {
+        return this.top.text.split('<br>').join('\n')
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_TOP', { prop: 'text', value: val.split('\n').join('<br>') })
+      }
+    },
+    topButton: {
+      get () {
+        return this.top ? this.top.button : ''
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_TOP', { prop: 'button', value: val })
+      }
+    },
+    topButtonGoto: {
+      get () {
+        return this.top ? this.top.goto : ''
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_TOP', { prop: 'goto', value: val })
+      }
+    }
+  },
+  watch: {
+    imageSrc (val) {
+      this.$store.commit('content/UPDATE_TOP', { prop: 'pictureURL', value: val })
+    }
   }
 }
 </script>

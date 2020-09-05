@@ -32,11 +32,9 @@ export default {
     },
     selected: {
       get () {
-        console.log(this.field.value)
         return this.field.value
       },
       set (val) {
-        console.log('SELECTED: ', val)
         this.$store.commit('contact/UPDATE_USER_INFO', {
           num: this.fieldIndex,
           value: val

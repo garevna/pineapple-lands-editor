@@ -72,11 +72,13 @@ export default {
   },
   computed: {
     ...mapState(['currentLand']),
-    ...mapState('editor', ['configs']),
+    ...mapState('editor', ['configs', 'subPagesConfigs']),
     sections () {
+      if (typeof this.currentLand === 'string' && this.currentLand.indexOf('2-') === 0) return this.subPagesConfigs[this.currentLand.slice(2) - 1].map(item => item.title)
       return this.configs[this.currentLand - 1].map(item => item.title)
     },
     jumps () {
+      if (typeof this.currentLand === 'string' && this.currentLand.indexOf('2-') === 0) return this.subPagesConfigs[this.currentLand.slice(2) - 1].map(item => item.value)
       return this.configs[this.currentLand - 1].map(item => item.value)
     },
     inputValue: {

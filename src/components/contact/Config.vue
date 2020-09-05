@@ -6,7 +6,7 @@
           {{ field.type }}
         </h3>
       </v-card-title>
-      <v-card-text>
+      <!-- <v-card-text>
         <p style="text-align: left; color: #09b">
           Define the name for the field (it will be shown as field label)
         </p>
@@ -16,10 +16,10 @@
               prompt="Field label (prompt text)"
               prepend-inner-icon="mdi-pencil"
         ></v-text-field>
-      </v-card-text>
-      <v-card-text>
+      </v-card-text> -->
+      <!-- <v-card-text>
         <v-checkbox v-model="field.required" class="mx-2" label="Required"></v-checkbox>
-      </v-card-text>
+      </v-card-text> -->
       <v-card-title v-if="field.type === 'combo' || field.type === 'list'">
         <p style="color: #09b">Define the set of available values</p>
       </v-card-title>
@@ -98,7 +98,6 @@ export default {
     field: {
       deep: true,
       handler (val) {
-        console.log('Field handler:\n', val)
         for (const prop in val) {
           this.$store.commit('content/UPDATE_USER_FORM_FIELD_OPTION', {
             num: this.fieldIndex,

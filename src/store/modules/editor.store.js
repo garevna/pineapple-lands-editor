@@ -20,11 +20,10 @@ const state = {
       { title: 'Footer', value: '#footer' }
     ],
     [
-      { title: 'Top of the page', value: '#top' },
-      { title: 'Reviews', value: '#testimonials' },
-      { title: 'Contact form', value: '#contact' },
-      { title: 'FAQs', value: '#faq' },
-      { title: 'Footer', value: '#footer' }
+      { title: 'I live in the CONSERVATORY', value: 'page-1' },
+      { title: 'I live in the QV1', value: 'page-2' },
+      { title: 'I live in the AURORA', value: 'page-3' },
+      { title: 'I live in another CBD building', value: 'https://pineapple.net.au/' }
     ],
     [
       { title: 'Top of the page', value: '#top' },
@@ -52,6 +51,26 @@ const state = {
       { title: 'Reviews', value: '#testimonials' },
       { title: 'FAQs', value: '#faq' },
       { title: 'Footer with contact form', value: '#footer' }
+    ]
+  ],
+  subPagesConfigs: [
+    [
+      { title: 'Home', value: '/' },
+      { title: 'Reviews', value: '#testimonials' },
+      { title: 'Get In Touch', value: '#contact' },
+      { title: 'FAQs', value: '#faq' }
+    ],
+    [
+      { title: 'Home', value: '/' },
+      { title: 'Reviews', value: '#testimonials' },
+      { title: 'Get In Touch', value: '#contact' },
+      { title: 'FAQs', value: '#faq' }
+    ],
+    [
+      { title: 'Home', value: '/' },
+      { title: 'Reviews', value: '#testimonials' },
+      { title: 'Get In Touch', value: '#contact' },
+      { title: 'FAQs', value: '#faq' }
     ]
   ]
 }

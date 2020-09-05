@@ -5,7 +5,7 @@
           class="transparent my-10"
   >
     <v-card-title>
-      <h2>FIBRE <span class="green--text">INTERNET PLANS</span></h2>
+      <SubHeader :value.sync=header />
     </v-card-title>
 
     <v-card-text width="100%" class="mx-0 px-0 text-center">
@@ -74,19 +74,22 @@
 
 import { mapState } from 'vuex'
 
+import SubHeader from '@/components/inputs/SubHeader.vue'
 import PriceCard from '@/components/plans/PriceCard.vue'
 import SwitchMode from '@/components/plans/SwitchToggle.vue'
 
 export default {
   name: 'InternetPlans',
   components: {
+    SubHeader,
     PriceCard,
     SwitchMode
   },
   props: ['page'],
   data () {
     return {
-      contact: false
+      contact: false,
+      ready: false
     }
   },
   computed: {
@@ -95,6 +98,14 @@ export default {
     ...mapState('content', ['internetPlans']),
     carouselHeight () {
       return this.viewportWidth < 960 ? this.viewportWidth < 600 ? 420 : 480 : 420
+    },
+    header: {
+      get () {
+        return this.internetPlans ? this.internetPlans.header : 'FIBRE INTERNET PLANS'
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_INTERNET_PLANS_CONTENT', { prop: 'header', value: val })
+      }
     }
   },
   watch: {

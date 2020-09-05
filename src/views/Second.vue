@@ -1,54 +1,52 @@
 <template>
   <v-container fluid class="homefone" v-if="ready">
       <AppHeader :page.sync="page"/>
-      <Top />
+      <Top :page.sync="page" />
+
+      <!-- ============================= LIST ============================= -->
+      <v-row width="100%" justify="center">
+        <section id="list" style="width: 100%">
+          <div class="base-title">
+            <a href="#list" class="core-goto"></a>
+            <List />
+          </div>
+        </section>
+      </v-row>
+
+      <!-- ============================= CREEN SECTION ============================= -->
+      <v-row width="100%">
+        <section id="dgtek" style="width: 100%">
+          <div class="base-title">
+            <a href="#dgtek" class="core-goto"></a>
+            <GreenSection />
+          </div>
+        </section>
+      </v-row>
+
+      <!-- ============================= HOW TO CONNECT ============================= -->
+      <v-row width="100%" justify="center">
+        <section id="how-to-connect">
+          <div class="base-title">
+            <a href="#how-to-connect" class="core-goto"></a>
+            <HowToConnect :contact.sync="contactUs" :connect.sync="getConnected" />
+          </div>
+        </section>
+      </v-row>
+
       <!-- ============================= TESTIMONIALS ============================= -->
       <v-row width="100%">
         <Testimonials />
       </v-row>
-      <!-- ============================= USER CONTACT ============================= -->
 
-      <v-row justify="center" class="pa-0 ma-0">
-        <v-sheet
-          width="100%"
-          max-width="1440"
-          color="homefone"
-          tile
-          class="mx-auto"
-        >
-          <v-row class="mx-0 px-0">
-            <v-col cols="12" md="6" class="aside-col">
-              <Aside />
-            </v-col>
-            <v-col cols="12" md="6" class="mx-0 px-0">
-              <v-card flat class="transparent mx-0">
-                <!-- <v-img src="@/img/map-picture.svg" height="800" contain style="opacity:0.2;"></v-img> -->
-                <v-card
-                        flat
-                        class="user-contact transparent mx-auto pa-0"
-                        style="margin-bottom: 80px"
-                >
-                  <UserContact />
-                </v-card>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-sheet>
-      </v-row>
-
-      <!-- ============================= HOW TO CONNECT ============================= -->
-      <!-- <v-row width="100%">
-        <HowToConnect :contact.sync="contactUs" :connect.sync="getConnected" />
-      </v-row> -->
       <!-- ============================= INTERNET PLANS ============================= -->
-      <!-- <v-row width="100%" justify="center">
+      <v-row width="100%" justify="center">
         <section id="plans">
           <div class="base-title">
             <a href="#plans" class="core-goto"></a>
             <InternetPlans :page.sync="page"/>
           </div>
         </section>
-      </v-row> -->
+      </v-row>
       <!-- ============================= FAQ ============================= -->
       <v-row width="100%">
         <section id="faq" style="width: 100%">
@@ -63,7 +61,7 @@
         <div class="base-title">
           <a href="#footer" class="core-goto"></a>
             <v-row width="100%">
-              <Footer :page.sync="page" :user.sync="user" />
+              <Footer :page.sync="page" />
             </v-row>
         </div>
       </section>
@@ -85,7 +83,7 @@
         </v-btn>
       </v-bottom-navigation>
 
-      <ImageGallery />
+      <!-- <ImageGallery /> -->
       <Popup />
   </v-container>
 </template>
@@ -95,16 +93,16 @@
 import { mapState, mapActions } from 'vuex'
 
 import AppHeader from '@/components/AppHeader.vue'
-import Top from '@/components/Top.vue'
-import Aside from '@/components/Aside.vue'
-import UserContact from '@/components/UserContact.vue'
-// import HowToConnect from '@/components/HowToConnect.vue'
+import Top from '@/components/2/HomeTop.vue'
+import List from '@/components/List.vue'
+import GreenSection from '@/components/GreenSection.vue'
+import HowToConnect from '@/components/HowToConnect.vue'
 import Testimonials from '@/components/Testimonials.vue'
-// import InternetPlans from '@/components/InternetPlans.vue'
+import InternetPlans from '@/components/InternetPlans.vue'
 import FAQ from '@/components/FAQ.vue'
 import Footer from '@/components/Footer.vue'
 
-import ImageGallery from '@/components/editor/ImageGallery.vue'
+// import ImageGallery from '@/components/editor/ImageGallery.vue'
 import Popup from '@/components/editor/Popup.vue'
 // import Auth from '@/components/editor/Auth.vue'
 
@@ -113,14 +111,14 @@ export default {
   components: {
     AppHeader,
     Top,
-    Aside,
-    UserContact,
-    // HowToConnect,
+    List,
+    GreenSection,
+    HowToConnect,
     Testimonials,
-    // InternetPlans,
+    InternetPlans,
     FAQ,
     Footer,
-    ImageGallery,
+    // ImageGallery,
     Popup
   },
   data () {
@@ -128,8 +126,7 @@ export default {
       ready: false,
       page: 0,
       contactUs: false,
-      getConnected: false,
-      user: {}
+      getConnected: false
     }
   },
   computed: {
@@ -160,16 +157,11 @@ export default {
       getContent: 'GET_CONTENT',
       saveContent: 'SAVE_CONTENT'
     }),
-    // ...mapActions('editor', {
-    //   getAllPictures: 'GET_ALL_PICTURES',
-    //   getAllAvatars: 'GET_ALL_AVATARS'
-    // }),
     ...mapActions('testimonials', {
       getTestimonials: 'GET_CONTENT',
       saveTestimonials: 'SAVE_CONTENT'
     }),
     async savePageContent () {
-      // let response = await this.saveTestimonials()
       const response = await this.saveContent(2)
       const actionName = response === 200 ? 'saveSuccess' : response === 403 || response === 401 ? 'accessDenied' : 'saveFailure'
       this[actionName]()
@@ -181,10 +173,6 @@ export default {
         this.ready = !!response
       })
     this.getTestimonials()
-  },
-  mounted () {
-    // this.getAllPictures()
-    // this.getAllAvatars()
   }
 }
 </script>

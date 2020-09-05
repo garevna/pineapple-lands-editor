@@ -1,15 +1,20 @@
 <template>
   <v-container fluid>
     <h2 style="color: #09b">Overall about landing pages</h2>
-    <v-row>
-      <v-col
-            cols="12"
-            v-for="cardNum in [1, 2, 3, 4, 5]"
-            :key="cardNum"
-        >
-          <LandInfoCard :index="cardNum" />
-      </v-col>
-    </v-row>
+    <v-card flat max-width="1440" class="transparent mx-auto">
+      <v-row align="start" justify="center">
+        <v-col cols="5">
+          <ListOfLands :route.sync="routeItem" />
+        </v-col>
+        <v-col cols="7">
+          <LandInfoCard
+                  v-if="routeItem"
+                  :route="routeItem.short"
+                  :url="routeItem.url ? routeItem.url : routeItem.title"
+          />
+        </v-col>
+      </v-row>
+    </v-card>
   </v-container>
 </template>
 
@@ -22,12 +27,17 @@
 
 <script>
 
+import ListOfLands from '@/components/editor/ListOfLands.vue'
 import LandInfoCard from '@/components/editor/LandInfoCard.vue'
 
 export default {
   name: 'Home',
   components: {
+    ListOfLands,
     LandInfoCard
-  }
+  },
+  data: () => ({
+    routeItem: null
+  })
 }
 </script>

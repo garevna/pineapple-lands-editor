@@ -15,6 +15,7 @@ const state = {
   testimonials: {},
   greenSection: {},
   howToConnect: {},
+  internetPlans: {},
   footer: {},
   userForm: {}
 }
@@ -60,6 +61,10 @@ const mutations = {
     state.userForm.fieldsToShow = JSON.parse(JSON.stringify(payload))
   },
 
+  /* ========================== INTERNET PLANS ========================== */
+  UPDATE_INTERNET_PLANS_CONTENT: (state, payload) => { state.internetPlans[payload.prop] = payload.value },
+  UPDATE_INTERNET_PLANS: (state, payload) => { state.plans[payload.prop] = payload.value },
+
   /* ======================= HOW TO CONNECT ======================= */
   UPDATE_CONNECT: (state, payload) => { state.howToConnect[payload.prop] = payload.value },
   ADD_CONNECT_ITEM: (state) => state.howToConnect.items.push({ title: 'Benefit ...', text: '...' }),
@@ -85,7 +90,7 @@ const mutations = {
   ADD_LIST_ITEM: (state) => {
     state.list.items.push({
       title: 'item',
-      icon: 'https://garevna.github.io/fibreinternet-melbournecbd.pineapple.com.au/svg/icon-1.svg',
+      icon: 'https://api.pineapple.net.au/icons/icon-1.svg',
       text: 'text...'
     })
     // state.list = JSON.parse(JSON.stringify(state.list))
@@ -119,9 +124,9 @@ const actions = {
       commit('UPDATE_ALL', response)
       commit('contact/UPDATE_EMAIL_SUBJECT', response.emailSubject, { root: true })
       commit('contact/UPDATE_EMAIL_TEXT', response.emailText, { root: true })
+      commit('SET_CURRENT_LAND', route, { root: true })
       if (!response.userForm) return response.browserTabTitle
       await dispatch('contact/SET_FIELDS_TO_SHOW', response.userForm.fieldsToShow, { root: true })
-      commit('SET_CURRENT_LAND', route, { root: true })
       return response.browserTabTitle
     } catch (error) {
       console.warn('ERROR:\n', error)

@@ -32,6 +32,12 @@
 </v-container>
 </template>
 
+<style>
+.v-system-bar--fixed, .v-system-bar--absolute {
+  z-index: 5;
+}
+</style>
+
 <style scoped>
 .v-btn-toggle > .v-btn.v-btn--active {
   color: #72BF44!important;
