@@ -9,6 +9,7 @@ const state = {
   mainNavSectors: [],
   top: {},
   info: {},
+  aside: {},
   list: {},
   faq: {},
   plans: {},
@@ -28,6 +29,8 @@ const getters = {
 const mutations = {
   UPDATE_PAGE_NUM: (state, payload) => { state.pageNum = payload },
   UPDATE_TOP: (state, payload) => { state.top[payload.prop] = payload.value },
+
+  /* INFO */
   UPDATE_INFO: (state, payload) => { state.info[payload.prop] = payload.value },
 
   UPDATE_OFFER: (state, payload) => {
@@ -35,11 +38,11 @@ const mutations = {
   },
   ADD_OFFER: (state) => {
     state.info.offer.push({ blackText: 'information about', greenText: 'offer' })
-    state.info = JSON.parse(JSON.stringify(state.info))
+    // state.info = JSON.parse(JSON.stringify(state.info))
   },
   REMOVE_OFFER: (state, num) => {
     state.info.offer.splice(num, 1)
-    state.info = JSON.parse(JSON.stringify(state.info))
+    // state.info = JSON.parse(JSON.stringify(state.info))
   },
 
   UPDATE_OFFER_GREEN_TEXT: (state, payload) => {
@@ -51,8 +54,32 @@ const mutations = {
     else state.info.offer[payload.num].blackText = payload.value
   },
 
+  /* DGTEK ASIDE */
+
+  UPDATE_ASIDE: (state, payload) => { state.aside[payload.prop] = payload.value },
+  ADD_ASIDE_ITEM: (state) => {
+    state.aside.items.push({ black: '[ Relevant ]', red: '[ Information ]' })
+    // state.aside = JSON.parse(JSON.stringify(state.info))
+  },
+  REMOVE_ASIDE_ITEM: (state, num) => {
+    state.aside.items.splice(num, 1)
+    // state.aside = JSON.parse(JSON.stringify(state.info))
+  },
+
+  UPDATE_ASIDE_RED_TEXT: (state, payload) => {
+    if (!state.aside.items[payload.num]) state.aside.items.push({ black: 'information about', red: payload.value })
+    else state.aside.items[payload.num].red = payload.value
+  },
+  UPDATE_ASIDE_BLACK_TEXT: (state, payload) => {
+    if (!state.aside.items[payload.num]) state.aside.items.push({ black: payload.value, red: '[ Information ]' })
+    else state.aside.items[payload.num].black = payload.value
+  },
+  UPDATE_ASIDE_SMALL_TEXT: (state, payload) => {
+    state.aside.smallText.splice(payload.num, 1, payload.value)
+  },
+
   /* ========================== USER FORM ========================== */
-  // UPDATE_USER_FORM: (state, payload) => { state.userForm[payload.prop] = payload.value },
+  UPDATE_USER_FORM: (state, payload) => { state.userForm[payload.prop] = payload.value },
   UPDATE_USER_FORM_FIELD_VALUE: (state, payload) => { state.userForm[payload.prop].value = payload.value },
   UPDATE_USER_FORM_FIELD_OPTION: (state, payload) => {
     state.userForm.fieldsToShow[payload.num][payload.option] = payload.value
@@ -119,6 +146,7 @@ const mutations = {
 
 const actions = {
   async GET_CONTENT ({ getters, commit, dispatch }, route) {
+    if (!route) return
     try {
       const response = await (await fetch(`${getters.pageContentEndpoint}/${route}`)).json()
       commit('UPDATE_ALL', response)

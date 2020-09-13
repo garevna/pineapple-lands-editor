@@ -1,9 +1,9 @@
 <template>
-  <v-container fluid class="homefone" v-if="testimonials">
-    <v-card flat class="transparent mx-auto mt-12 mb-0 text-center" max-width="1360">
-      <v-card-title class="text-center" max-width="940">
+  <v-container fluid class="homefone">
+    <v-card flat class="transparent mx-auto mt-12 mb-0 text-center" max-width="960">
+      <v-card-text class="text-center">
         <SubHeader :value.sync="header" class="mx-auto" />
-      </v-card-title>
+      </v-card-text>
 
       <v-slide-group
         v-if="viewportWidth >= 600"
@@ -19,23 +19,22 @@
         >
           <v-card
             flat
-            class="ma-4"
-            height="250"
-            width="376"
+            class="transparent ma-4"
+            height="320"
+            width="auto"
             @click="toggle"
           >
             <v-row
-              class="fill-height"
+              class="transparent fill-height"
               align="center"
               justify="center"
             >
               <v-scale-transition>
                 <TestimonialsCard
-                      :date="testimonial.date"
+                      :date="testimonial.published_at"
                       :name="testimonial.name"
-                      :photo="testimonial.photo"
+                      :photo="testimonial.logo"
                       :text="testimonial.text"
-                      :removed.sync="removed"
                 />
               </v-scale-transition>
             </v-row>
@@ -60,25 +59,44 @@
           <v-sheet height="100%" flat tile class="transparent">
             <v-row align="center" justify="center">
               <TestimonialsCard
-                    :date="testimonial.date"
+                    :date="testimonial.published_at"
                     :name="testimonial.name"
-                    :photo="testimonial.photo"
+                    :photo="testimonial.logo"
                     :text="testimonial.text"
-                    :removed.sync="removed"
               />
             </v-row>
           </v-sheet>
         </v-carousel-item>
       </v-carousel>
     </v-card>
-    <v-card-text class="text-center">
-      <Button :value.sync="content.button" :goto.sync="goto" class="mx-auto" style="max-width: 480px" />
-    </v-card-text>
+    <!-- <v-card-text class="text-center">
+      <v-btn
+          color="buttons"
+          dark
+          rounded
+          width="220"
+          height="48"
+          class="submit-button px-auto mx-auto"
+          @click="$emit('update:page', 'plans')"
+      >
+          {{ content.button }}
+      </v-btn>
+    </v-card-text> -->
   </v-container>
 </template>
 
 <style>
+.testimonials .v-btn__content,
+.testimonials .mdi::before,
+.testimonials .mdi-chevron-right::before,
+.testimonials .v-icon::after {
+  color: #fff!important;
+}
 
+.testimonials .theme--light.v-btn.v-btn--icon {
+  background: #7b79!important;
+  color: #fff!important;
+}
 </style>
 
 <style scoped>
@@ -95,26 +113,31 @@ import { mapState } from 'vuex'
 
 import TestimonialsCard from '@/components/TestimonialsCard.vue'
 import SubHeader from '@/components/inputs/SubHeader.vue'
-import Button from '@/components/inputs/Button.vue'
+// import Button from '@/components/inputs/Button.vue'
 
 export default {
   name: 'Testimonials',
   components: {
     TestimonialsCard,
-    SubHeader,
-    Button
+    SubHeader
   },
   props: ['page'],
   data: () => ({
     model: 0,
-    removed: null
+    testimonials: null
   }),
   computed: {
     ...mapState('content', {
       content: 'testimonials'
     }),
-    ...mapState('testimonials', ['testimonials']),
+    // ...mapState('testimonials', ['testimonials']),
     ...mapState(['viewportWidth']),
+    cardWidth () {
+      return this.viewportWidth < 600 ? this.viewportWidth - 100 : 376
+    },
+    textSize () {
+      return this.viewportWidth < 600 ? '12px' : '14px'
+    },
     header: {
       get () {
         return this.content.header
@@ -150,12 +173,15 @@ export default {
     }
   },
   methods: {
-    action () {
-      console.log('Testimonials action')
+    async getReviews () {
+      this.testimonials = (await (await fetch('https://dka.dgtek.net/api/frontend/testimonials')).json()).data
     }
   },
+  created () {
+    this.getReviews()
+  },
   mounted () {
-    this.$store.dispatch('testimonials/GET_CONTENT')
+    console.log()
   }
 }
 

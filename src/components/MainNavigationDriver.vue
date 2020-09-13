@@ -76,64 +76,6 @@
         width="480"
     >
       <ListOfLands :drawer.sync="drawer" :nav="true" />
-      <!-- <v-list nav dense>
-        <v-list-item-group
-              v-model="group"
-              active-class="info--text text--info"
-        >
-          <v-list-item>
-            <v-list-item-avatar tile>
-              <v-img src="https://api.pineapple.net.au/icons/android-chrome-512x512.png"></v-img>
-            </v-list-item-avatar>
-
-            <v-list-item-content>
-              <v-list-item-title>pineapple.net.au</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-
-          <v-divider></v-divider>
-
-          <v-list-item
-                 v-for="(item, index) in items"
-                 :key="index"
-                 @click="selected = index + 1"
-          >
-            <v-list-item-icon>
-              <v-icon color="green">mdi-pencil-circle</v-icon>
-            </v-list-item-icon>
-
-            <v-list-item-content>
-              <v-list-item-title @click="$route.name === item.route || $router.push({ name: item.route })">
-                {{ item.title }}
-              </v-list-item-title>
-              <v-card flat class="transparent ml-2" v-if="item.childs">
-                <v-list nav dense>
-                  <v-list-item-group
-                        v-model="secondLandPage"
-                        active-class="info--text text--info"
-                  >
-                    <v-list-item
-                           v-for="(subpage, num) in item.childs"
-                           :key="num"
-                           @click="selected = num + 1"
-                    >
-                      <v-list-item-icon>
-                        <v-icon color="green">mdi-pencil-circle</v-icon>
-                      </v-list-item-icon>
-
-                      <v-list-item-content>
-                        <v-list-item-title @click="$route.name === subpage.route || $router.push({ name: subpage.route })">
-                          {{ subpage.title }}
-                        </v-list-item-title>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </v-list-item-group>
-                </v-list>
-              </v-card>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list> -->
     </v-navigation-drawer>
   </v-container>
 </template>

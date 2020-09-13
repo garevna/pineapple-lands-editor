@@ -51,6 +51,13 @@ const state = {
       { title: 'Reviews', value: '#testimonials' },
       { title: 'FAQs', value: '#faq' },
       { title: 'Footer with contact form', value: '#footer' }
+    ],
+    [
+      { title: 'Top of the page', value: '#top' },
+      { title: 'Benefits', value: '#benefits' },
+      { title: 'Reviews', value: '#testimonials' },
+      { title: 'FAQs', value: '#faq' },
+      { title: 'Call back', value: '#contact' }
     ]
   ],
   subPagesConfigs: [

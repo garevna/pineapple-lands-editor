@@ -112,6 +112,11 @@ export default new Vuex.Store({
         title: 'nbn.pineapple.net.au',
         route: 'fifth',
         short: 5
+      },
+      {
+        title: 'dgtek.net/free-upgrade',
+        route: 'dgtek',
+        short: 6
       }
     ]
   },

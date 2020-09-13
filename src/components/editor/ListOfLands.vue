@@ -5,12 +5,12 @@
           active-class="info--text text--info"
     >
       <v-list-item v-if="nav">
-        <v-list-item-avatar tile>
-          <v-img src="https://api.pineapple.net.au/icons/android-chrome-512x512.png"></v-img>
-        </v-list-item-avatar>
+        <v-list-item-icon>
+          <v-icon large>mdi-pencil-circle</v-icon>
+        </v-list-item-icon>
 
         <v-list-item-content v-if="nav">
-          <v-list-item-title>pineapple.net.au</v-list-item-title>
+          <v-list-item-title>Landing Pages Editor</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
@@ -19,9 +19,11 @@
       <v-list-item
              v-for="(item, index) in items"
              :key="index"
+             class="mt-4"
       >
         <v-list-item-icon>
-          <v-icon color="green">mdi-pencil-circle</v-icon>
+          <PineappleLogo v-if="item.route !== 'dgtek'" />
+          <DGtekLogo v-else />
         </v-list-item-icon>
 
         <v-list-item-content>
@@ -39,7 +41,7 @@
                        @click="selected = num + 1"
                 >
                   <v-list-item-icon>
-                    <v-icon color="green">mdi-pencil-circle</v-icon>
+                    <PineappleLogo />
                   </v-list-item-icon>
 
                   <v-list-item-content>
@@ -68,8 +70,15 @@
 
 import { mapState } from 'vuex'
 
+import PineappleLogo from '@/components/PineappleLogo.vue'
+import DGtekLogo from '@/components/dgtek/Logo.vue'
+
 export default {
   name: 'ListOfLands',
+  components: {
+    PineappleLogo,
+    DGtekLogo
+  },
   props: ['drawer', 'nav', 'route'],
   data: () => ({
     group: null

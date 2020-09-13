@@ -51,6 +51,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "fifth" */ '@/views/Fifth.vue')
   },
   {
+    path: '/dgtek',
+    name: 'dgtek',
+    component: () => import(/* webpackChunkName: "dgtek" */ '@/views/DGtek.vue')
+  },
+  {
     path: '/overall',
     name: 'overall',
     component: () => import(/* webpackChunkName: "overall" */ '@/views/LandsOveral.vue')

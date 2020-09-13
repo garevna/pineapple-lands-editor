@@ -90,7 +90,7 @@
     </v-card>
     <v-card flat class="transparent mx-auto mt-12 text-center">
       <v-card-text class="text-center">
-        <Button :value.sync="button" :goto.sync="goto" class="mx-auto" />
+        <Button :value.sync="button" :goto.sync="goto" class="mx-auto" v-if="button" />
       </v-card-text>
     </v-card>
   </v-container>

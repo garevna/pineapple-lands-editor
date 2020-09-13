@@ -32,7 +32,7 @@
       <v-row>
         <v-text-field
               dark
-              class="submit-button mx-auto"
+              :class="{ 'pineapple-submit-button': !isDGtek, 'dgtek-submit-button': isDGtek }"
               v-model="inputValue"
               hide-details
               prepend-inner-icon="mdi-pencil"
@@ -42,19 +42,26 @@
 </template>
 
 <style scoped>
-.submit-button {
+
+.pineapple-submit-button, .dgtek-submit-button {
   font-family: Gilroy;
   font-style: normal;
   font-weight: bold;
   font-size: 16px!important;
   line-height: 100%;
   text-transform: uppercase;
-  width: 340px;
-  color: #fff!important;
+  padding: 12px 16px;
   text-align:center!important;
+  color: #fff!important;
+  width: 340px;
+}
+.pineapple-submit-button {
   background-color: #72BF44;
-  padding: 8px 16px;
   border-radius: 32px;
+}
+.dgtek-submit-button {
+  background-color: #f44336;
+  border-radius: 8px;
 }
 </style>
 
@@ -73,6 +80,9 @@ export default {
   computed: {
     ...mapState(['currentLand']),
     ...mapState('editor', ['configs', 'subPagesConfigs']),
+    isDGtek () {
+      return this.$route.name === 'dgtek'
+    },
     sections () {
       if (typeof this.currentLand === 'string' && this.currentLand.indexOf('2-') === 0) return this.subPagesConfigs[this.currentLand.slice(2) - 1].map(item => item.title)
       return this.configs[this.currentLand - 1].map(item => item.title)
