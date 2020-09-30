@@ -226,8 +226,9 @@ export default {
       card.scrollTop = card.scrollHeight
     },
     reflectAllChanges () {
-      this.$store.dispatch('contact/SET_FIELDS_TO_SHOW', this.formFields)
-      this.modal = false
+      this.$store.commit('content/UPDATE_USER_FORM_FIELDS', this.userForm.fieldsToShow)
+      this.$store.dispatch('contact/SET_FIELDS_TO_SHOW', this.userForm.fieldsToShow)
+        .then(() => { this.modal = false })
     }
   },
   mounted () {

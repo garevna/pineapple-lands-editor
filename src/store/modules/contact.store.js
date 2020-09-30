@@ -51,13 +51,16 @@ const mutations = {
       state.contactFormFields[index].value = ''
       state.contactFormFields[index].error = false
     }
+  },
+  SET_FIELDS_TO_SHOW (state, payload) {
+    state.contactFormFields = payload
   }
 }
 
 const actions = {
 
-  SET_FIELDS_TO_SHOW ({ state, getters }, payload) {
-    state.contactFormFields = payload.map((field) => {
+  SET_FIELDS_TO_SHOW ({ commit, getters }, payload) {
+    const contactFormFields = payload.map((field) => {
       return {
         type: getters.types[field.type],
         placeholder: field.placeholder,
@@ -68,6 +71,7 @@ const actions = {
         available: field.type === 'state' ? ['VIC', 'NSW', 'ACT', 'QLD', 'SA', 'WA', 'TAS', 'NT'] : field.available || null
       }
     })
+    commit('SET_FIELDS_TO_SHOW', contactFormFields)
   },
   async SEND_EMAIL ({ state, commit }) {
     let error = false
