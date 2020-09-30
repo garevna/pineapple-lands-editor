@@ -1,10 +1,10 @@
 <template>
-  <Page pageNum="2" />
+  <Page homePageName="2" pageNum="2" />
 </template>
 
 <script>
 
-import Page from '@/components/2/Page.vue'
+import Page from '@/components/multipage/Page.vue'
 
 export default {
   name: 'page-2',

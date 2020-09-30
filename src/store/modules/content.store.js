@@ -1,6 +1,18 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
 
+const {
+  infoSection,
+  pagesSection,
+  dgtekAsideSection,
+  userFormSection,
+  howToConnectSection,
+  listSection,
+  faqSection
+} = require('./mutations').default
+
+const userFormInitial = require('@/store/modules/userFormInitial.js').default
+
 const state = {
   browserTabTitle: 'pineapple.net',
   emailSubject: 'pineapple.net.au',
@@ -17,7 +29,10 @@ const state = {
   greenSection: {},
   howToConnect: {},
   internetPlans: {},
-  footer: {},
+  footer: {
+    text: 'Leave your inquiry and we\'ll get back to you within 24 hours on business days',
+    title: 'READY TO GET STARTED?'
+  },
   userForm: {}
 }
 
@@ -31,102 +46,37 @@ const mutations = {
   UPDATE_TOP: (state, payload) => { state.top[payload.prop] = payload.value },
 
   /* INFO */
-  UPDATE_INFO: (state, payload) => { state.info[payload.prop] = payload.value },
+  ...infoSection.default,
 
-  UPDATE_OFFER: (state, payload) => {
-    state.info.offer = payload
-  },
-  ADD_OFFER: (state) => {
-    state.info.offer.push({ blackText: 'information about', greenText: 'offer' })
-    // state.info = JSON.parse(JSON.stringify(state.info))
-  },
-  REMOVE_OFFER: (state, num) => {
-    state.info.offer.splice(num, 1)
-    // state.info = JSON.parse(JSON.stringify(state.info))
-  },
-
-  UPDATE_OFFER_GREEN_TEXT: (state, payload) => {
-    if (!state.info.offer[payload.num]) state.info.offer.push({ blackText: 'information about', greenText: payload.value })
-    else state.info.offer[payload.num].greenText = payload.value
-  },
-  UPDATE_OFFER_BLACK_TEXT: (state, payload) => {
-    if (!state.info.offer[payload.num]) state.info.offer.push({ blackText: payload.value, greenText: 'offer' })
-    else state.info.offer[payload.num].blackText = payload.value
-  },
+  /* LIVE - PAGES */
+  ...pagesSection.default,
 
   /* DGTEK ASIDE */
+  ...dgtekAsideSection.default,
 
-  UPDATE_ASIDE: (state, payload) => { state.aside[payload.prop] = payload.value },
-  ADD_ASIDE_ITEM: (state) => {
-    state.aside.items.push({ black: '[ Relevant ]', red: '[ Information ]' })
-    // state.aside = JSON.parse(JSON.stringify(state.info))
-  },
-  REMOVE_ASIDE_ITEM: (state, num) => {
-    state.aside.items.splice(num, 1)
-    // state.aside = JSON.parse(JSON.stringify(state.info))
-  },
+  /* USER FORM */
+  ...userFormSection.default,
 
-  UPDATE_ASIDE_RED_TEXT: (state, payload) => {
-    if (!state.aside.items[payload.num]) state.aside.items.push({ black: 'information about', red: payload.value })
-    else state.aside.items[payload.num].red = payload.value
-  },
-  UPDATE_ASIDE_BLACK_TEXT: (state, payload) => {
-    if (!state.aside.items[payload.num]) state.aside.items.push({ black: payload.value, red: '[ Information ]' })
-    else state.aside.items[payload.num].black = payload.value
-  },
-  UPDATE_ASIDE_SMALL_TEXT: (state, payload) => {
-    state.aside.smallText.splice(payload.num, 1, payload.value)
-  },
+  /* HOW TO CONNECT */
+  ...howToConnectSection.default,
 
-  /* ========================== USER FORM ========================== */
-  UPDATE_USER_FORM: (state, payload) => { state.userForm[payload.prop] = payload.value },
-  UPDATE_USER_FORM_FIELD_VALUE: (state, payload) => { state.userForm[payload.prop].value = payload.value },
-  UPDATE_USER_FORM_FIELD_OPTION: (state, payload) => {
-    state.userForm.fieldsToShow[payload.num][payload.option] = payload.value
-  },
-  UPDATE_USER_FORM_FIELDS: (state, payload) => {
-    state.userForm.fieldsToShow = JSON.parse(JSON.stringify(payload))
-  },
+  /* FAQ */
+  ...faqSection.default,
+
+  /* LIST */
+  ...listSection.default,
 
   /* ========================== INTERNET PLANS ========================== */
   UPDATE_INTERNET_PLANS_CONTENT: (state, payload) => { state.internetPlans[payload.prop] = payload.value },
   UPDATE_INTERNET_PLANS: (state, payload) => { state.plans[payload.prop] = payload.value },
 
-  /* ======================= HOW TO CONNECT ======================= */
-  UPDATE_CONNECT: (state, payload) => { state.howToConnect[payload.prop] = payload.value },
-  ADD_CONNECT_ITEM: (state) => state.howToConnect.items.push({ title: 'Benefit ...', text: '...' }),
-  REMOVE_CONNECT_ITEM: (state, num) => {
-    state.howToConnect.items = state.howToConnect.items.filter((item, index) => index !== num)
-  },
-  UPDATE_CONNECT_ITEM: (state, payload) => { state.howToConnect.items[payload.num][payload.prop] = payload.value },
-
   /* ======================= TESTIMONIALS ======================= */
   UPDATE_TESTIMONIALS: (state, payload) => { state.testimonials[payload.prop] = payload.value },
 
-  /* =========================== FAQ =========================== */
-  UPDATE_FAQ: (state, payload) => { state.faq[payload.prop] = payload.value },
-  UPDATE_FAQ_ITEM: (state, payload) => { state.faq.items[payload.num][payload.prop] = payload.value },
-  ADD_FAQ_ITEM: (state) => { state.faq.items.push({ question: 'Question?', answer: 'Answer...' }) },
-  DELETE_FAQ_ITEM: (state, num) => { state.faq.items.splice(num, 1) },
-
   /* ======================= DISCLAIMER ========================== */
   UPDATE_DISCLAIMER: (state, payload) => { state.disclaimer[payload.prop] = payload.value },
-  /* ======================= LIST ========================== */
-  UPDATE_LIST: (state, payload) => { state.list[payload.prop] = payload.value },
-  UPDATE_LIST_ITEM: (state, payload) => { state.list.items[payload.num][payload.prop] = payload.value },
-  ADD_LIST_ITEM: (state) => {
-    state.list.items.push({
-      title: 'item',
-      icon: 'https://api.pineapple.net.au/icons/icon-1.svg',
-      text: 'text...'
-    })
-    // state.list = JSON.parse(JSON.stringify(state.list))
-  },
-  REMOVE_LIST_ITEM: (state, num) => {
-    state.list.items.splice(num, 1)
-    // state.list = JSON.parse(JSON.stringify(state.list))
-  },
 
+  /* ======================= FOOTER ========================== */
   UPDATE_FOOTER: (state, payload) => { state.footer[payload.prop] = payload.value },
 
   UPDATE_ALL: (state, payload) => {
@@ -141,19 +91,40 @@ const mutations = {
         }
       }
     }
+  },
+  CLEAR_ALL: (state) => {
+    state.browserTabTitle = 'pineapple.net'
+    state.emailSubject = 'pineapple.net.au'
+    state.emailText = 'Thank you for your interest in Pineapple NET! A member of our team will be in touch shortly.'
+    state.mainNavButtons = []
+    state.mainNavSectors = []
+    state.top = null
+    state.info = null
+    state.aside = null
+    state.list = null
+    state.faq = null
+    state.plans = null
+    state.testimonials = null
+    state.greenSection = null
+    state.howToConnect = null
+    state.internetPlans = null
+    state.footer.text = 'Leave your inquiry and we\'ll get back to you within 24 hours on business days'
+    state.footer.title = 'READY TO GET STARTED?'
+    state.userForm = null
   }
 }
 
 const actions = {
   async GET_CONTENT ({ getters, commit, dispatch }, route) {
     if (!route) return
+    commit('CLEAR_ALL')
     try {
       const response = await (await fetch(`${getters.pageContentEndpoint}/${route}`)).json()
       commit('UPDATE_ALL', response)
       commit('contact/UPDATE_EMAIL_SUBJECT', response.emailSubject, { root: true })
       commit('contact/UPDATE_EMAIL_TEXT', response.emailText, { root: true })
       commit('SET_CURRENT_LAND', route, { root: true })
-      if (!response.userForm) return response.browserTabTitle
+      if (!response.userForm) response.userForm = userFormInitial
       await dispatch('contact/SET_FIELDS_TO_SHOW', response.userForm.fieldsToShow, { root: true })
       return response.browserTabTitle
     } catch (error) {

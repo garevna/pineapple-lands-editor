@@ -49,6 +49,9 @@
             </v-card>
           </v-card>
     </v-container>
+    <v-card-text class="text-center">
+      <Button :value.sync="button" :goto.sync="goto" class="mx-auto" style="max-width: 480px" />
+    </v-card-text>
   </v-container>
 </template>
 
@@ -77,6 +80,7 @@ import SubHeader from '@/components/inputs/SubHeader.vue'
 import SubSubHeader from '@/components/inputs/SubSubHeader.vue'
 import Paragraph from '@/components/inputs/Paragraph.vue'
 import ChangePicture from '@/components/editor/ChangePicture.vue'
+import Button from '@/components/inputs/Button.vue'
 
 export default {
   name: 'HowToConnect',
@@ -85,7 +89,8 @@ export default {
     SubHeader,
     SubSubHeader,
     Paragraph,
-    ChangePicture
+    ChangePicture,
+    Button
   },
   data () {
     return {
@@ -111,6 +116,22 @@ export default {
       },
       set (val) {
         this.$store.commit('content/UPDATE_CONNECT', { prop: 'text', value: val })
+      }
+    },
+    button: {
+      get () {
+        return this.howToConnect.button
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_BUTTON_TEXT', val)
+      }
+    },
+    goto: {
+      get () {
+        return this.howToConnect.goto
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_BUTTON_GOTO', val)
       }
     },
     title1: {

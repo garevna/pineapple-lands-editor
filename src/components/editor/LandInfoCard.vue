@@ -85,17 +85,14 @@ export default {
     endpoint () {
       return `${this.contentHost}/${this.route}`
     },
+    pageConfigs () {
+      return this.$store.state.editor.configs[this.route]
+    },
     sections () {
-      if (typeof this.route === 'string') {
-        return this.$store.state.editor.subPagesConfigs[this.route.slice(-1) - 1].map(item => item.title)
-      }
-      return this.$store.state.editor.configs[this.route - 1].map(item => item.title)
+      return this.pageConfigs.map(item => item.title)
     },
     jumps () {
-      if (typeof this.route === 'string') {
-        return this.$store.state.editor.subPagesConfigs[this.route.slice(-1) - 1].map(item => item.value)
-      }
-      return this.$store.state.editor.configs[this.route - 1].map(item => item.value)
+      return this.pageConfigs.map(item => item.value)
     }
   },
   watch: {

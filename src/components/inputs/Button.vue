@@ -78,18 +78,27 @@ export default {
     }
   },
   computed: {
-    ...mapState(['currentLand']),
-    ...mapState('editor', ['configs', 'subPagesConfigs']),
-    isDGtek () {
-      return this.$route.name === 'dgtek'
+    ...mapState(['currentLand', 'lands']),
+    ...mapState('editor', ['configs']),
+    route () {
+      let land = this.lands.find(land => land.route === this.$route.name)
+      if (!land) {
+        land = this.lands
+          .flatMap(land => land.childs)
+          .filter(item => item)
+          .find(item => item.route === this.$route.name)
+      }
+      return land.short
     },
     sections () {
-      if (typeof this.currentLand === 'string' && this.currentLand.indexOf('2-') === 0) return this.subPagesConfigs[this.currentLand.slice(2) - 1].map(item => item.title)
-      return this.configs[this.currentLand - 1].map(item => item.title)
+      return this.configs[this.route].map(item => item.title)
     },
     jumps () {
-      if (typeof this.currentLand === 'string' && this.currentLand.indexOf('2-') === 0) return this.subPagesConfigs[this.currentLand.slice(2) - 1].map(item => item.value)
-      return this.configs[this.currentLand - 1].map(item => item.value)
+      console.log(this.route, this.configs)
+      return this.configs[this.route].map(item => item.value)
+    },
+    isDGtek () {
+      return this.$route.name === 'dgtek'
     },
     inputValue: {
       get () {

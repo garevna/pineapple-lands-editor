@@ -91,7 +91,7 @@
 import { mapState, mapActions } from 'vuex'
 
 import AppHeader from '@/components/AppHeader.vue'
-import Top from '@/components/2/Top.vue'
+import Top from '@/components/multipage/Top.vue'
 import Aside from '@/components/Aside.vue'
 import UserContact from '@/components/UserContact.vue'
 import Testimonials from '@/components/Testimonials.vue'
@@ -112,7 +112,7 @@ export default {
     Footer,
     Popup
   },
-  props: ['pageNum'],
+  props: ['homePageName', 'pageNum'],
   data () {
     return {
       ready: false,
@@ -144,13 +144,13 @@ export default {
       getTestimonials: 'GET_CONTENT'
     }),
     async savePageContent () {
-      const response = await this.saveContent(`2-${this.pageNum}`)
+      const response = await this.saveContent(`${this.homePageName}-${this.pageNum}`)
       const actionName = response === 200 ? 'saveSuccess' : response === 403 || response === 401 ? 'accessDenied' : 'saveFailure'
       this[actionName]()
     }
   },
   beforeMount () {
-    this.getContent(`2-${this.pageNum}`)
+    this.getContent(`${this.homePageName}-${this.pageNum}`)
       .then((response) => {
         this.ready = true
       })

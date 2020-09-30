@@ -44,9 +44,9 @@ p {
 
 <script>
 
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
-import TopPicture from '@/components/2/TopPicture.vue'
+import TopPicture from '@/components/multipage/TopPicture.vue'
 import ChangePicture from '@/components/editor/ChangePicture.vue'
 import SubHeader from '@/components/inputs/SubHeader.vue'
 import Paragraph from '@/components/inputs/Paragraph.vue'
@@ -61,19 +61,21 @@ export default {
     Paragraph,
     Button
   },
-  props: ['page'],
+  props: ['pageNum'],
   data: () => ({
     imageSrc: ''
   }),
   computed: {
-    ...mapState('content', ['top', 'mainNavButtons']),
-    ...mapGetters(['familyPicture']),
+    ...mapState('content', ['pages']),
+    top () {
+      return this.pages[this.pageNum - 1].top
+    },
     header: {
       get () {
         return this.top.header
       },
       set (val) {
-        this.$store.commit('content/UPDATE_TOP', { prop: 'header', value: val })
+        this.change('header', val)
       }
     },
     text: {
@@ -81,7 +83,7 @@ export default {
         return this.top.text.split('<br>').join('\n')
       },
       set (val) {
-        this.$store.commit('content/UPDATE_TOP', { prop: 'text', value: val.split('\n').join('<br>') })
+        this.change('text', val.split('\n').join('<br>'))
       }
     },
     topButton: {
@@ -89,7 +91,7 @@ export default {
         return this.top ? this.top.button : ''
       },
       set (val) {
-        this.$store.commit('content/UPDATE_TOP', { prop: 'button', value: val })
+        this.change('button', val)
       }
     },
     topButtonGoto: {
@@ -97,13 +99,23 @@ export default {
         return this.top ? this.top.goto : ''
       },
       set (val) {
-        this.$store.commit('content/UPDATE_TOP', { prop: 'goto', value: val })
+        this.change('goto', val)
       }
+    }
+  },
+  methods: {
+    change (propName, propValue) {
+      this.$store.commit('content/UPDATE_PAGE_SECTION', {
+        pageNum: this.pageNum - 1,
+        sectionName: 'top',
+        propName,
+        propValue
+      })
     }
   },
   watch: {
     imageSrc (val) {
-      this.$store.commit('content/UPDATE_TOP', { prop: 'pictureURL', value: val })
+      this.change('pictureURL', val)
     }
   }
 }

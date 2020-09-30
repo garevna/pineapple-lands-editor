@@ -27,10 +27,33 @@
       </section>
 
       <!-- ============================= CREEN SECTION ============================= -->
-      <section id="dgtek" style="width: 100%">
+      <!-- <section id="dgtek" style="width: 100%">
         <div class="base-title">
           <a href="#dgtek" class="core-goto"></a>
           <GreenSection />
+        </div>
+      </section> -->
+
+      <!-- ============================= USER CONTACT ============================= -->
+      <section id="contact" style="width: 100%">
+        <div class="base-title">
+          <a href="#contact" class="core-goto"></a>
+          <v-row justify="center" class="pa-0 ma-0">
+            <v-col cols="12" md="6" class="aside-col">
+              <GreenSection />
+            </v-col>
+            <v-col cols="12" md="6" class="mx-0 px-0">
+              <v-card flat class="transparent mx-0">
+                <v-card
+                        flat
+                        class="user-contact transparent mx-auto pa-0"
+                        style="margin-bottom: 80px"
+                >
+                  <UserContact />
+                </v-card>
+              </v-card>
+            </v-col>
+          </v-row>
         </div>
       </section>
 
@@ -103,16 +126,17 @@
 import { mapState, mapActions } from 'vuex'
 
 import AppHeader from '@/components/AppHeader.vue'
-import Top from '@/components/3/Top.vue'
+import Top from '@/components/multipage/Top.vue'
 import List from '@/components/List.vue'
-// import Aside from '@/components/Aside.vue'
-// import UserContact from '@/components/UserContact.vue'
-import HowToConnect from '@/components/HowToConnect.vue'
 import GreenSection from '@/components/GreenSection.vue'
+import UserContact from '@/components/UserContact.vue'
+import HowToConnect from '@/components/HowToConnect.vue'
 import Testimonials from '@/components/Testimonials.vue'
 import InternetPlans from '@/components/InternetPlans.vue'
 import FAQ from '@/components/FAQ.vue'
 import Footer from '@/components/Footer.vue'
+
+const userFormInitial = require('@/store/modules/userFormInitial.js').default
 
 export default {
   name: 'App',
@@ -121,7 +145,7 @@ export default {
     Top,
     List,
     // Aside,
-    // UserContact,
+    UserContact,
     HowToConnect,
     GreenSection,
     Testimonials,
@@ -193,6 +217,7 @@ export default {
   beforeMount () {
     this.getContent(3)
       .then((response) => {
+        if (!this.$store.state.content.userForm) this.$store.state.content.userForm = userFormInitial
         this.ready = !!response
       })
     this.getTestimonials()

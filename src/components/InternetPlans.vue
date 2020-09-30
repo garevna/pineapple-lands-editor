@@ -57,6 +57,9 @@
         </v-carousel>
       </v-card>
     </v-slide-x-transition>
+    <v-card-text class="text-center">
+      <Button :value.sync="button" :goto.sync="goto" class="mx-auto" style="max-width: 480px" />
+    </v-card-text>
   </v-card>
 </template>
 
@@ -77,13 +80,15 @@ import { mapState } from 'vuex'
 import SubHeader from '@/components/inputs/SubHeader.vue'
 import PriceCard from '@/components/plans/PriceCard.vue'
 import SwitchMode from '@/components/plans/SwitchToggle.vue'
+import Button from '@/components/inputs/Button.vue'
 
 export default {
   name: 'InternetPlans',
   components: {
     SubHeader,
     PriceCard,
-    SwitchMode
+    SwitchMode,
+    Button
   },
   props: ['page'],
   data () {
@@ -96,16 +101,38 @@ export default {
     ...mapState(['viewportWidth', 'plan']),
     ...mapState('internetPlans', ['plans']),
     ...mapState('content', ['internetPlans']),
-    carouselHeight () {
-      return this.viewportWidth < 960 ? this.viewportWidth < 600 ? 420 : 480 : 420
-    },
     header: {
       get () {
         return this.internetPlans ? this.internetPlans.header : 'FIBRE INTERNET PLANS'
       },
       set (val) {
-        this.$store.commit('content/UPDATE_INTERNET_PLANS_CONTENT', { prop: 'header', value: val })
+        this.$store.commit('content/UPDATE_INTERNET_PLANS', { prop: 'header', value: val })
       }
+    },
+    button: {
+      get () {
+        return this.internetPlans ? this.internetPlans.button || 'Contact Us' : 'Contact Us'
+      },
+      set (value) {
+        this.$store.commit('content/UPDATE_INTERNET_PLANS', {
+          prop: 'button',
+          value
+        })
+      }
+    },
+    goto: {
+      get () {
+        return this.internetPlans ? this.internetPlans.goto || '#contact' : '#contact'
+      },
+      set (value) {
+        this.$store.commit('content/UPDATE_INTERNET_PLANS', {
+          prop: 'goto',
+          value
+        })
+      }
+    },
+    carouselHeight () {
+      return this.viewportWidth < 960 ? this.viewportWidth < 600 ? 420 : 480 : 420
     }
   },
   watch: {

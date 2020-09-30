@@ -11,44 +11,49 @@ const routes = [
     component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue')
   },
   {
-    path: '/1',
-    name: 'first',
+    path: '/fast-fibre-internet',
+    name: 'fast-fibre-internet',
     component: () => import(/* webpackChunkName: "first" */ '@/views/First.vue')
   },
   {
-    path: '/2',
-    name: 'second',
+    path: '/connect-melbourne-cbd',
+    name: 'connect-melbourne-cbd',
     component: () => import(/* webpackChunkName: "second" */ '@/views/Second.vue')
   },
   {
-    path: '/2-1',
-    name: 'second-1',
+    path: '/conservatory',
+    name: 'conservatory',
     component: () => import(/* webpackChunkName: "second-1" */ '@/components/2/Page-1.vue')
   },
   {
-    path: '/2-2',
-    name: 'second-2',
+    path: '/qv1',
+    name: 'qv1',
     component: () => import(/* webpackChunkName: "second-2" */ '@/components/2/Page-2.vue')
   },
   {
-    path: '/2-3',
-    name: 'second-3',
+    path: '/aurora',
+    name: 'aurora',
     component: () => import(/* webpackChunkName: "second-3" */ '@/components/2/Page-3.vue')
   },
   {
-    path: '/3',
-    name: 'third',
+    path: '/fibreinternet-melbournecbd',
+    name: 'fibreinternet-melbournecbd',
     component: () => import(/* webpackChunkName: "third" */ '@/views/Third.vue')
   },
   {
-    path: '/4',
-    name: 'fourth',
+    path: '/refer-a-friend',
+    name: 'refer-a-friend',
     component: () => import(/* webpackChunkName: "fourth" */ '@/views/Fourth.vue')
   },
   {
-    path: '/5',
-    name: 'fifth',
+    path: '/nbn',
+    name: 'nbn',
     component: () => import(/* webpackChunkName: "fifth" */ '@/views/Fifth.vue')
+  },
+  {
+    path: '/live',
+    name: 'live',
+    component: () => import(/* webpackChunkName: "live" */ '@/views/Live.vue')
   },
   {
     path: '/dgtek',
