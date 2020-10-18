@@ -51,11 +51,6 @@ const routes = [
     component: () => import(/* webpackChunkName: "fifth" */ '@/views/Fifth.vue')
   },
   {
-    path: '/live',
-    name: 'live',
-    component: () => import(/* webpackChunkName: "live" */ '@/views/Live.vue')
-  },
-  {
     path: '/dgtek',
     name: 'dgtek',
     component: () => import(/* webpackChunkName: "dgtek" */ '@/views/DGtek.vue')
@@ -74,6 +69,17 @@ const routes = [
     path: '/plans',
     name: 'plans',
     component: () => import(/* webpackChunkName: "plans" */ '@/views/InternetPlans.vue')
+  },
+  {
+    path: '/live',
+    name: 'live',
+    component: () => import(/* webpackChunkName: "live" */ '@/views/Live.vue')
+  },
+  {
+    path: '/:route',
+    name: 'live-page',
+    component: () => import(/* webpackChunkName: "live-page" */ '@/views/LivePage.vue'),
+    props: true
   }
 ]
 

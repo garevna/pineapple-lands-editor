@@ -80,7 +80,7 @@ const configs = {
     { title: 'Jump to Internet Plans', value: '#plans' },
     { title: 'Jump to FAQs', value: '#faq' }
   ],
-  'live-subpage': [
+  'live-page': [
     { title: 'Return to home page', value: '/' },
     { title: 'Jump to Top of the page', value: '#top' },
     { title: 'Jump to Reviews', value: '#testimonials' },

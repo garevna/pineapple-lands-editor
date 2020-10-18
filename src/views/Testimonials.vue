@@ -25,21 +25,6 @@
         </v-btn>
       </v-row>
     </v-card>
-
-    <!-- ============================= BOTTOM NAV ============================= -->
-    <v-bottom-navigation
-          fixed
-          dark
-          class="buttons"
-          v-if="authorized"
-    >
-      <v-btn @click="saveContent" v-if="authorized">
-        <span>Save</span>
-        <v-icon>mdi-content-save-edit</v-icon>
-      </v-btn>
-    </v-bottom-navigation>
-
-    <Popup />
   </v-container>
 </template>
 
@@ -67,16 +52,14 @@
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 import TestimonialsCard from '@/components/editor/TestimonialsCard.vue'
-import Popup from '@/components/editor/Popup.vue'
 
 export default {
   name: 'Testimonials',
   components: {
-    TestimonialsCard,
-    Popup
+    TestimonialsCard
   },
   props: ['page'],
   data: () => ({
@@ -85,7 +68,9 @@ export default {
     removed: false
   }),
   computed: {
-    ...mapState(['authorized'])
+    ...mapState('testimonials', {
+      reviews: 'testimonials'
+    })
   },
   watch: {
     removed (val) {
@@ -102,27 +87,17 @@ export default {
     }
   },
   methods: {
+    ...mapActions('testimonials', {
+      getTestimonials: 'GET_CONTENT'
+    }),
     addReview () {
       this.$store.commit('testimonials/ADD_ITEM')
-    },
-    async saveContent () {
-      const response = await this.$store.dispatch('testimonials/SAVE_CONTENT')
-      if (response === 200) {
-        this.$store.commit('SET_POPUP_TITLE', 'REVIEWS')
-        this.$store.commit('SET_POPUP_TEXT', 'Data successfully saved')
-        this.$store.commit('SHOW_POPUP')
-      } else {
-        this.$store.commit('SET_POPUP_TITLE', 'REVIEWS')
-        this.$store.commit('SET_POPUP_TEXT', 'Something wrong...')
-        this.$store.commit('SHOW_POPUP')
-      }
     }
   },
   mounted () {
-    this.$store.dispatch('testimonials/GET_CONTENT')
-      .then(() => {
-        this.testimonials = this.$store.state.testimonials.testimonials
-      })
+    this.getTestimonials().then(() => {
+      this.testimonials = this.reviews
+    })
   }
 }
 

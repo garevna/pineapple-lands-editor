@@ -14,18 +14,47 @@
           </v-card>
         </v-col>
         <v-col cols="12" lg="6" class="mx-auto my-auto">
-          <v-card flat width="100%" max-width="480" class="transparent mx-auto">
-            <v-card-text
-                  class="text-left"
-                  v-if="viewportWidth > 700"
+          <v-row>
+            <v-col cols="12" sm="4">
+              <v-text-field
+                    v-if="pages"
+                    v-model="postcode"
+                    label="Post code"
+                    dense
+                    outlined
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="8" v-if="streetNames.length > 0">
+              <v-select
+                    v-if="pages"
+                    :items="streetNames"
+                    label="Street Name"
+                    @change="selectStreet($event)"
+                    dense
+                    outlined
+              ></v-select>
+            </v-col>
+          </v-row>
+          <v-card
+                flat
+                width="100%"
+                max-width="100%"
+                class="transparent mx-auto"
             >
-
-            <!-- <Button
-                v-for="(btn, index) in mainNavButtons"
-                :key="index"
-                :value="btn"
-                :hideConfig="true"
-            /> -->
+            <v-card-text class="text-center text-md-left">
+              <v-btn
+                  v-for="btn in streetNumbers"
+                  :key="btn"
+                  color="buttons"
+                  dark
+                  rounded
+                  height="48"
+                  max-width="48"
+                  class="submit-button text-left px-auto mx-auto my-2"
+                  @click="navigateTo(btn)"
+              >
+                    {{ btn }}
+              </v-btn>
             </v-card-text>
           </v-card>
         </v-col>
@@ -67,19 +96,26 @@ import { mapState } from 'vuex'
 
 import SubHeader from '@/components/inputs/SubHeader.vue'
 import Paragraph from '@/components/inputs/Paragraph.vue'
-// import Button from '@/components/inputs/Button.vue'
 
 export default {
   name: 'Top',
   components: {
-    // Button,
     SubHeader,
     Paragraph
   },
   props: ['page'],
+  data: () => ({
+    selectedPages: [],
+    postcode: '',
+    streetName: '',
+    streetNumbers: []
+  }),
   computed: {
-    ...mapState(['viewportWidth']),
+    ...mapState(['viewportWidth', 'pages']),
     ...mapState('content', ['top', 'mainNavButtons', 'mainNavSectors']),
+    streetNames () {
+      return !this.pages ? [] : (this.selectedPages || this.pages).map(item => item.address.streetName)
+    },
     header: {
       get () {
         return this.top.header
@@ -105,12 +141,23 @@ export default {
       }
     }
   },
+  watch: {
+    postcode (val) {
+      this.selectedPages = val ? this.pages.filter(item => item.address.postcode === val) : this.pages
+    }
+  },
   methods: {
-    // navigate (index) {
-    //   console.log(this.mainNavSectors[index])
-    //   if (this.mainNavSectors[index].indexOf('http') === 0) window.open(this.mainNavSectors[index], '_blank')
-    //   else if (this.mainNavSectors[index].indexOf('#') < 0) this.$router.push({ name: this.mainNavSectors[index] })
-    // }
+    selectStreet (val) {
+      if (!this.pages) return
+      const street = this.postcode
+        ? this.pages.filter(item => item.address.postcode === this.postcode).filter(item => item.address.streetName === val)
+        : this.pages.filter(item => item.address.streetName === val)
+      this.streetNumbers = street.map(item => item.address.streetNumber)
+    },
+    navigateTo (number) {
+      const item = (this.selectedPages || this.pages).find(item => item.address.streetNumber === number)
+      if (item.id) this.$router.push({ path: `/live-${item.id}` })
+    }
   }
 }
 </script>

@@ -179,9 +179,6 @@ export default {
   },
   created () {
     this.getReviews()
-  },
-  mounted () {
-    console.log()
   }
 }
 

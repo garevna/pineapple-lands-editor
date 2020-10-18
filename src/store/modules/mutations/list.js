@@ -7,6 +7,7 @@ export default {
     state.list.items.push({
       title: 'item',
       icon: 'https://api.pineapple.net.au/icons/icon-1.svg',
+      // icon: 'https://pineapple-net-land.glitch.me/icons/icon-1.svg',
       text: 'text...'
     })
   },

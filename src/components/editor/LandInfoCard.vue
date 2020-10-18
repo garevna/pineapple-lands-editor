@@ -52,14 +52,16 @@
     </v-card>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn large dark color="info" text @click="saveData">Save</v-btn>
+      <v-btn large dark color="info" text @click="saveData" v-if="authorized">
+        Save
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
 
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 import ButtonConfig from '@/components/editor/ButtonConfig.vue'
 
@@ -81,6 +83,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['authorized']),
     ...mapGetters(['contentHost']),
     endpoint () {
       return `${this.contentHost}/${this.route}`
@@ -116,13 +119,17 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      saveSuccess: 'SAVE_SUCCESS',
+      saveFailure: 'SAVE_FAILURE',
+      accessDenied: 'ACCESS_DENIED'
+    }),
     addNewButton () {
       this.mainNavButtons.push('...')
       this.mainNavSectors.push(null)
     },
     async getData () {
       const response = await (await fetch(this.endpoint)).json()
-      // console.log(response)
       this.browserTabTitle = response.browserTabTitle
       this.emailSubject = response.emailSubject
       this.emailText = response.emailText
@@ -139,6 +146,10 @@ export default {
         mainNavButtons: this.mainNavButtons,
         mainNavSectors: this.mainNavSectors
       })
+
+      if (!this.authorized) return this.accessDenied()
+      // if (location && location.hostname !== 'pa.pineapple.net.au') return this.accessDenied()
+
       const response = await fetch(this.endpoint, {
         method: 'POST',
         headers: {
@@ -147,7 +158,8 @@ export default {
         },
         body: JSON.stringify(pageContent)
       })
-      console.log('Data has been saved:\n', response)
+      const showResponse = response.status === 200 ? 'saveSuccess' : response.status === 403 || response.status === 401 ? 'accessDenied' : 'saveFailure'
+      this[showResponse]()
     }
   },
   mounted () {

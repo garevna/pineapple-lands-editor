@@ -7,19 +7,11 @@
     </v-container>
 
     <!-- ============================= BOTTOM NAV ============================= -->
-    <v-bottom-navigation
-          fixed
-          dark
-          :class="authorized ? 'buttons' : 'warning'"
-          v-if="!authorized"
-    >
-      <v-btn @click="login = true" v-if="!authorized">
-        <span>Sign In</span>
-        <v-icon>mdi-login</v-icon>
-      </v-btn>
-    </v-bottom-navigation>
-    <Popup />
-    <Auth :opened.sync="login" />
+    <BottomNavigation>
+      <div slot='navigation'>
+        <slot name="nav" />
+      </div>
+    </BottomNavigation>
   </v-app>
 </template>
 
@@ -55,6 +47,10 @@ html, body {
 .theme--light.v-system-bar .v-icon {
   font-size: 22px!important;
   color: #fff!important;
+}
+
+.v-system-bar--fixed, .v-system-bar--absolute {
+  z-index: 9;
 }
 
 h1, h2, h3, h4, h5 {
@@ -181,19 +177,19 @@ svg.defs-only {
 
 <script>
 
-import MainNavigationDriver from '@/components/MainNavigationDriver.vue'
+import 'pineapple-main-nav-bar'
+import 'pineapple-main-nav-bar/dist/pineapple-main-nav-bar.css'
 
 import { mapState, mapGetters, mapActions } from 'vuex'
 
-import Popup from '@/components/editor/Popup.vue'
-import Auth from '@/components/editor/Auth.vue'
+import BottomNavigation from '@/components/BottomNavigation.vue'
+import MainNavigationDriver from '@/components/MainNavigationDriver.vue'
 
 export default {
   name: 'App',
   components: {
-    MainNavigationDriver,
-    Popup,
-    Auth
+    BottomNavigation,
+    MainNavigationDriver
   },
   data () {
     return {
@@ -209,26 +205,10 @@ export default {
   methods: {
     ...mapActions({
       validateToken: 'VALIDATE_TOKEN',
-      saveSuccess: 'SAVE_SUCCESS',
-      saveFailure: 'SAVE_FAILURE',
-      accessDenied: 'ACCESS_DENIED',
       getGeneralInfo: 'GET_GENERAL_INFO'
     }),
     onResize () {
       this.$store.commit('CHANGE_VIEWPORT')
-    },
-    async savePageContent () {
-      const pageNum = this.pages.indexOf(this.$route.name)
-      let response = null
-      if (pageNum === 5) {
-        response = await this.saveTestimonials()
-      } else {
-        response = await this.savePageContent()
-      }
-
-      response = await this.saveContent(this.contentEndpoint)
-      const actionName = response === 200 ? 'saveSuccess' : response === 403 || response === 401 ? 'accessDenied' : 'saveFailure'
-      this[actionName]()
     }
   },
   beforeMount () {

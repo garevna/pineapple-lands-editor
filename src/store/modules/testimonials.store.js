@@ -6,6 +6,7 @@ const state = {
 }
 
 const getters = {
+  authorized: (state, getters, rootState) => rootState.authorized,
   host: (state, getters, rootState) => rootState.host,
   db: (state, getters, rootState) => `${rootState.host}/testimonials`,
   staticEndpoint: (state, getters, rootState) => `${rootState.host}/avatars`,
@@ -36,7 +37,6 @@ const mutations = {
   },
   REMOVE_ITEM (state, num) {
     state.testimonials = state.testimonials.filter((item, index) => index !== num)
-    console.log(state.testimonials)
   },
   UPDATE_CONTENT (state, payload) {
     state.testimonials = payload
@@ -50,6 +50,9 @@ const actions = {
   },
 
   async SAVE_CONTENT ({ state, getters }) {
+    if (!getters.authorized) return 401
+    if (location && location.hostname !== 'pa.pineapple.net.au') return 403
+
     const response = await fetch(getters.db, {
       method: 'POST',
       headers: {
@@ -73,10 +76,7 @@ const actions = {
         },
         body: formData
       })
-      // console.log(response)
-      // if (response.status !== 200) return null
       const url = await response.text()
-      console.log(url)
       return url
     } catch (error) { return `${getters.staticEndpoint}/default.png` }
   }

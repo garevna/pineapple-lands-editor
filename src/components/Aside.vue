@@ -133,9 +133,6 @@ export default {
       if (!val) return
       this.offer = this.$store.state.content.info.offer
       this.changed = false
-    },
-    offer: function (val) {
-      console.log('Info offer changed:\n', val)
     }
   },
   methods: {

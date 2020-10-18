@@ -1,7 +1,13 @@
 <template>
   <v-container fluid class="homefone">
-      <AppHeader :page.sync="page"/>
-      <Top :page.sync="page" />
+    <v-row width="100%" justify="center">
+      <section id="top" style="width: 100%">
+        <div class="base-title">
+          <a href="#top" class="core-goto"></a>
+          <Top :page.sync="page" />
+        </div>
+      </section>
+    </v-row>
 
       <!-- ============================= LIST ============================= -->
       <v-row width="100%" justify="center">
@@ -28,14 +34,19 @@
         <section id="how-to-connect">
           <div class="base-title">
             <a href="#how-to-connect" class="core-goto"></a>
-            <HowToConnect :contact.sync="contactUs" :connect.sync="getConnected" />
+            <HowToConnect :page.sync="page" />
           </div>
         </section>
       </v-row>
 
       <!-- ============================= TESTIMONIALS ============================= -->
-      <v-row width="100%">
-        <Testimonials />
+      <v-row width="100%" justify="center">
+        <section id="testimonials">
+          <div class="base-title">
+            <a href="#testimonials" class="core-goto"></a>
+            <Testimonials />
+          </div>
+        </section>
       </v-row>
 
       <!-- ============================= INTERNET PLANS ============================= -->
@@ -66,23 +77,39 @@
         </div>
       </section>
       <!-- ============================= BOTTOM NAV ============================= -->
-      <v-bottom-navigation
-            fixed
-            dark
-            class="buttons"
-      >
-
-        <v-btn @click="savePageContent" v-if="authorized">
-          <span>Save</span>
-          <v-icon>mdi-content-save-edit</v-icon>
-        </v-btn>
-
-        <v-btn @click="login = true" v-if="!authorized">
-          <span>Sign In</span>
-          <v-icon>mdi-login</v-icon>
-        </v-btn>
-      </v-bottom-navigation>
-      <Popup />
+      <!-- <BottomNavigation /> -->
+      <!-- <div slot='nav'>
+        <v-row justify="center">
+          <v-card flat class="transparent mx-auto pa-2">
+            <div class="text-center">
+              <v-pagination
+                v-model="page"
+                light
+                color="#fa0"
+                :length="pages.length"
+                :total-visible="5"
+                v-if="pagination"
+              ></v-pagination>
+            </div>
+          </v-card>
+          <v-btn icon @click="pagination=true" v-if="!pagination">
+            <span>Pages</span>
+            <v-icon>mdi-file-search</v-icon>
+          </v-btn>
+          <v-btn icon @click="editSelectedPage" v-if="pagination">
+            <span>Edit current page</span>
+            <v-icon>mdi-file-edit</v-icon>
+          </v-btn>
+          <v-btn icon @click="pagination=false" v-if="pagination">
+            <span>Close</span>
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-btn @click="savePageContent" v-if="authorized">
+            <span>Save</span>
+            <v-icon>mdi-content-save-edit</v-icon>
+          </v-btn>
+        </v-row>
+      </div> -->
   </v-container>
 </template>
 
@@ -90,7 +117,6 @@
 
 import { mapState, mapActions } from 'vuex'
 
-import AppHeader from '@/components/AppHeader.vue'
 import Top from '@/components/live/HomeTop.vue'
 import List from '@/components/List.vue'
 import GreenSection from '@/components/GreenSection.vue'
@@ -100,12 +126,12 @@ import InternetPlans from '@/components/InternetPlans.vue'
 import FAQ from '@/components/FAQ.vue'
 import Footer from '@/components/Footer.vue'
 
-import Popup from '@/components/editor/Popup.vue'
+// import BottomNavigation from '@/components/live/BottomNavigation.vue'
 
 export default {
   name: 'Live',
   components: {
-    AppHeader,
+    // BottomNavigation,
     Top,
     List,
     GreenSection,
@@ -113,19 +139,16 @@ export default {
     Testimonials,
     InternetPlans,
     FAQ,
-    Footer,
-    Popup
+    Footer
   },
   data () {
     return {
       ready: false,
-      page: 0,
-      contactUs: false,
-      getConnected: false
+      page: 0
     }
   },
   computed: {
-    ...mapState(['viewport', 'viewportWidth', 'authorized'])
+    ...mapState(['viewport', 'viewportWidth'])
   },
   watch: {
     page (val) {
@@ -139,26 +162,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      validateToken: 'VALIDATE_TOKEN',
-      saveSuccess: 'SAVE_SUCCESS',
-      saveFailure: 'SAVE_FAILURE',
-      accessDenied: 'ACCESS_DENIED'
-    }),
     ...mapActions('contact', {
       userFormConfig: 'UPDATE_USER_FORM_CONFIGURATION'
     }),
-    ...mapActions('content', {
-      saveContent: 'SAVE_CONTENT'
-    }),
     ...mapActions('testimonials', {
       getTestimonials: 'GET_CONTENT'
-    }),
-    async savePageContent () {
-      const response = await this.saveContent('live')
-      const actionName = response === 200 ? 'saveSuccess' : response === 403 || response === 401 ? 'accessDenied' : 'saveFailure'
-      this[actionName]()
-    }
+    })
   },
   beforeMount () {
     this.getTestimonials()

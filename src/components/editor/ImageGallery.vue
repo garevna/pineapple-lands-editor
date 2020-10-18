@@ -23,7 +23,7 @@
         >
           <v-card hover class="pa-0" tile @click="select(index)">
             <v-fab-transition>
-              <v-btn fab icon @click.stop="askToRemovePicture(index)">
+              <v-btn fab icon @click.stop="askToRemovePicture(index)" v-if="authorized">
                 <v-icon color="red darken-2">mdi-delete</v-icon>
               </v-btn>
             </v-fab-transition>
@@ -50,7 +50,7 @@
 
 <script>
 
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 import RemovePopup from '@/components/editor/RemovePopup.vue'
 
@@ -72,6 +72,7 @@ export default {
     removing: null
   }),
   computed: {
+    ...mapState(['authorized']),
     ...mapGetters('testimonials', {
       __uploadAvatar: 'uploadEndpoint',
       __staticAvatar: 'staticEndpoint',
@@ -122,6 +123,11 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      saveSuccess: 'SAVE_SUCCESS',
+      saveFailure: 'SAVE_FAILURE',
+      accessDenied: 'ACCESS_DENIED'
+    }),
     async getImages () {
       try {
         this.images = (await (await fetch(this.endpoint)).json())
@@ -151,7 +157,8 @@ export default {
             Authorization: localStorage.getItem('token')
           }
         })
-        console.log(response)
+        const showResponse = response.status === 200 ? 'saveSuccess' : response.status === 403 || response.status === 401 ? 'accessDenied' : 'saveFailure'
+        this[showResponse]()
       } catch (err) {
         console.error(err)
         this.ready = false

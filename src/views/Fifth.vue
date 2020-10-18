@@ -1,7 +1,7 @@
 <template>
   <v-app class="homefone">
     <v-container fluid class="homefone" v-if="ready">
-      <AppHeader :page.sync="page"/>
+      <MainNavBar :page.sync="page" />
       <v-sheet
         width="100%"
         max-width="1440"
@@ -88,30 +88,14 @@
             </v-row>
         </div>
       </section>
-
-      <!-- ============================= BOTTOM NAV ============================= -->
-      <v-bottom-navigation
-            fixed
-            dark
-            class="buttons"
-            v-if="authorized"
-      >
-        <v-btn @click="savePageContent" v-if="authorized">
-          <span>Save</span>
-          <v-icon>mdi-content-save-edit</v-icon>
-        </v-btn>
-      </v-bottom-navigation>
-
-      <Popup />
     </v-container>
   </v-app>
 </template>
 
 <script>
 
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 
-import AppHeader from '@/components/AppHeader.vue'
 import Top from '@/components/5/Top.vue'
 import Aside from '@/components/Aside.vue'
 import UserContact from '@/components/UserContact.vue'
@@ -121,12 +105,9 @@ import FAQ from '@/components/FAQ.vue'
 import Disclaimer from '@/components/Disclaimer.vue'
 import Footer from '@/components/Footer.vue'
 
-import Popup from '@/components/editor/Popup.vue'
-
 export default {
   name: 'Fifth',
   components: {
-    AppHeader,
     Top,
     Aside,
     UserContact,
@@ -134,8 +115,7 @@ export default {
     Testimonials,
     FAQ,
     Disclaimer,
-    Footer,
-    Popup
+    Footer
   },
   data () {
     return {
@@ -147,72 +127,25 @@ export default {
       user: {}
     }
   },
-  computed: {
-    ...mapState(['viewport', 'viewportWidth', 'pages', 'selectors', 'authorized']),
-    ...mapGetters('editor', ['contentEndpoint'])
-  },
   watch: {
-    business (val) {
-      if (val) {
-        this.page = this.pages.indexOf('Business')
-      }
-    },
-    residential (val) {
-      this.page = this.pages.indexOf('Residential')
-    },
-    section (val) {
-      if (this.selectors[val] === '#connect') {
-        if (this.addressAvalable) {
-          this.$router.push({ name: 'connect' })
-        } else {
-          this.$vuetify.goTo('#check', {
-            duration: 500,
-            offset: 200,
-            easing: 'easeInOutCubic'
-          })
-        }
-        this.page = undefined
-        return
-      }
-      if (this.selectors[val] === '#contact') {
-        this.$router.push({ name: 'contact' })
-        return
-      }
-      if (this.selectors[val]) {
-        this.$vuetify.goTo(this.selectors[val], {
-          duration: 500,
-          offset: 0,
-          easing: 'easeInOutCubic'
-        })
-      }
+    page (val) {
+      this.$vuetify.goTo(val, {
+        duration: 500,
+        offset: 0,
+        easing: 'easeInOutCubic'
+      })
     }
   },
   methods: {
-    ...mapActions({
-      validateToken: 'VALIDATE_TOKEN',
-      saveSuccess: 'SAVE_SUCCESS',
-      saveFailure: 'SAVE_FAILURE',
-      accessDenied: 'ACCESS_DENIED'
-    }),
     ...mapActions('content', {
-      getContent: 'GET_CONTENT',
-      saveContent: 'SAVE_CONTENT'
-    }),
-    ...mapActions('testimonials', {
-      getTestimonials: 'GET_CONTENT'
-    }),
-    async savePageContent () {
-      const response = await this.saveContent(5)
-      const actionName = response === 200 ? 'saveSuccess' : response === 403 || response === 401 ? 'accessDenied' : 'saveFailure'
-      this[actionName]()
-    }
+      getContent: 'GET_CONTENT'
+    })
   },
   beforeMount () {
     this.getContent(5)
       .then((response) => {
         this.ready = !!response
       })
-    this.getTestimonials()
   }
 }
 </script>

@@ -53,7 +53,7 @@ const mutations = {
     }
   },
   SET_FIELDS_TO_SHOW (state, payload) {
-    state.contactFormFields = payload
+    state.contactFormFields = Object.assign([], payload)
   }
 }
 
@@ -72,29 +72,6 @@ const actions = {
       }
     })
     commit('SET_FIELDS_TO_SHOW', contactFormFields)
-  },
-  async SEND_EMAIL ({ state, commit }) {
-    let error = false
-    for (const field in state.contactFormFields) {
-      error = error || state.contactFormFields[field].error || state.contactFormFields[field].value.length === 0
-    }
-    if (error) return false
-
-    commit('CREATE_MESSAGE')
-    const response = await (await fetch(state.mailEndpoint, {
-      method: 'POST',
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        subject: state.emailSubject,
-        email: state.contactFormFields.email,
-        message: state.messageForMail
-      })
-    })).json()
-    commit('CLEAR_ALL_FIELDS')
-    return true
   },
 
   UPDATE_USER_FORM_CONFIGURATION ({ commit, rootState }) {

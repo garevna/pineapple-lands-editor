@@ -31,6 +31,5 @@ export default {
       required: field.required,
       available: field.available
     }))
-    console.log(state.pages[payload.pageNum].userForm.fieldsToShow)
   }
 }

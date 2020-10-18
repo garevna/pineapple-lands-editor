@@ -1,33 +1,9 @@
 <template>
   <v-container fluid class="homefone" v-if="ready">
-    <PagesNavigation :selected.sync="page" :opened.sync="navigationOpened" />
+    <MainNavBar :page.sync="page" />
     <v-card flat class="transparent" width="100%">
-      <Home v-if="showHome" :home="home" />
-      <Page :pageNum="page" v-else />
+      <Home />
     </v-card>
-
-    <!-- ============================= BOTTOM NAV ============================= -->
-    <v-bottom-navigation
-            fixed
-            dark
-            class="buttons"
-            style="z-index: 7 !important"
-    >
-      <v-btn @click="navigationOpened = true">
-        <span>Navigation</span>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-
-      <v-btn @click="savePageContent" v-if="authorized">
-        <span>Save</span>
-        <v-icon>mdi-content-save-edit</v-icon>
-      </v-btn>
-
-      <v-btn @click="login = true" v-if="!authorized">
-        <span>Sign In</span>
-        <v-icon>mdi-login</v-icon>
-      </v-btn>
-    </v-bottom-navigation>
   </v-container>
 </template>
 
@@ -35,75 +11,77 @@
 
 import { mapState, mapActions } from 'vuex'
 
-import PagesNavigation from '@/components/live/PagesNavigation.vue'
 import Home from '@/components/live/Home.vue'
-import Page from '@/components/live/Page.vue'
 
 export default {
   name: 'Live',
   components: {
-    PagesNavigation,
-    Home,
-    Page
+    Home
   },
   data () {
     return {
       ready: false,
-      showHome: true,
-      navigationOpened: true,
+      navigationOpened: false,
+      page: undefined,
+      goto: undefined,
       section: 0,
-      page: 'home', /* home page */
+      pageIndex: undefined,
       contactUs: false,
       getConnected: false
     }
   },
   computed: {
-    ...mapState(['viewport', 'viewportWidth', 'authorized']),
-    ...mapState('content', ['pages', 'mainNavButtons', 'mainNavSectors']),
-    ...mapState('content', ['top', 'aside', 'userForm', 'info', 'list', 'greenSection', 'testimonials', 'plans', 'howToConnect', 'faq', 'footer'])
+    ...mapState(['viewport', 'viewportWidth', 'authorized', 'pages', 'error']),
+    ...mapState('content', ['mainNavButtons', 'mainNavSectors']),
+    pageId () {
+      return this.pages[this.pageIndex].id
+    }
   },
   watch: {
     page (val) {
-      console.log(val)
-      this.showHome = val === 'home'
+      if (!val) return
+
+      /* Inside page transition */
+      if (val.indexOf('#') === 0) {
+        this.$vuetify.goTo(val, {
+          duration: 500,
+          offset: 80,
+          easing: 'easeInOutCubic'
+        })
+        this.page = undefined
+        return
+      }
+
+      /* Go to external url */
+      if (val.indexOf('http') === 0) {
+        window.open(val, '_blank')
+        this.page = undefined
+        return
+      }
+
+      this.page = undefined
     }
   },
   methods: {
-    ...mapActions({
-      validateToken: 'VALIDATE_TOKEN',
-      saveSuccess: 'SAVE_SUCCESS',
-      saveFailure: 'SAVE_FAILURE',
-      accessDenied: 'ACCESS_DENIED'
-    }),
     ...mapActions('content', {
-      getContent: 'GET_CONTENT',
-      saveContent: 'SAVE_CONTENT'
+      getContent: 'GET_CONTENT'
     }),
-    async savePageContent () {
-      const response = await this.saveContent('live')
-      const actionName = response === 200 ? 'saveSuccess' : response === 403 || response === 401 ? 'accessDenied' : 'saveFailure'
-      this[actionName]()
+    ...mapActions({
+      getPages: 'GET_PAGES',
+      errorMessage: 'READ_FAILURE'
+    }),
+    async getData () {
+      await this.getContent('live')
+      if (this.error) this.errorMessage()
+      if (!this.pages || !this.pages.length) {
+        await this.getPages()
+        if (this.error) this.errorMessage()
+      }
+      this.ready = !this.error
     }
   },
   beforeMount () {
-    this.getContent('live').then(() => {
-      this.home = {
-        mainNavButtons: this.mainNavButtons,
-        mainNavSectors: this.mainNavSectors,
-        top: this.top,
-        aside: this.aside,
-        userForm: this.userForm,
-        info: this.info,
-        list: this.list,
-        greenSection: this.greenSection,
-        testimonials: this.testimonials,
-        plans: this.plans,
-        howToConnect: this.howToConnect,
-        faq: this.faq,
-        footer: this.footer
-      }
-      this.ready = true
-    })
+    this.getData()
   }
 }
 </script>

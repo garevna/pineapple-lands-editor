@@ -26,25 +26,20 @@
                         label="Button text"
                         width="400"
                         v-model="text"
-                        class="px-12"
+                        class="px-2"
                 ></v-text-field>
               </v-card-text>
             </td>
             <td>
               <v-card-text>
-                <!-- BUTTON CLICK ACTION -->
-                <!-- <span><small>click-through</small></span> -->
                 <v-menu bottom left>
                   <template v-slot:activator="{ on }">
                     <v-btn
-                      large
                       color="#09b"
                       icon
                       v-on="on"
                     >
-                      <v-icon large>
-                        mdi-gesture-tap-button
-                      </v-icon>
+                      <v-icon> $buttonConfig </v-icon>
                     </v-btn>
                   </template>
 

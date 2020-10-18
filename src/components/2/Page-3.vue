@@ -4,7 +4,7 @@
 
 <script>
 
-import Page from '@/components/multipage/Page.vue'
+import Page from '@/components/2/Page.vue'
 
 export default {
   name: 'page-3',

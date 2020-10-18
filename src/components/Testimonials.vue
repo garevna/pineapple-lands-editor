@@ -149,11 +149,6 @@ export default {
       }
     }
   },
-  methods: {
-    action () {
-      console.log('Testimonials action')
-    }
-  },
   mounted () {
     this.$store.dispatch('testimonials/GET_CONTENT')
   }

@@ -75,7 +75,6 @@ export default {
       this.login = ''
       this.password = ''
       if (!userlogin.status || !pass.status) return this.authFail()
-
       const response = await fetch(`${this.hostEndpoint}/auth`, {
         method: 'POST',
         headers: {

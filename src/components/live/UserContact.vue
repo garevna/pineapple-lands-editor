@@ -207,10 +207,8 @@ export default {
   },
 
   mounted () {
-    console.log(this.pages[this.pageNum].userForm.fieldsToShow)
     this.setFields(this.pages[this.pageNum].userForm.fieldsToShow)
     this.fields = this.getFields()
-    console.log(this.fields)
   }
 }
 

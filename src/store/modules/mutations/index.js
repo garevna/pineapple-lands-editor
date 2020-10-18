@@ -1,19 +1,21 @@
-import * as infoSection from './section-info.js'
-import * as pagesSection from './section-pages.js'
+import * as info from './info.js'
+import * as pages from './pages.js'
 
-import * as dgtekAsideSection from './section-dgtek-aside.js'
+import * as dgtekAside from './dgtek-aside.js'
 
-import * as userFormSection from './section-user-form.js'
-import * as howToConnectSection from './section-how-to-connect.js'
-import * as listSection from './section-list.js'
-import * as faqSection from './section-faq.js'
+import * as userForm from './user-form.js'
+import * as howToConnect from './how-to-connect.js'
+import * as list from './list.js'
+import * as faq from './faq.js'
+import * as other from './other.js'
 
 export default {
-  infoSection,
-  pagesSection,
-  dgtekAsideSection,
-  userFormSection,
-  howToConnectSection,
-  listSection,
-  faqSection
+  info,
+  pages,
+  dgtekAside,
+  userForm,
+  howToConnect,
+  list,
+  faq,
+  other
 }

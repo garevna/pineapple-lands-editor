@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="homefone" v-if="ready">
-    <AppHeader :page.sync="page" />
+    <MainNavBar :page.sync="page" />
 
     <!-- ============================= TOP ============================= -->
     <section id="top">
@@ -10,27 +10,24 @@
       </div>
     </section>
     <!-- ============================= USER CONTACT ============================= -->
-    <section id="contact" style="width: 100%">
-      <div class="base-title">
-        <a href="#contact" class="core-goto"></a>
-        <v-row justify="center" class="pa-0 ma-0">
-          <v-col cols="12" md="6" class="aside-col">
+    <v-row justify="center" class="pa-0 ma-0">
+      <v-col cols="12" md="6" class="aside-col">
+        <section id="benefits" style="width: 100%">
+          <div class="base-title">
+            <a href="#benefits" class="core-goto"></a>
             <Aside />
-          </v-col>
-          <v-col cols="12" md="6" class="mx-0 px-0">
-            <v-card flat class="transparent mx-0">
-              <v-card
-                      flat
-                      class="user-contact transparent mx-auto pa-0"
-                      style="margin-bottom: 80px"
-              >
-                <UserContact />
-              </v-card>
-            </v-card>
-          </v-col>
-        </v-row>
-      </div>
-    </section>
+          </div>
+        </section>
+      </v-col>
+      <v-col cols="12" md="6" class="mx-0 px-0">
+        <section id="contact" style="width: 100%">
+          <div class="base-title">
+            <a href="#contact" class="core-goto"></a>
+            <UserContact />
+          </div>
+        </section>
+      </v-col>
+    </v-row>
 
     <!-- ============================= HOW TO CONNECT ============================= -->
     <v-row width="100%" justify="center">
@@ -76,29 +73,13 @@
             </v-row>
         </div>
       </section>
-
-    <!-- ============================= BOTTOM NAV ============================= -->
-    <v-bottom-navigation
-          fixed
-          dark
-          class="buttons"
-          v-if="authorized"
-    >
-      <v-btn @click="savePageContent" v-if="authorized">
-        <span>Save</span>
-        <v-icon>mdi-content-save-edit</v-icon>
-      </v-btn>
-    </v-bottom-navigation>
-
-    <Popup />
   </v-container>
 </template>
 
 <script>
 
-import { mapState, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 
-import AppHeader from '@/components/AppHeader.vue'
 import Top from '@/components/Top.vue'
 import Aside from '@/components/Aside.vue'
 import UserContact from '@/components/UserContact.vue'
@@ -108,12 +89,9 @@ import InternetPlans from '@/components/InternetPlans.vue'
 import FAQ from '@/components/FAQ.vue'
 import Footer from '@/components/Footer.vue'
 
-import Popup from '@/components/editor/Popup.vue'
-
 export default {
   name: 'First',
   components: {
-    AppHeader,
     Top,
     Aside,
     UserContact,
@@ -121,62 +99,38 @@ export default {
     Testimonials,
     InternetPlans,
     FAQ,
-    Footer,
-    Popup
+    Footer
   },
   data () {
     return {
       ready: false,
       page: 0,
+      goto: undefined,
       section: null,
       contactUs: false,
       getConnected: false,
       user: {}
     }
   },
-  computed: {
-    ...mapState(['viewport', 'viewportWidth', 'authorized'])
-  },
   watch: {
     page (val) {
-      if (this.selectors[val]) {
-        this.$vuetify.goTo(this.selectors[val], {
-          duration: 500,
-          offset: 0,
-          easing: 'easeInOutCubic'
-        })
-      }
+      this.$vuetify.goTo(val, {
+        duration: 500,
+        offset: 0,
+        easing: 'easeInOutCubic'
+      })
     }
   },
   methods: {
-    ...mapActions({
-      validateToken: 'VALIDATE_TOKEN',
-      saveSuccess: 'SAVE_SUCCESS',
-      saveFailure: 'SAVE_FAILURE',
-      accessDenied: 'ACCESS_DENIED'
-    }),
     ...mapActions('content', {
-      getContent: 'GET_CONTENT',
-      saveContent: 'SAVE_CONTENT'
-    }),
-    ...mapActions('contact', {
-      userFormConfig: 'UPDATE_USER_FORM_CONFIGURATION'
-    }),
-    ...mapActions('testimonials', {
-      getTestimonials: 'GET_CONTENT'
-    }),
-    async savePageContent () {
-      const response = await this.saveContent(1)
-      const actionName = response === 200 ? 'saveSuccess' : response === 403 || response === 401 ? 'accessDenied' : 'saveFailure'
-      this[actionName]()
-    }
+      getContent: 'GET_CONTENT'
+    })
   },
   beforeMount () {
     this.getContent(1)
       .then((response) => {
         this.ready = !!response
       })
-    this.getTestimonials()
   }
 }
 </script>

@@ -63,7 +63,7 @@
       </v-row>
     </v-container>
     <!-- ============================= BOTTOM NAV ============================= -->
-    <v-bottom-navigation
+    <!-- <v-bottom-navigation
           fixed
           dark
           class="buttons"
@@ -73,7 +73,7 @@
         <span>Save</span>
         <v-icon>mdi-content-save-edit</v-icon>
       </v-btn>
-    </v-bottom-navigation>
+    </v-bottom-navigation> -->
   </v-container>
 </template>
 
@@ -108,27 +108,26 @@ export default {
     ready: false
   }),
   computed: {
-    ...mapState(['viewport', 'viewportWidth', 'authorized'])
+    ...mapState(['viewport', 'viewportWidth'])
   },
   methods: {
-    ...mapActions({
-      validateToken: 'VALIDATE_TOKEN',
-      saveSuccess: 'SAVE_SUCCESS',
-      saveFailure: 'SAVE_FAILURE',
-      accessDenied: 'ACCESS_DENIED'
-    }),
+    // ...mapActions({
+    //   validateToken: 'VALIDATE_TOKEN',
+    //   saveSuccess: 'SAVE_SUCCESS',
+    //   saveFailure: 'SAVE_FAILURE',
+    //   accessDenied: 'ACCESS_DENIED'
+    // }),
     ...mapActions('content', {
-      getContent: 'GET_CONTENT',
-      saveContent: 'SAVE_CONTENT'
-    }),
-    ...mapActions('contact', {
-      userFormConfig: 'UPDATE_USER_FORM_CONFIGURATION'
-    }),
-    async savePageContent () {
-      const response = await this.saveContent(this.route)
-      const actionName = response === 200 ? 'saveSuccess' : response === 403 || response === 401 ? 'accessDenied' : 'saveFailure'
-      this[actionName]()
-    }
+      getContent: 'GET_CONTENT'
+    })
+    // ...mapActions('contact', {
+    //   userFormConfig: 'UPDATE_USER_FORM_CONFIGURATION'
+    // }),
+    // async savePageContent () {
+    //   const response = await this.saveContent(this.route)
+    //   const actionName = response === 200 ? 'saveSuccess' : response === 403 || response === 401 ? 'accessDenied' : 'saveFailure'
+    //   this[actionName]()
+    // }
   },
   beforeMount () {
     this.getContent(this.route)
@@ -138,10 +137,10 @@ export default {
   },
   created () {
     this.getContent()
-  },
-  mounted () {
-    window.addEventListener('resize', this.onResize, { passive: true })
   }
+  // mounted () {
+  //   window.addEventListener('resize', this.onResize, { passive: true })
+  // }
 }
 
 </script>

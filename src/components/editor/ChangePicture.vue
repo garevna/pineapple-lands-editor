@@ -31,7 +31,7 @@
 
     <v-tooltip top color="info">
       <template v-slot:activator="{ on }">
-        <v-btn fab dark small color="magenta" @click="$refs.picture.click()" v-on="on">
+        <v-btn fab dark small color="magenta" @click="$refs.picture.click()" v-on="on" v-if="authorized">
           <v-icon>mdi-file-upload</v-icon>
         </v-btn>
       </template>
@@ -73,7 +73,7 @@
 
 <script>
 
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 import ImageGallery from '@/components/editor/ImageGallery.vue'
 import ErrorPopup from '@/components/editor/ErrorPopup.vue'
@@ -103,6 +103,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['authorized']),
     sectionNum () {
       return this.availableSections.indexOf(this.destination)
     },

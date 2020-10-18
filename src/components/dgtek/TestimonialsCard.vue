@@ -79,11 +79,6 @@ export default {
       return this.viewportWidth < 600 ? '12px' : '14px'
     }
   },
-  methods: {
-    showFullText () {
-      //
-    }
-  },
   mounted () {
     const textElement = document.body.appendChild(document.createElement('p'))
     textElement.style.marginTop = '-1000px'
@@ -91,8 +86,6 @@ export default {
     textElement.textContent = this.text
     this.ellipsis = textElement.offsetHeight > 86
     textElement.remove()
-
-    console.log(this.date, this.photo, this.name, this.text)
   }
 }
 

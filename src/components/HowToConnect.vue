@@ -185,15 +185,12 @@ export default {
   },
   watch: {
     iconSrc1 (val) {
-      console.log('WATCHER: Icon src 1 changed: ', val)
       this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 0, prop: 'icon', value: val })
     },
     iconSrc2 (val) {
-      console.log('WATCHER: Icon src 2 changed: ', val)
       this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 1, prop: 'icon', value: val })
     },
     iconSrc3 (val) {
-      console.log('WATCHER: Icon src 3 changed: ', val)
       this.$store.commit('content/UPDATE_CONNECT_ITEM', { num: 2, prop: 'icon', value: val })
     }
   }

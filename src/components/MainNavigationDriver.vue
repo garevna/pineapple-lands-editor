@@ -74,6 +74,7 @@
         left
         temporary
         width="480"
+        style="z-index: 11"
     >
       <ListOfLands :drawer.sync="drawer" :nav="true" />
     </v-navigation-drawer>

@@ -147,9 +147,6 @@ export default {
       if (!val) return
       this.items = this.$store.state.content.aside.items
       this.changed = false
-    },
-    items: function (val) {
-      console.log('Aside items changed:\n', val)
     }
   },
   methods: {

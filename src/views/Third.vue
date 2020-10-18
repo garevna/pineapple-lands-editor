@@ -1,21 +1,12 @@
 <template>
   <v-container fluid class="homefone" v-if="ready" style="overflow-x: hidden">
-      <AppHeader :pages="pages" :page.sync="page" />
-      <!-- <v-sheet
-        width="100%"
-        max-width="1440"
-        color="homefone"
-        tile
-        class="mx-auto"
-      > -->
+      <MainNavBar :page.sync="page" />
         <section id="top" style="width: 100%">
           <div class="base-title">
             <a href="#top" class="core-goto"></a>
             <Top :page.sync="page" />
           </div>
         </section>
-
-      <!-- </v-sheet> -->
 
       <!-- ============================= LIST ============================= -->
 
@@ -26,36 +17,26 @@
         </div>
       </section>
 
-      <!-- ============================= CREEN SECTION ============================= -->
-      <!-- <section id="dgtek" style="width: 100%">
-        <div class="base-title">
-          <a href="#dgtek" class="core-goto"></a>
-          <GreenSection />
-        </div>
-      </section> -->
-
       <!-- ============================= USER CONTACT ============================= -->
-      <section id="contact" style="width: 100%">
-        <div class="base-title">
-          <a href="#contact" class="core-goto"></a>
-          <v-row justify="center" class="pa-0 ma-0">
-            <v-col cols="12" md="6" class="aside-col">
+
+      <v-row justify="center" class="pa-0 ma-0">
+        <v-col cols="12" md="6" class="aside-col">
+          <section id="dgtek" style="width: 100%">
+            <div class="base-title">
+              <a href="#dgtek" class="core-goto"></a>
               <GreenSection />
-            </v-col>
-            <v-col cols="12" md="6" class="mx-0 px-0">
-              <v-card flat class="transparent mx-0">
-                <v-card
-                        flat
-                        class="user-contact transparent mx-auto pa-0"
-                        style="margin-bottom: 80px"
-                >
-                  <UserContact />
-                </v-card>
-              </v-card>
-            </v-col>
-          </v-row>
-        </div>
-      </section>
+            </div>
+          </section>
+        </v-col>
+        <v-col cols="12" md="6" class="mx-0 px-0">
+          <section id="contact" style="width: 100%">
+            <div class="base-title">
+              <a href="#contact" class="core-goto"></a>
+              <UserContact />
+            </div>
+          </section>
+        </v-col>
+      </v-row>
 
       <!-- ============================= HOW TO CONNECT ============================= -->
 
@@ -102,18 +83,6 @@
             </v-row>
         </div>
       </section>
-      <!-- ============================= BOTTOM NAV ============================= -->
-      <v-bottom-navigation
-            fixed
-            dark
-            class="buttons"
-            v-if="authorized"
-      >
-        <v-btn @click="savePageContent" v-if="authorized">
-          <span>Save</span>
-          <v-icon>mdi-content-save-edit</v-icon>
-        </v-btn>
-      </v-bottom-navigation>
   </v-container>
 </template>
 
@@ -123,9 +92,8 @@
 
 <script>
 
-import { mapState, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 
-import AppHeader from '@/components/AppHeader.vue'
 import Top from '@/components/multipage/Top.vue'
 import List from '@/components/List.vue'
 import GreenSection from '@/components/GreenSection.vue'
@@ -141,10 +109,8 @@ const userFormInitial = require('@/store/modules/userFormInitial.js').default
 export default {
   name: 'App',
   components: {
-    AppHeader,
     Top,
     List,
-    // Aside,
     UserContact,
     HowToConnect,
     GreenSection,
@@ -166,23 +132,6 @@ export default {
       plans: false
     }
   },
-  computed: {
-    ...mapState(['viewport', 'viewportWidth', 'authorized']),
-    ...mapState('content', {
-      title: 'browserTabTitle',
-      subject: 'emailSubject',
-      emailText: 'emailText',
-      // pages: 'mainNavButtons',
-      // selectors: 'selectors',
-      top: 'top',
-      info: 'info',
-      userForm: 'userForm',
-      howToConnect: 'howToConnect',
-      testimonials: 'testimonials',
-      faq: 'faq',
-      footer: 'footer'
-    })
-  },
   watch: {
     page (val) {
       if (!val) return
@@ -195,24 +144,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      validateToken: 'VALIDATE_TOKEN',
-      saveSuccess: 'SAVE_SUCCESS',
-      saveFailure: 'SAVE_FAILURE',
-      accessDenied: 'ACCESS_DENIED'
-    }),
     ...mapActions('content', {
-      getContent: 'GET_CONTENT',
-      saveContent: 'SAVE_CONTENT'
-    }),
-    ...mapActions('testimonials', {
-      getTestimonials: 'GET_CONTENT'
-    }),
-    async savePageContent () {
-      const response = await this.saveContent(3)
-      const actionName = response === 200 ? 'saveSuccess' : response === 403 || response === 401 ? 'accessDenied' : 'saveFailure'
-      this[actionName]()
-    }
+      getContent: 'GET_CONTENT'
+    })
   },
   beforeMount () {
     this.getContent(3)
@@ -220,7 +154,6 @@ export default {
         if (!this.$store.state.content.userForm) this.$store.state.content.userForm = userFormInitial
         this.ready = !!response
       })
-    this.getTestimonials()
   }
 }
 </script>

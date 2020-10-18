@@ -132,13 +132,6 @@ export default {
         this.$store.commit('content/UPDATE_TOP', { prop: 'button', value: val })
       }
     }
-  },
-  methods: {
-    // navigate (index) {
-    //   console.log(this.mainNavSectors[index])
-    //   if (this.mainNavSectors[index].indexOf('http') === 0) window.open(this.mainNavSectors[index], '_blank')
-    //   else if (this.mainNavSectors[index].indexOf('#') < 0) this.$router.push({ name: this.mainNavSectors[index] })
-    // }
   }
 }
 </script>

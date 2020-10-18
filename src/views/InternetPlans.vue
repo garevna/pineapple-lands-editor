@@ -45,7 +45,7 @@
     <!-- </v-card> -->
 
     <!-- ============================= BOTTOM NAV ============================= -->
-    <v-bottom-navigation
+    <!-- <v-bottom-navigation
           fixed
           dark
           class="buttons"
@@ -55,7 +55,7 @@
         <span>Save</span>
         <v-icon>mdi-content-save-edit</v-icon>
       </v-btn>
-    </v-bottom-navigation>
+    </v-bottom-navigation> -->
 
     <!-- <Popup /> -->
   </v-container>
@@ -89,7 +89,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['viewportWidth', 'plan', 'authorized']),
+    ...mapState(['plan']),
     ...mapState('internetPlans', ['plans'])
   },
   watch: {
@@ -101,8 +101,7 @@ export default {
   },
   methods: {
     ...mapActions('internetPlans', {
-      getData: 'GET_DATA',
-      saveData: 'SAVE_DATA'
+      getData: 'GET_DATA'
     })
   },
   beforeMount () {

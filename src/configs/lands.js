@@ -40,11 +40,6 @@ const lands = [
     short: '4'
   },
   {
-    title: 'live.pineapple.net.au',
-    route: 'live',
-    short: 'live'
-  },
-  {
     title: 'nbn.pineapple.net.au',
     route: 'nbn',
     short: '5'
@@ -53,6 +48,11 @@ const lands = [
     title: 'dgtek.net/free-upgrade',
     route: 'dgtek',
     short: 'dgtek-1'
+  },
+  {
+    title: 'live.pineapple.net.au',
+    route: 'live',
+    short: 'live'
   }
 ]
 

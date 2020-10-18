@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="homefone" v-if="ready">
-      <AppHeader :page.sync="page"/>
+      <MainNavBar :page.sync="page" />
       <Top :page.sync="page" />
 
       <!-- ============================= LIST ============================= -->
@@ -65,34 +65,13 @@
             </v-row>
         </div>
       </section>
-      <!-- ============================= BOTTOM NAV ============================= -->
-      <v-bottom-navigation
-            fixed
-            dark
-            class="buttons"
-      >
-
-        <v-btn @click="savePageContent" v-if="authorized">
-          <span>Save</span>
-          <v-icon>mdi-content-save-edit</v-icon>
-        </v-btn>
-
-        <v-btn @click="login = true" v-if="!authorized">
-          <span>Sign In</span>
-          <v-icon>mdi-login</v-icon>
-        </v-btn>
-      </v-bottom-navigation>
-
-      <!-- <ImageGallery /> -->
-      <Popup />
   </v-container>
 </template>
 
 <script>
 
-import { mapState, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 
-import AppHeader from '@/components/AppHeader.vue'
 import Top from '@/components/2/HomeTop.vue'
 import List from '@/components/List.vue'
 import GreenSection from '@/components/GreenSection.vue'
@@ -102,14 +81,9 @@ import InternetPlans from '@/components/InternetPlans.vue'
 import FAQ from '@/components/FAQ.vue'
 import Footer from '@/components/Footer.vue'
 
-// import ImageGallery from '@/components/editor/ImageGallery.vue'
-import Popup from '@/components/editor/Popup.vue'
-// import Auth from '@/components/editor/Auth.vue'
-
 export default {
   name: 'Second',
   components: {
-    AppHeader,
     Top,
     List,
     GreenSection,
@@ -117,62 +91,55 @@ export default {
     Testimonials,
     InternetPlans,
     FAQ,
-    Footer,
-    // ImageGallery,
-    Popup
+    Footer
   },
   data () {
     return {
       ready: false,
       page: 0,
+      goto: undefined,
       contactUs: false,
       getConnected: false
     }
   },
-  computed: {
-    ...mapState(['viewport', 'viewportWidth', 'authorized'])
-  },
   watch: {
     page (val) {
-      if (this.selectors[val]) {
-        this.$vuetify.goTo(this.selectors[val], {
+      if (!val) return
+
+      /* Inside page transition */
+      if (val.indexOf('#') === 0) {
+        this.$vuetify.goTo(val, {
           duration: 500,
-          offset: 0,
+          offset: 80,
           easing: 'easeInOutCubic'
         })
+        this.page = undefined
+        return
       }
+
+      /* Go to external url */
+      if (val.indexOf('http') === 0) {
+        window.open(val, '_blank')
+        this.page = undefined
+        return
+      }
+
+      /* Go to page */
+      const routeName = ['conservatory', 'qv1', 'aurora'][['page-1', 'page-2', 'page-3'].indexOf(val)]
+      this.$route.name === routeName || this.$router.push({ name: routeName })
+      this.page = undefined
     }
   },
   methods: {
-    ...mapActions({
-      validateToken: 'VALIDATE_TOKEN',
-      saveSuccess: 'SAVE_SUCCESS',
-      saveFailure: 'SAVE_FAILURE',
-      accessDenied: 'ACCESS_DENIED'
-    }),
-    ...mapActions('contact', {
-      userFormConfig: 'UPDATE_USER_FORM_CONFIGURATION'
-    }),
     ...mapActions('content', {
-      getContent: 'GET_CONTENT',
-      saveContent: 'SAVE_CONTENT'
-    }),
-    ...mapActions('testimonials', {
-      getTestimonials: 'GET_CONTENT',
-      saveTestimonials: 'SAVE_CONTENT'
-    }),
-    async savePageContent () {
-      const response = await this.saveContent(2)
-      const actionName = response === 200 ? 'saveSuccess' : response === 403 || response === 401 ? 'accessDenied' : 'saveFailure'
-      this[actionName]()
-    }
+      getContent: 'GET_CONTENT'
+    })
   },
   beforeMount () {
     this.getContent(2)
       .then((response) => {
         this.ready = !!response
       })
-    this.getTestimonials()
   }
 }
 </script>

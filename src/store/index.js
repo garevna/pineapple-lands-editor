@@ -2,15 +2,27 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import modules from './modules'
 
+const { pagesSection } = require('./modules/mutations')
+
 const lands = require('@/configs/lands').default
 const { fieldTypes, validators, description } = require('@/configs/contactFormFieldsConfig.js').default
+
+const {
+  validateToken,
+  getGeneralInfo,
+  saveGeneralInfo,
+  getPages,
+  savePages
+} = require('./modules/actions').default
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     host: 'https://api.pineapple.net.au',
+    // host: 'https://pineapple-net-land.glitch.me',
     generalInfoEndpoint: 'https://api.pineapple.net.au/content/general',
+    // generalInfoEndpoint: 'https://pineapple-net-land.glitch.me/content/general',
     officeAddress: '',
     officePhone: '',
     officeEmail: '',
@@ -32,7 +44,9 @@ export default new Vuex.Store({
     fieldTypes,
     validators,
     description,
-    lands
+    lands,
+    error: null,
+    showPageInfo: false
   },
   modules,
 
@@ -42,30 +56,58 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    ...pagesSection,
     UPDATE_GENERAL_INFO: (state, payload) => { state[payload.prop] = payload.value },
-    SET_CURRENT_LAND: (state, num) => { state.currentLand = num },
-    UPDATE_PAGES: (state, payload) => {
-      state.pages = payload.pages
-      state.selectors = payload.selectors
+    SET_CURRENT_LAND: (state, value) => { state.currentLand = value },
+    SET_PAGES: (state, payload) => {
+      state.pages = Object.assign([], payload)
     },
+
+    ADD_PAGE: (state, pageData) => {
+      state.pages.push(pageData)
+    },
+
+    HIDE_CURRENT_PAGE: (state) => {
+      const id = state.currentLand.slice(5)
+      const index = state.pages.findIndex(page => page.id === id)
+      if (index < 0) return
+      Object.assign(state.pages[index], { hidden: true })
+    },
+
+    SET_CURRENT_PAGE_ACTIVE: (state) => {
+      const id = state.currentLand.slice(5)
+      const index = state.pages.findIndex(page => page.id === id)
+      if (index < 0) return
+      state.pages[index].hidden = false
+    },
+
+    UPDATE_PAGE_ADDRESS: (state, payload) => {
+      state.pages[payload.index].address[payload.propName] = payload.propValue
+    },
+
+    SHOW_PAGE_INFO: (state) => {
+      state.showPageInfo = true
+    },
+
+    HIDE_PAGE_INFO: (state) => {
+      state.showPageInfo = false
+    },
+
     CHANGE_VIEWPORT: (state) => {
       state.viewportWidth = window.innerWidth
       state.viewportHeight = window.innerHeight
     },
+
     CHANGE_VIEWPORT_WIDTH: (state, width) => { state.viewportWidth = width },
     CHANGE_VIEWPORT_HEIGHT: (state, height) => { state.viewportHeight = height },
 
     CHANGE_PLAN: (state, plan) => { state.plan = plan },
 
-    ERROR_HANDLER: (state, { moduleName, error }) => {
-      state.errorsLog.push({
-        module: moduleName,
-        error,
-        time: new Date().getTime()
-      })
+    SET_ERROR: (state, error) => {
+      state.error = error
     },
-    ERRORS_CLEAR: (state) => {
-      state.errorsLog = []
+    CLEAR_ERROR: (state) => {
+      state.error = null
     },
     SET_PROPERTY: (state, payload) => {
       Vue.set(payload.object, payload.propertyName, payload.value)
@@ -91,17 +133,11 @@ export default new Vuex.Store({
   },
 
   actions: {
-
-    async GET_GENERAL_INFO ({ state, commit }) {
-      const generalInfo = await (await fetch(state.generalInfoEndpoint)).json()
-      for (const field in generalInfo) {
-        commit('SET_PROPERTY', {
-          object: state,
-          propertyName: field,
-          value: generalInfo[field]
-        })
-      }
-    },
+    ...validateToken,
+    ...getGeneralInfo,
+    ...saveGeneralInfo,
+    ...getPages,
+    ...savePages,
 
     async VALIDATE_TOKEN ({ state, commit }) {
       const token = localStorage.getItem('token')
@@ -129,21 +165,26 @@ export default new Vuex.Store({
     AUTH_SUCCESS ({ commit }) {
       commit('SET_AUTH', true)
       commit('SET_POPUP_TITLE', 'AUTH SUCCESS')
-      commit('SET_POPUP_TEXT', 'You have full access to save changes')
+      commit('SET_POPUP_TEXT', 'You have access to save changes')
       commit('SHOW_POPUP')
     },
     SAVE_SUCCESS ({ commit }) {
-      commit('SET_POPUP_TITLE', 'SAVE DATA')
+      commit('SET_POPUP_TITLE', 'SAVE THE DATA')
       commit('SET_POPUP_TEXT', 'Data has been successfully saved')
       commit('SHOW_POPUP')
     },
     SAVE_FAILURE ({ commit }) {
-      commit('SET_POPUP_TITLE', 'SAVE DATA')
-      commit('SET_POPUP_TEXT', 'Error saving data')
+      commit('SET_POPUP_TITLE', 'SAVE THE DATA')
+      commit('SET_POPUP_TEXT', 'Error saving the data')
+      commit('SHOW_POPUP')
+    },
+    READ_FAILURE ({ commit }) {
+      commit('SET_POPUP_TITLE', 'READ THE DATA')
+      commit('SET_POPUP_TEXT', 'Error reading the data')
       commit('SHOW_POPUP')
     },
     ACCESS_DENIED ({ commit }) {
-      commit('SET_POPUP_TITLE', 'SAVE DATA')
+      commit('SET_POPUP_TITLE', 'SAVE THE DATA')
       commit('SET_POPUP_TEXT', 'Access denied')
       commit('SHOW_POPUP')
     }

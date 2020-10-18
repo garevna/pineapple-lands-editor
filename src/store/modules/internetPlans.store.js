@@ -3,7 +3,6 @@
 /* eslint-disable no-shadow */
 
 const state = {
-  endpoint: 'https://api.pineapple.net.au/content/plans',
   plans: {
     residential: [
       { upload: 50, download: 50, price: 50, selected: false },
@@ -16,26 +15,14 @@ const state = {
       { upload: 500, download: 500, price: 240, selected: false },
       { upload: 1000, download: 1000, price: 500, selected: false }
     ]
-  },
-  occupancyTypes: [
-    'Single Dwelling House',
-    'Multi Dwelling Unit',
-    'Apartment complex',
-    'Business Park',
-    'Office Building'
-  ],
-  infoSources: [
-    'Google',
-    'Friend',
-    'Facebook',
-    'Instagram',
-    'LinkedIn'
-  ]
+  }
 }
 
 const getters = {
   plan: (state, getters, rootState) => rootState.plan,
-  tarif: (state, getters) => state.plans[getters.plan].find(item => item.selected)
+  tarif: (state, getters) => state.plans[getters.plan].find(item => item.selected),
+  authorized: (state, getters, rootState) => rootState.authorized,
+  endpoint: (state, getters, rootState) => `${rootState.host}/content/plans`
 }
 
 const mutations = {
@@ -46,8 +33,8 @@ const mutations = {
 
 const actions = {
 
-  async GET_DATA ({ state, commit }) {
-    const { plans } = await (await fetch(state.endpoint)).json()
+  async GET_DATA ({ state, getters, commit }) {
+    const { plans } = await (await fetch(getters.endpoint)).json()
     for (const plan in plans) {
       plans[plan].forEach((item, index) => {
         for (const prop in item) {
@@ -63,8 +50,11 @@ const actions = {
     return state.plans
   },
 
-  async saveData ({ state }) {
-    const response = await fetch(state.endpoint, {
+  async SAVE_PLANS ({ state, getters }) {
+    if (!getters.authorized) return 401
+    // if (location && location.hostname !== 'pa.pineapple.net.au') return 403
+
+    const response = await fetch(getters.endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -72,7 +62,7 @@ const actions = {
       },
       body: JSON.stringify(state.plans)
     })
-    return response
+    return response.status
   },
 
   SELECT_PLAN ({ commit }, payload) {
@@ -83,11 +73,6 @@ const actions = {
     state.plans.residential.forEach((tarif) => { tarif.selected = false })
     state.plans.business.forEach((tarif) => { tarif.selected = false })
     state.plans[getters.plan][tarifIndex].selected = true
-  },
-
-  LOG_ERROR ({ commit }, error) {
-    commit('ERROR_HANDLER', { moduleName: 'plans', error }, { root: true })
-    return null
   }
 }
 

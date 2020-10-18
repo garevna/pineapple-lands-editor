@@ -14,14 +14,14 @@ export default new Vuetify({
       home: 'mdi-home-circle',
       config: 'mdi-cog',
       search: 'mdi-image-search',
+      nav: 'mdi-magnify',
       upload: 'mdi-file-upload',
-      first: 'mdi-numeric-1-circle-outline',
-      second: 'mdi-numeric-2-circle-outline',
-      third: 'mdi-numeric-3-circle-outline',
-      fourth: 'mdi-numeric-4-circle-outline',
-      fifth: 'mdi-numeric-5-circle-outline',
+      pages: 'mdi-book-open-page-variant',
       delete: 'mdi-delete-forever',
-      add: 'mdi-plus-thick'
+      add: 'mdi-plus-thick',
+      buttonConfig: 'mdi-gesture-tap-button',
+      hidden: 'mdi-eye-off',
+      active: 'mdi-eye'
     }
   },
   theme: {

@@ -111,7 +111,6 @@ export default {
   mounted () {
     this.field = this.$store.state.content.userForm.fieldsToShow[this.fieldIndex]
     delete this.field.undefined
-    console.log('Config mounted: ', this.field)
   }
 }
 </script>

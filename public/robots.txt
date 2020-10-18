@@ -1,3 +1,2 @@
 User-agent: *
-
-Host: https://dgtek.net
+Host: https://pineapple.net.au

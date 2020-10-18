@@ -1,7 +1,13 @@
 <template>
   <v-card flat class="transparent mx-auto text-center">
     <v-row style="margin-top: 16px; margin-left: 20px!important" v-if="!hideConfig">
-        <span style="margin-top: 16px"><small>{{ goto }}</small></span>
+
+        <span style="margin-top: 16px">
+          <small>
+            {{ jump }}
+          </small>
+        </span>
+
         <v-menu bottom left>
           <template v-slot:activator="{ on }">
             <v-btn
@@ -11,7 +17,7 @@
               v-on="on"
             >
               <v-icon large>
-                mdi-gesture-tap-button
+                $buttonConfig
               </v-icon>
             </v-btn>
           </template>
@@ -19,7 +25,7 @@
             <v-list-item
               v-for="(section, i) in sections"
               :key="i"
-              @click="selectSection(i)"
+              @click="selectSection(section)"
             >
               <v-list-item-title>
                 {{ section }}
@@ -74,27 +80,25 @@ export default {
   props: ['value', 'goto', 'hideConfig'],
   data () {
     return {
-      clicked: false
+      clicked: false,
+      jump: ''
     }
   },
   computed: {
     ...mapState(['currentLand', 'lands']),
     ...mapState('editor', ['configs']),
     route () {
-      let land = this.lands.find(land => land.route === this.$route.name)
-      if (!land) {
-        land = this.lands
-          .flatMap(land => land.childs)
-          .filter(item => item)
-          .find(item => item.route === this.$route.name)
-      }
+      if (this.$route.name === 'live-page') return 'live-page'
+      if (this.$route.name === 'dgtek') return 'dgtek-1'
+      const index = ['conservatory', 'qv1', 'aurora'].findIndex(item => item === this.$route.name) + 1
+      if (index) return `2-${index}`
+      const land = this.lands.find(land => land.route === this.$route.name)
       return land.short
     },
     sections () {
       return this.configs[this.route].map(item => item.title)
     },
     jumps () {
-      console.log(this.route, this.configs)
       return this.configs[this.route].map(item => item.value)
     },
     isDGtek () {
@@ -110,8 +114,16 @@ export default {
     }
   },
   methods: {
-    selectSection (num) {
-      this.$emit('update:goto', this.jumps[num])
+    selectSection (value) {
+      this.jump = this.jumps[this.sections.indexOf(value)]
+    }
+  },
+  mounted () {
+    this.jump = this.goto
+  },
+  watch: {
+    jump (val) {
+      this.$emit('update:goto', val)
     }
   }
 }

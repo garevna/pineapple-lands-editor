@@ -99,7 +99,7 @@ export default {
     items: {
       deep: true,
       handler (val) {
-        console.log(val)
+        // console.log(val)
       }
     },
     remove (val) {
