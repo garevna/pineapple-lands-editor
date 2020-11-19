@@ -61,6 +61,7 @@ const actions = {
     })
     return url
   },
+
   async UPLOAD_ICON ({ state, dispatch }, file) {
     const url = await dispatch('UPLOAD_FILE', {
       destination: 'icon',

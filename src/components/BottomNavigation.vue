@@ -23,7 +23,7 @@
           </div>
 
           <v-btn icon @click="pagination=true" v-if="live && !pagination">
-            <span>Active pages</span>
+            <span>Pages</span>
             <v-icon>mdi-file-search</v-icon>
           </v-btn>
           <v-btn icon @click="editSelectedPage" v-if="live && pagination && page">

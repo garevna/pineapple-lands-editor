@@ -36,8 +36,8 @@ const routes = [
     component: () => import(/* webpackChunkName: "second-3" */ '@/components/2/Page-3.vue')
   },
   {
-    path: '/fibreinternet-melbournecbd',
-    name: 'fibreinternet-melbournecbd',
+    path: '/3months',
+    name: '3months',
     component: () => import(/* webpackChunkName: "third" */ '@/views/Third.vue')
   },
   {

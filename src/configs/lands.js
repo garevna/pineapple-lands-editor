@@ -30,8 +30,8 @@ const lands = [
     ]
   },
   {
-    title: 'fibreinternet-melbournecbd.pineapple.net.au',
-    route: 'fibreinternet-melbournecbd',
+    title: '3months.pineapple.net.au',
+    route: '3months',
     short: '3'
   },
   {
