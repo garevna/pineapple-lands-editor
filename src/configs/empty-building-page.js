@@ -26,6 +26,7 @@ const newBuildingPageContent = {
     text: '[Header text here...\nHeader text here...\nHeader text here...]',
     button: 'Get In Touch',
     goto: '#contact',
+    // pictureURL: 'https://pineapple-net-land.glitch.me/images/default.jpg'
     pictureURL: 'https://api.pineapple.net.au/images/default.jpg'
   },
   info: {

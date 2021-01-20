@@ -43,51 +43,12 @@
   </v-card>
 </template>
 
-<style scoped>
-
-.testimonial-name,
-.testimonial-text,
-.testimonial-date,
-.testimonial-photo {
-  position: absolute!important;
-}
-
-.testimonial-name, .testimonial-date { text-align: left; }
-
-.testimonial-photo {
-  top: 30px;
-  left: 20px;
-  border-radius: 50%!important;
-}
-.testimonial-name {
-  top: 24px;
-  left: 70px!important;
-  font-size: 15px!important;
-  font-weight: bold;
-}
-.testimonial-text {
-  top: 80px;
-  left: 16px;
-  width: 90%!important;
-  text-align: justify;
-  font-weight: normal;
-}
-.testimonial-date {
-  bottom: 16px!important;
-  left: 24px;
-  font-size: 12px;
-  font-weight: normal;
-}
-</style>
-
 <script>
-
-import ChangePicture from '@/components/editor/ChangePicture.vue'
 
 export default {
   name: 'TestimonialsCard',
   components: {
-    ChangePicture
+    ChangePicture: () => import('@/components/editor/ChangePicture.vue')
   },
   props: ['index', 'content', 'removed'],
   data: () => ({
@@ -168,3 +129,40 @@ export default {
 }
 
 </script>
+
+<style scoped>
+
+.testimonial-name,
+.testimonial-text,
+.testimonial-date,
+.testimonial-photo {
+  position: absolute!important;
+}
+
+.testimonial-name, .testimonial-date { text-align: left; }
+
+.testimonial-photo {
+  top: 30px;
+  left: 20px;
+  border-radius: 50%!important;
+}
+.testimonial-name {
+  top: 24px;
+  left: 70px!important;
+  font-size: 15px!important;
+  font-weight: bold;
+}
+.testimonial-text {
+  top: 80px;
+  left: 16px;
+  width: 90%!important;
+  text-align: justify;
+  font-weight: normal;
+}
+.testimonial-date {
+  bottom: 16px!important;
+  left: 24px;
+  font-size: 12px;
+  font-weight: normal;
+}
+</style>

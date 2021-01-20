@@ -1,28 +1,34 @@
-/* LIVE.PINEAPPLE.NET.AU - CONTENT MODULE MUTATIONS */
+/* LIVE.PINEAPPLE.NET.AU - ROOT MODULE MUTATIONS */
 
-const newBuildingPageContent = require('@/store/empty-building-page.js').default
+export const SET_PAGES = (state, payload) => {
+  state.pages = payload
+}
 
-export default {
+export const ADD_PAGE = (state, pageData) => {
+  state.pages.unshift(pageData)
+}
 
-  SET_NEW_PAGE_CONTENT: (state, content) => {
-    Object.assign(state, JSON.parse(JSON.stringify(newBuildingPageContent)))
-  },
+export const HIDE_CURRENT_PAGE = (state, id) => {
+  const index = state.pages.findIndex(page => page.id === id)
+  if (index < 0) return
+  Object.assign(state.pages[index], { hidden: true })
+}
 
-  SWITCH_VISIBILITY_OF_PAGE: (state, payload) => {
-    if (!state.pages) return console.warn('There is no pages')
-    const props = Object.keys(payload)
-    if (!props.find('pageId') && !props.find('pageIndex')) return console.warn('Error: Invalid params')
-    const pageIndex = payload.pageId ? state.pages.findIndex(page => page.id === payload.pageId) : payload.pageIndex
+export const SET_CURRENT_PAGE_ACTIVE = (state) => {
+  const id = state.currentLand.slice(5)
+  const index = state.pages.findIndex(page => page.id === id)
+  if (index < 0) return
+  state.pages[index].hidden = false
+}
 
-    if (pageIndex === -1 || typeof pageIndex !== 'number') return console.warn('Page not found')
-    state.pages[pageIndex].hidden = typeof payload.visibility === 'string' ? payload.visibility === 'hidden' : !payload.visibility
-  },
+export const UPDATE_PAGE_ADDRESS = (state, payload) => {
+  state.pages[payload.index].address[payload.propName] = payload.propValue
+}
 
-  UPDATE_PAGE_ADDRESS: (state, payload) => {
-    state.address[payload.propName] = payload.propValue
-  },
+export const SHOW_PAGE_INFO = (state) => {
+  state.showPageInfo = true
+}
 
-  UPDATE_PAGE_NAME: (state, name) => {
-    state.name = name
-  }
+export const HIDE_PAGE_INFO = (state) => {
+  state.showPageInfo = false
 }

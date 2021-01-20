@@ -72,19 +72,21 @@
 
 import { mapActions } from 'vuex'
 
-import Top from '@/components/2/HomeTop.vue'
-import List from '@/components/List.vue'
-import GreenSection from '@/components/GreenSection.vue'
-import HowToConnect from '@/components/HowToConnect.vue'
-import Testimonials from '@/components/Testimonials.vue'
-import InternetPlans from '@/components/InternetPlans.vue'
-import FAQ from '@/components/FAQ.vue'
-import Footer from '@/components/Footer.vue'
+const {
+  Top2,
+  List,
+  GreenSection,
+  HowToConnect,
+  Testimonials,
+  InternetPlans,
+  FAQ,
+  Footer
+} = require('@/components').default
 
 export default {
   name: 'Second',
   components: {
-    Top,
+    Top: Top2,
     List,
     GreenSection,
     HowToConnect,

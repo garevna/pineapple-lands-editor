@@ -83,7 +83,6 @@
         </v-btn>
       </v-bottom-navigation>
 
-      <Popup />
     </v-container>
   </v-app>
 </template>
@@ -92,27 +91,24 @@
 
 import { mapState, mapActions } from 'vuex'
 
-// import AppHeader from '@/components/AppHeader.vue'
-import Top from '@/components/multipage/Top.vue'
-import Aside from '@/components/Aside.vue'
-import UserContact from '@/components/UserContact.vue'
-import Testimonials from '@/components/Testimonials.vue'
-import FAQ from '@/components/FAQ.vue'
-import Footer from '@/components/Footer.vue'
-
-import Popup from '@/components/editor/Popup.vue'
+const {
+  MultipageTop: Top,
+  Aside,
+  UserContact,
+  Testimonials,
+  FAQ,
+  Footer
+} = require('@/components').default
 
 export default {
   name: 'Page',
   components: {
-    // AppHeader,
     Top,
     Aside,
     UserContact,
     Testimonials,
     FAQ,
-    Footer,
-    Popup
+    Footer
   },
   props: ['homePageName', 'pageNum'],
   data () {
@@ -153,34 +149,23 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      validateToken: 'VALIDATE_TOKEN',
-      saveSuccess: 'SAVE_SUCCESS',
-      saveFailure: 'SAVE_FAILURE',
-      accessDenied: 'ACCESS_DENIED'
-    }),
     ...mapActions('content', {
       getContent: 'GET_CONTENT',
       saveContent: 'SAVE_CONTENT'
-    }),
-    ...mapActions('contact', {
-      userFormConfig: 'UPDATE_USER_FORM_CONFIGURATION'
     }),
     ...mapActions('testimonials', {
       getTestimonials: 'GET_CONTENT'
     }),
     async savePageContent () {
-      const response = await this.saveContent(`${this.homePageName}-${this.pageNum}`)
-      const actionName = response === 200 ? 'saveSuccess' : response === 403 || response === 401 ? 'accessDenied' : 'saveFailure'
-      this[actionName]()
+      await this.saveContent(`${this.homePageName}-${this.pageNum}`)
     }
   },
   beforeMount () {
+    this.getTestimonials()
     this.getContent(`${this.homePageName}-${this.pageNum}`)
       .then((response) => {
         this.ready = true
       })
-    this.getTestimonials()
   },
   mounted () {
     this.page = undefined

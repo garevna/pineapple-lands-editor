@@ -1,6 +1,6 @@
 <template>
   <v-app class="homefone">
-    <v-container fluid class="homefone" v-if="ready">
+    <v-container fluid class="homefone">
       <MainNavBar :page.sync="page" />
 
       <!-- ============================= TOP ============================= -->
@@ -35,7 +35,7 @@
                 {{ address.formatted }}
               </h3>
               <h5 style="color: #fff!important; text-align: center;">
-                {{ address.streetNumber }} {{ address.streetName }}, {{ address.city }} {{ address.state }} {{ address.postcode }}
+                {{ addressLine }}
               </h5>
             </v-card>
           </v-row>
@@ -80,64 +80,64 @@
     <v-snackbar
         v-model="hidden"
         top
-        left
+        center
         :timeout="1000 * 60 * 60 * 6"
       >
         This page is hidden
       </v-snackbar>
-
-    <PageInfo />
   </v-app>
 </template>
 
 <script>
 
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
-import Top from '@/components/multipage/Top.vue'
-import Aside from '@/components/Aside.vue'
-import UserContact from '@/components/UserContact.vue'
-import Testimonials from '@/components/Testimonials.vue'
-import FAQ from '@/components/FAQ.vue'
-import Footer from '@/components/Footer.vue'
-
-import PageInfo from '@/components/live/PageInfo.vue'
+const {
+  MultipageTop,
+  Aside,
+  UserContact,
+  Testimonials,
+  FAQ,
+  Footer
+} = require('@/components').default
 
 export default {
   name: 'Page',
   components: {
-    Top,
+    Top: MultipageTop,
     Aside,
     UserContact,
     Testimonials,
     FAQ,
-    Footer,
-    PageInfo
+    Footer
   },
   data () {
     return {
-      address: {},
-      ready: false,
       page: null,
       goto: null,
-      editInfo: false
+      editInfo: false,
+      addressLine: ''
     }
   },
   computed: {
-    ...mapState(['browserTabTitle', 'currentLand', 'pages', 'error']),
-    currentPage () {
-      return this.pages.find(item => item.id === this.$route.path.slice(6))
+    ...mapState(['pages', 'currentLand']),
+    ...mapState('content', ['address']),
+    buildingName () {
+      return this.address?.formatted
     },
-    hidden: {
-      get () {
-        return this.currentPage ? this.currentPage.hidden : false
-      },
-      set (val) {
-        console.log(val)
-      }
+    hidden () {
+      const page = this.pages.find(item => item.id === this.currentLand.slice(5))
+      return page.hidden
     }
   },
   watch: {
+    address: {
+      deep: true,
+      immediate: true,
+      handler (addr) {
+        this.addressLine = this.getAddressLine(addr)
+      }
+    },
     page (val) {
       if (!val) return
 
@@ -165,45 +165,16 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      getPages: 'GET_PAGES',
-      errorMessage: 'READ_FAILURE'
-    }),
-    ...mapActions('content', {
-      getContent: 'GET_CONTENT'
-    }),
-    ...mapActions('contact', {
-      setFieldsToShow: 'SET_FIELDS_TO_SHOW'
-    }),
-    editPageInfo () {
-      this.editInfo = true
-    },
-    async getPageData () {
-      if (!this.pages.length) await this.getPages()
-      if (this.pages.find(item => item.id === this.$route.path.slice(6))) {
-        await this.getContent(this.$route.path.slice(1))
-        if (this.error) {
-          console.warn(this.error, '\nIt looks like this page does not exist yet.\nEmpty content will be created for this page')
-          this.errorMessage()
-          this.$store.commit('content/SET_NEW_PAGE_CONTENT')
-        }
-      } else {
-        this.$store.commit('content/CLEAR_ALL')
-        this.$store.commit('content/SET_NEW_PAGE_CONTENT')
-        this.setFieldsToShow(this.$store.state.content.userForm.fieldsToShow)
-        this.$store.commit('SET_CURRENT_LAND', this.$route.path.slice(1))
-        this.$store.commit('ADD_PAGE', {
-          id: this.$route.path.slice(6),
-          address: this.$store.state.content.address,
-          hidden: true
-        })
-      }
-      this.address = this.$store.state.content.address
-      this.ready = !this.error
+    getAddressLine (address) {
+      const {
+        streetNumber = '',
+        streetName = '',
+        city = '',
+        state = '',
+        postcode = ''
+      } = address
+      return `${streetNumber} ${streetName}${streetName ? ',' : ''} ${city} ${state} ${postcode}`
     }
-  },
-  beforeMount () {
-    this.getPageData()
   },
   mounted () {
     this.page = undefined

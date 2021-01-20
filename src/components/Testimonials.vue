@@ -91,16 +91,17 @@
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
-import TestimonialsCard from '@/components/TestimonialsCard.vue'
-import SubHeader from '@/components/inputs/SubHeader.vue'
-import Button from '@/components/inputs/Button.vue'
+const {
+  SubHeader,
+  Button
+} = require('@/components/inputs').default
 
 export default {
   name: 'Testimonials',
   components: {
-    TestimonialsCard,
+    TestimonialsCard: () => import('@/components/TestimonialsCard.vue'),
     SubHeader,
     Button
   },
@@ -120,10 +121,7 @@ export default {
         return this.content.header
       },
       set (val) {
-        this.$store.commit('content/UPDATE_TESTIMONIALS', {
-          prop: 'header',
-          value: val
-        })
+        this.update('header', val)
       }
     },
     button: {
@@ -131,10 +129,7 @@ export default {
         return this.content.button
       },
       set (val) {
-        this.$store.commit('content/UPDATE_TESTIMONIALS', {
-          prop: 'button',
-          value: val
-        })
+        this.update('button', val)
       }
     },
     goto: {
@@ -142,15 +137,23 @@ export default {
         return this.content.goto
       },
       set (val) {
-        this.$store.commit('content/UPDATE_TESTIMONIALS', {
-          prop: 'goto',
-          value: val
-        })
+        this.update('goto', val)
       }
     }
   },
+  methods: {
+    ...mapMutations('content', {
+      updateTestimonials: 'UPDATE_TESTIMONIALS'
+    }),
+    ...mapActions('testimonials', {
+      getContent: 'GET_CONTENT'
+    }),
+    update (prop, value) {
+      this.updateTestimonials({ prop, value })
+    }
+  },
   mounted () {
-    this.$store.dispatch('testimonials/GET_CONTENT')
+    this.getContent()
   }
 }
 

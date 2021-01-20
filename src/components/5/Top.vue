@@ -57,9 +57,11 @@ h1, p {
 
 import { mapState } from 'vuex'
 
-import TopHeader from '@/components/inputs/TopHeader.vue'
-import Paragraph from '@/components/inputs/Paragraph.vue'
-import Button from '@/components/inputs/Button.vue'
+const {
+  TopHeader,
+  Paragraph,
+  Button
+} = require('@/components/inputs').default
 
 export default {
   name: 'Top',

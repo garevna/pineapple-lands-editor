@@ -27,7 +27,6 @@
               <PageInfoCard />
             </v-col>
           </v-row>
-
         </v-card>
       </v-dialog>
     </v-row>
@@ -47,10 +46,6 @@ export default {
     PageCard,
     PageInfoCard
   },
-  // props: ['editInfo'],
-  data: () => ({
-    //
-  }),
   computed: {
     ...mapState(['showPageInfo']),
     ...mapState('content', ['mainNavButtons']),

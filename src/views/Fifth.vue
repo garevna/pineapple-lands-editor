@@ -96,19 +96,21 @@
 
 import { mapActions } from 'vuex'
 
-import Top from '@/components/5/Top.vue'
-import Aside from '@/components/Aside.vue'
-import UserContact from '@/components/UserContact.vue'
-import HowToConnect from '@/components/HowToConnect.vue'
-import Testimonials from '@/components/Testimonials.vue'
-import FAQ from '@/components/FAQ.vue'
-import Disclaimer from '@/components/Disclaimer.vue'
-import Footer from '@/components/Footer.vue'
+const {
+  Top5,
+  Aside,
+  UserContact,
+  HowToConnect,
+  Testimonials,
+  FAQ,
+  Disclaimer,
+  Footer
+} = require('@/components').default
 
 export default {
   name: 'Fifth',
   components: {
-    Top,
+    Top: Top5,
     Aside,
     UserContact,
     HowToConnect,

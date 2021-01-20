@@ -157,12 +157,10 @@
 
 import { mapState } from 'vuex'
 
-import Config from '@/components/contact/Config.vue'
-
 export default {
   name: 'UserFormCustomization',
   components: {
-    Config
+    Config: () => import('@/components/contact/Config.vue')
   },
   props: ['dialog'],
   data () {

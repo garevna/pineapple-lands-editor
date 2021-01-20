@@ -80,14 +80,16 @@
 
 import { mapActions } from 'vuex'
 
-import Top from '@/components/Top.vue'
-import Aside from '@/components/Aside.vue'
-import UserContact from '@/components/UserContact.vue'
-import HowToConnect from '@/components/HowToConnect.vue'
-import Testimonials from '@/components/Testimonials.vue'
-import InternetPlans from '@/components/InternetPlans.vue'
-import FAQ from '@/components/FAQ.vue'
-import Footer from '@/components/Footer.vue'
+const {
+  Top,
+  Aside,
+  UserContact,
+  HowToConnect,
+  Testimonials,
+  InternetPlans,
+  FAQ,
+  Footer
+} = require('@/components').default
 
 export default {
   name: 'First',

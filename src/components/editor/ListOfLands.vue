@@ -70,14 +70,11 @@
 
 import { mapState } from 'vuex'
 
-import PineappleLogo from '@/components/PineappleLogo.vue'
-import DGtekLogo from '@/components/dgtek/Logo.vue'
-
 export default {
   name: 'ListOfLands',
   components: {
-    PineappleLogo,
-    DGtekLogo
+    PineappleLogo: () => import('@/components/PineappleLogo.vue'),
+    DGtekLogo: () => import('@/components/dgtek/Logo.vue')
   },
   props: ['drawer', 'nav', 'route'],
   data: () => ({

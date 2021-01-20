@@ -1,17 +1,15 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
 
+const { getData, postData, upload } = require('@/helpers').default
+const { testimonials, avatar } = require('@/configs/host').default
+
 const state = {
   testimonials: null
 }
 
 const getters = {
-  authorized: (state, getters, rootState) => rootState.authorized,
-  host: (state, getters, rootState) => rootState.host,
-  db: (state, getters, rootState) => `${rootState.host}/testimonials`,
-  staticEndpoint: (state, getters, rootState) => `${rootState.host}/avatars`,
-  uploadEndpoint: (state, getters, rootState) => `${rootState.host}/testimonials/avatar`,
-  avatarsEndpoint: (state, getters, rootState) => `${rootState.host}/testimonials/avatars` /* get all avatars, delete avatar */
+  authorized: (state, getters, rootState) => rootState.authorized
 }
 
 const mutations = {
@@ -32,7 +30,7 @@ const mutations = {
       date: new Date(),
       name: '',
       text: '',
-      photo: `${getters.staticEndpoint}/default.png`
+      photo: avatar.default
     })
   },
   REMOVE_ITEM (state, num) {
@@ -44,41 +42,32 @@ const mutations = {
 }
 
 const actions = {
-  async GET_CONTENT ({ getters, commit }) {
-    const content = await (await fetch(getters.db)).json()
-    commit('UPDATE_CONTENT', content)
+  async GET_CONTENT ({ commit }) {
+    commit('SET_PROGRESS', true, { root: true })
+    const response = await getData(testimonials)
+    commit('SET_PROGRESS', false, { root: true })
+    if (response.status !== 200) {
+      commit('READ_FAILURE', null, { root: true })
+      return
+    }
+    commit('UPDATE_CONTENT', response.data)
   },
 
-  async SAVE_CONTENT ({ state, getters }) {
+  async SAVE_CONTENT ({ state, getters, commit }) {
     if (!getters.authorized) return 401
-    if (location && location.hostname !== 'pa.pineapple.net.au') return 403
-
-    const response = await fetch(getters.db, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('token')
-      },
-      body: JSON.stringify(state.testimonials)
-    })
-    return response.status
+    commit('SET_PROGRESS', true, { root: true })
+    const response = await postData('testimonials', state.testimonials)
+    commit('SET_PROGRESS', false, { root: true })
+    commit(response.status === 200 ? 'SAVE_SUCCESS' : 'SAVE_FAILURE', null, { root: true })
   },
 
-  async UPLOAD_AVATAR ({ state, getters }, file) {
+  async UPLOAD_AVATAR (context, file) {
     const formData = new FormData()
     formData.set('avatar', file)
-    let response = null
-    try {
-      response = await fetch(getters.uploadEndpoint, {
-        method: 'POST',
-        headers: {
-          Authorization: localStorage.getItem('token')
-        },
-        body: formData
-      })
-      const url = await response.text()
-      return url
-    } catch (error) { return `${getters.staticEndpoint}/default.png` }
+    context.commit('SET_PROGRESS', true, { root: true })
+    const response = await upload(avatar.upload, avatar.default, formData)
+    context.commit('SET_PROGRESS', false, { root: true })
+    return response.url
   }
 }
 

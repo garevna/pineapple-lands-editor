@@ -3,7 +3,7 @@
     <img :src="photo" class="testimonial-photo" width="40" height="40" style="border-radius: 50%" alt="" />
     <p class="testimonial-name">{{ name }}</p>
     <p class="testimonial-text" :style="{ fontSize: textSize }" v-html="text"></p>
-    <p class="testimonial-text-ellipsis" :style="{ fontSize: textSize }" v-if="ellipsis" @click="showFullText">...</p>
+    <p class="testimonial-text-ellipsis" :style="{ fontSize: textSize }" v-if="ellipsis">...</p>
     <p class="testimonial-date">{{ date }}</p>
   </v-card>
 </template>
@@ -77,11 +77,6 @@ export default {
     },
     textSize () {
       return this.viewportWidth < 600 ? '12px' : '14px'
-    }
-  },
-  methods: {
-    showFullText () {
-      //
     }
   },
   mounted () {

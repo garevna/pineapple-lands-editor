@@ -54,7 +54,7 @@
 
 import { mapState, mapActions } from 'vuex'
 
-import TestimonialsCard from '@/components/editor/TestimonialsCard.vue'
+const { TestimonialsCard } = require('@/components/editor').default
 
 export default {
   name: 'Testimonials',

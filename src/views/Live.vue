@@ -11,12 +11,10 @@
 
 import { mapState, mapActions } from 'vuex'
 
-import Home from '@/components/live/Home.vue'
-
 export default {
   name: 'Live',
   components: {
-    Home
+    Home: () => import('@/components/live/Home.vue')
   },
   data () {
     return {

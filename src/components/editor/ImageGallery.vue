@@ -23,7 +23,7 @@
         >
           <v-card hover class="pa-0" tile @click="select(index)">
             <v-fab-transition>
-              <v-btn fab icon @click.stop="askToRemovePicture(index)" v-if="authorized">
+              <v-btn fab icon @click.stop="remove(index)" v-if="authorized">
                 <v-icon color="red darken-2">mdi-delete</v-icon>
               </v-btn>
             </v-fab-transition>
@@ -39,26 +39,17 @@
       </v-row>
     </v-card>
   </v-dialog>
-
-  <RemovePopup :visibility.sync="removePopupVisible"
-               :confirm.sync="confirmRemoving"
-               removing="Image"
-               :details="details"
-  />
 </v-row>
 </template>
 
 <script>
 
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
-import RemovePopup from '@/components/editor/RemovePopup.vue'
+const { hostname, avatar, image, icon } = require('@/configs/host').default
 
 export default {
   name: 'ImageGallery',
-  components: {
-    RemovePopup
-  },
   props: {
     destination: String,
     selectedImageURL: String,
@@ -66,41 +57,36 @@ export default {
   },
   data: () => ({
     images: [],
-    removePopupVisible: false,
     confirmRemoving: false,
     details: null,
-    removing: null
+    removing: null,
+    limits: {
+      avatar: 50000,
+      image: 1000000,
+      icon: 100000
+    },
+    size: {
+      avatar: 48,
+      image: 300,
+      icon: 150
+    },
+    hostname,
+    endpoints: {
+      avatar,
+      image,
+      icon
+    }
   }),
   computed: {
-    ...mapState(['authorized']),
-    ...mapGetters('testimonials', {
-      __uploadAvatar: 'uploadEndpoint',
-      __staticAvatar: 'staticEndpoint',
-      __avatarts: 'avatarsEndpoint'
-    }),
-    ...mapGetters('editor', {
-      __uploadImage: 'uploadImageEndpoint',
-      __staticImage: 'staticImageEndpoint',
-      __images: 'imagesEndpoint',
-      __uploadIcon: 'uploadIconEndpoint',
-      __staticIcon: 'staticIconEndpoint',
-      __icons: 'iconsEndpoint'
-    }),
-
-    uploadEndpoint () {
-      return this.destination === 'avatar' ? this.__uploadAvatar : this.destination === 'image' ? this.__uploadImage : this.__uploadIcon
-    },
+    ...mapState(['authorized', 'popup']),
     staticEndpoint () {
-      return this.destination === 'avatar' ? this.__staticAvatar : this.destination === 'image' ? this.__staticImage : this.__staticIcon
-    },
-    endpoint () {
-      return this.destination === 'avatar' ? this.__avatarts : this.destination === 'image' ? this.__images : this.__icons
+      return `${this.hostname}/${this.endpoints[this.destination].static}`
     },
     fileLimit () {
-      return this.destination === 'avatar' ? 50000 : this.destination === 'image' ? 1000000 : 100000
+      return this.limits[this.destination]
     },
     imageSize () {
-      return this.destination === 'avatar' ? 50 : this.destination === 'image' ? 300 : 150
+      return this.size[this.destination]
     },
     gallery: {
       get () {
@@ -115,54 +101,41 @@ export default {
     activate (val) {
       if (val) this.getImages()
     },
-    confirmRemoving (val) {
-      if (!val) return
-      this.removePicture(this.removing)
-      this.getImages()
-      this.removePopupVisible = false
+    'popup.action': {
+      handler (val) {
+        val && this.removePicture()
+      }
     }
   },
   methods: {
     ...mapActions({
-      saveSuccess: 'SAVE_SUCCESS',
-      saveFailure: 'SAVE_FAILURE',
-      accessDenied: 'ACCESS_DENIED'
+      getAllImages: 'GET_IMAGES',
+      removeImage: 'DELETE_IMAGE'
+    }),
+    ...mapMutations({
+      dialogDelete: 'DIALOG_DELETE'
     }),
     async getImages () {
-      try {
-        this.images = (await (await fetch(this.endpoint)).json())
-          .filter(img => img !== '.gitkeep' && img !== 'logo.png' && img !== 'facebook.png' && img !== 'linkedin.png')
-        this.ready = true
-      } catch (err) {
-        console.error(err)
-        this.ready = false
-      }
+      const response = await this.getAllImages(this.destination)
+      this.images = response.filter(img => img !== '.gitkeep' && img !== 'logo.png' && img !== 'facebook.png' && img !== 'linkedin.png')
     },
     select (index) {
       const val = `${this.staticEndpoint}/${this.images[index]}`
       this.$emit('update:selectedImageURL', val)
       this.$emit('update:activate', false)
     },
-    askToRemovePicture (index) {
-      this.confirmRemoving = false
+    remove (index) {
       this.removing = index
-      this.details = `<img src="${this.staticEndpoint}/${this.images[index]}" width="120"/>`
-      this.removePopupVisible = true
+      this.dialogDelete()
     },
-    async removePicture (index) {
-      try {
-        const response = await fetch(`${this.endpoint}/${this.images[index]}`, {
-          method: 'DELETE',
-          headers: {
-            Authorization: localStorage.getItem('token')
-          }
-        })
-        const showResponse = response.status === 200 ? 'saveSuccess' : response.status === 403 || response.status === 401 ? 'accessDenied' : 'saveFailure'
-        this[showResponse]()
-      } catch (err) {
-        console.error(err)
-        this.ready = false
-      }
+    async removePicture () {
+      if (this.index === null) return
+      await this.removeImage({
+        destination: this.destination,
+        file: this.images[this.removing]
+      })
+      this.getImages()
+      this.removing = null
     }
   }
 }

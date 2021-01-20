@@ -62,40 +62,15 @@
 </v-container>
 </template>
 
-<style>
-.v-image__image .v-image__image--cover {
-  transition: all 0.5s!important;
-}
-.v-image__image .v-image__image--cover:hover {
-  filter: blur(8px)!important;
-  -webkit-filter: blur(8px)!important;
-}
-</style>
-
-<style scoped>
-.top-element {
-  margin-top: 120px;
-  margin-bottom: 64px;
-}
-p {
-  line-height: 180%!important;
-}
-
-@media screen and (max-width: 500px) {
-  .top-element {
-    margin-top: 80px;
-    margin-bottom: 48px;
-  }
-}
-</style>
-
 <script>
 
 import { mapState } from 'vuex'
 
-import SubHeader from '@/components/inputs/SubHeader.vue'
-import Paragraph from '@/components/inputs/Paragraph.vue'
-import Button from '@/components/inputs/Button.vue'
+const {
+  SubHeader,
+  Paragraph,
+  Button
+} = require('@/components/inputs').default
 
 export default {
   name: 'Top',
@@ -135,3 +110,30 @@ export default {
   }
 }
 </script>
+
+<style>
+.v-image__image .v-image__image--cover {
+  transition: all 0.5s!important;
+}
+.v-image__image .v-image__image--cover:hover {
+  filter: blur(8px)!important;
+  -webkit-filter: blur(8px)!important;
+}
+</style>
+
+<style scoped>
+.top-element {
+  margin-top: 120px;
+  margin-bottom: 64px;
+}
+p {
+  line-height: 180%!important;
+}
+
+@media screen and (max-width: 500px) {
+  .top-element {
+    margin-top: 80px;
+    margin-bottom: 48px;
+  }
+}
+</style>

@@ -1,15 +1,10 @@
 /*    FOR CONTENT MODULE OF STORE    */
 
-export default {
-  SAVE_CONTENT: async ({ state, getters, dispatch }, route) => {
-    const response = await fetch(`${getters.pageContentEndpoint}/${route}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('token')
-      },
-      body: JSON.stringify(state)
-    })
-    return response.status
-  }
+const saveData = require('@/helpers/postData').default
+
+export const SAVE_CONTENT = async (context, route) => {
+  context.commit('SET_PROGRESS', true, { root: true })
+  const response = await saveData(`content/${route}`, context.state)
+  context.commit('SET_PROGRESS', false, { root: true })
+  context.commit(response.status === 200 ? 'SAVE_SUCCESS' : 'SAVE_FAILURE', null, { root: true })
 }

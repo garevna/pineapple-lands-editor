@@ -94,22 +94,24 @@
 
 import { mapActions } from 'vuex'
 
-import Top from '@/components/multipage/Top.vue'
-import List from '@/components/List.vue'
-import GreenSection from '@/components/GreenSection.vue'
-import UserContact from '@/components/UserContact.vue'
-import HowToConnect from '@/components/HowToConnect.vue'
-import Testimonials from '@/components/Testimonials.vue'
-import InternetPlans from '@/components/InternetPlans.vue'
-import FAQ from '@/components/FAQ.vue'
-import Footer from '@/components/Footer.vue'
+const {
+  MultipageTop,
+  List,
+  GreenSection,
+  UserContact,
+  HowToConnect,
+  Testimonials,
+  InternetPlans,
+  FAQ,
+  Footer
+} = require('@/components').default
 
-const userFormInitial = require('@/store/modules/userFormInitial.js').default
+const userFormInitial = require('@/configs/userFormInitial.js').default
 
 export default {
   name: 'App',
   components: {
-    Top,
+    Top: MultipageTop,
     List,
     UserContact,
     HowToConnect,

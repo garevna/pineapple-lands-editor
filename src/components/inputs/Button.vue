@@ -81,25 +81,26 @@ export default {
   data () {
     return {
       clicked: false,
-      jump: ''
+      jump: '',
+      configs: require('@/configs/mainNavMenu').default
     }
   },
   computed: {
     ...mapState(['currentLand', 'lands']),
-    ...mapState('editor', ['configs']),
-    route () {
-      if (this.$route.name === 'live-page') return 'live-page'
-      if (this.$route.name === 'dgtek') return 'dgtek-1'
-      const index = ['conservatory', 'qv1', 'aurora'].findIndex(item => item === this.$route.name) + 1
-      if (index) return `2-${index}`
-      const land = this.lands.find(land => land.route === this.$route.name)
-      return land.short
-    },
+    // ...mapState('editor', ['configs']),
+    // route () {
+    //   if (this.$route.name === 'live-page') return 'live-page'
+    //   if (this.$route.name === 'dgtek') return 'dgtek-1'
+    //   const index = ['conservatory', 'qv1', 'aurora'].findIndex(item => item === this.$route.name) + 1
+    //   if (index) return `2-${index}`
+    //   const land = this.lands.find(land => land.route === this.$route.name)
+    //   return land.short
+    // },
     sections () {
-      return this.configs[this.route].map(item => item.title)
+      return this.configs[this.$route.name].map(item => item.title)
     },
     jumps () {
-      return this.configs[this.route].map(item => item.value)
+      return this.configs[this.$route.name].map(item => item.value)
     },
     isDGtek () {
       return this.$route.name === 'dgtek'

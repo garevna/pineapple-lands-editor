@@ -13,6 +13,8 @@
         <span>Landing pages</span>
       </v-tooltip>
 
+      <h5 style="color: #fff">{{ title }}</h5>
+
       <v-spacer></v-spacer>
 
       <v-tooltip bottom color="info">
@@ -25,47 +27,33 @@
         <span>General Info About Pineapple NET</span>
       </v-tooltip>
 
-      <v-menu
-            bottom
-            left
-            width="320"
-            transition="slide-x-transition"
-            :offset-y="true"
-      >
-        <template v-slot:activator="{ on, attrs }">
+      <v-tooltip bottom color="info">
+        <template v-slot:activator="{ on }">
           <v-btn
-              dark
-              icon
-              v-bind="attrs"
-              v-on="on"
+            text
+            color="transparent"
+            v-on="on"
+            @click="$route.name === 'testimonials' || $router.push({ name: 'testimonials' })"
           >
-            <v-icon>mdi-dots-vertical</v-icon>
+            <v-icon large color="white">mdi-message-draw</v-icon>
           </v-btn>
         </template>
+        <span>Edit Reviews</span>
+      </v-tooltip>
 
-        <v-list>
-          <v-list-item
-                v-if="$route.name !== 'overall'"
-                @click="$router.push({ name: 'overall' })"
+      <v-tooltip bottom color="info">
+        <template v-slot:activator="{ on }">
+          <v-btn
+            text
+            color="transparent"
+            v-on="on"
+            @click="$route.name === 'plans' || $router.push({ name: 'plans' })"
           >
-            <v-list-item-title>Landing pages overall</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item
-                v-if="$route.name !== 'testimonials'"
-                @click="$router.push({ name: 'testimonials' })"
-          >
-            <v-list-item-title>Reviews</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item
-                v-if="$route.name !== 'plans'"
-                @click="$router.push({ name: 'plans' })"
-          >
-            <v-list-item-title>InternetPlans</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+            <v-icon large color="white">mdi-calculator</v-icon>
+          </v-btn>
+        </template>
+        <span>Edit Inernet Plans</span>
+      </v-tooltip>
     </v-system-bar>
 
     <v-navigation-drawer
@@ -78,12 +66,22 @@
     >
       <ListOfLands :drawer.sync="drawer" :nav="true" />
     </v-navigation-drawer>
+    <v-progress-linear
+      v-if="progress"
+      class="mt-12"
+      color="#09b"
+      indeterminate
+      style="z-index: 999"
+    ></v-progress-linear>
   </v-container>
 </template>
 
 <script>
 
-import ListOfLands from '@/components/editor/ListOfLands.vue'
+import { mapState } from 'vuex'
+
+const { ListOfLands } = require('@/components/editor').default
+const { routesNames } = require('@/configs/main-nav-bar-titles')
 
 export default {
   name: 'MainNavigationDriver',
@@ -96,7 +94,14 @@ export default {
       drawer: false,
       group: null,
       selected: undefined,
-      secondLandPage: undefined
+      secondLandPage: undefined,
+      routesNames
+    }
+  },
+  computed: {
+    ...mapState(['progress']),
+    title () {
+      return this.routesNames[this.$route.name]
     }
   },
   watch: {

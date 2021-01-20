@@ -94,14 +94,11 @@ p {
 
 import { mapState } from 'vuex'
 
-import SubHeader from '@/components/inputs/SubHeader.vue'
-import Paragraph from '@/components/inputs/Paragraph.vue'
-
 export default {
   name: 'Top',
   components: {
-    SubHeader,
-    Paragraph
+    SubHeader: () => import('@/components/inputs/SubHeader.vue'),
+    Paragraph: () => import('@/components/inputs/Paragraph.vue')
   },
   props: ['page'],
   data: () => ({

@@ -55,9 +55,11 @@ p {
 
 import { mapState } from 'vuex'
 
-import ChangePicture from '@/components/editor/ChangePicture.vue'
-import TopHeader from '@/components/inputs/TopHeader.vue'
-import Paragraph from '@/components/inputs/Paragraph.vue'
+const { ChangePicture } = require('@/components/editor').default
+const {
+  TopHeader,
+  Paragraph
+} = require('@/components/inputs').default
 
 export default {
   name: 'Top',

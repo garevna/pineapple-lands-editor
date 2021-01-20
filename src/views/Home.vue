@@ -27,19 +27,6 @@
         <Paragraph :value.sync="fb" />
       </v-card-text>
     </v-card>
-
-    <!-- ============================= BOTTOM NAV ============================= -->
-    <!-- <v-bottom-navigation
-          fixed
-          dark
-          class="buttons"
-          v-if="authorized"
-    >
-      <v-btn @click="saveData" v-if="authorized">
-        <span>Save</span>
-        <v-icon>mdi-content-save-edit</v-icon>
-      </v-btn>
-    </v-bottom-navigation> -->
   </v-container>
 </template>
 
@@ -54,7 +41,7 @@
 
 import { mapState } from 'vuex'
 
-import Paragraph from '@/components/inputs/Paragraph.vue'
+const { Paragraph } = require('@/components/inputs').default
 
 export default {
   name: 'Home',
@@ -110,26 +97,6 @@ export default {
       set (val) {
         this.$store.commit('UPDATE_GENERAL_INFO', { prop: 'faceBook', value: val })
       }
-    }
-  },
-  methods: {
-    async saveData ({ state }) {
-      const response = await fetch(state.generalInfoEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: localStorage.getItem('token')
-        },
-        body: JSON.stringify({
-          officeAddress: this.address,
-          officePhone: this.phone,
-          officeEmail: this.email,
-          officeABN: this.abn,
-          linkedIn: this.linkedin,
-          faceBook: this.fb
-        })
-      })
-      return response
     }
   }
 }

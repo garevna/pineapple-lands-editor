@@ -2,44 +2,48 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import modules from './modules'
 
-const { pagesSection } = require('./modules/mutations')
+const {
+  viewport,
+  pages,
+  popups
+} = require('./modules/mutations').default
 
 const lands = require('@/configs/lands').default
+
 const { fieldTypes, validators, description } = require('@/configs/contactFormFieldsConfig.js').default
 
 const {
-  validateToken,
-  getGeneralInfo,
-  saveGeneralInfo,
-  getPages,
-  savePages
+  GET_GENERAL_INFO,
+  SAVE_GENERAL_INFO,
+  GET_PAGES,
+  SAVE_PAGES,
+  GET_IMAGES,
+  DELETE_IMAGE
 } = require('./modules/actions').default
+
+const generalInfo = require('@/configs/generalInfo').default
+const { validateToken } = require('@/helpers').default
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    host: 'https://api.pineapple.net.au',
-    // host: 'https://pineapple-net-land.glitch.me',
-    generalInfoEndpoint: 'https://api.pineapple.net.au/content/general',
-    // generalInfoEndpoint: 'https://pineapple-net-land.glitch.me/content/general',
-    officeAddress: '',
-    officePhone: '',
-    officeEmail: '',
-    officeABN: '',
-    linkedIn: '',
-    faceBook: '',
+    authorized: false,
+    progress: false,
+    ...generalInfo,
     contactEndpoint: '',
     viewportWidth: window.innerWidth,
     viewportHeight: window.innerHeight,
     plan: 'residential',
     pages: [],
     selectors: [],
-    popup: false,
-    popupTitle: '',
-    popupText: '',
-    authorized: false,
-    numberOfLands: 5,
+    popup: {
+      open: false,
+      title: '',
+      text: '',
+      action: false,
+      label: ''
+    },
     currentLand: null,
     fieldTypes,
     validators,
@@ -50,56 +54,17 @@ export default new Vuex.Store({
   },
   modules,
 
-  getters: {
-    contentHost: (state) => `${state.host}/content`,
-    testimonialsHost: (state) => `${state.host}/testimonials`
-  },
-
   mutations: {
-    ...pagesSection,
+    ...viewport,
+    ...pages,
+    ...popups,
+
+    SET_PROGRESS: (state, value) => {
+      state.progress = value
+    },
+
     UPDATE_GENERAL_INFO: (state, payload) => { state[payload.prop] = payload.value },
     SET_CURRENT_LAND: (state, value) => { state.currentLand = value },
-    SET_PAGES: (state, payload) => {
-      state.pages = Object.assign([], payload)
-    },
-
-    ADD_PAGE: (state, pageData) => {
-      state.pages.push(pageData)
-    },
-
-    HIDE_CURRENT_PAGE: (state) => {
-      const id = state.currentLand.slice(5)
-      const index = state.pages.findIndex(page => page.id === id)
-      if (index < 0) return
-      Object.assign(state.pages[index], { hidden: true })
-    },
-
-    SET_CURRENT_PAGE_ACTIVE: (state) => {
-      const id = state.currentLand.slice(5)
-      const index = state.pages.findIndex(page => page.id === id)
-      if (index < 0) return
-      state.pages[index].hidden = false
-    },
-
-    UPDATE_PAGE_ADDRESS: (state, payload) => {
-      state.pages[payload.index].address[payload.propName] = payload.propValue
-    },
-
-    SHOW_PAGE_INFO: (state) => {
-      state.showPageInfo = true
-    },
-
-    HIDE_PAGE_INFO: (state) => {
-      state.showPageInfo = false
-    },
-
-    CHANGE_VIEWPORT: (state) => {
-      state.viewportWidth = window.innerWidth
-      state.viewportHeight = window.innerHeight
-    },
-
-    CHANGE_VIEWPORT_WIDTH: (state, width) => { state.viewportWidth = width },
-    CHANGE_VIEWPORT_HEIGHT: (state, height) => { state.viewportHeight = height },
 
     CHANGE_PLAN: (state, plan) => { state.plan = plan },
 
@@ -114,79 +79,22 @@ export default new Vuex.Store({
     },
     DELETE_PROPERTY: (state, payload) => {
       Vue.delete(payload.object, payload.propertyName)
-    },
-    SHOW_POPUP: (state) => {
-      state.popup = true
-    },
-    HIDE_POPUP: (state) => {
-      state.popup = false
-    },
-    SET_POPUP_TITLE: (state, title) => {
-      state.popupTitle = title
-    },
-    SET_POPUP_TEXT: (state, text) => {
-      state.popupText = text
-    },
-    SET_AUTH: (state, val) => {
-      state.authorized = !!val
     }
   },
 
   actions: {
-    ...validateToken,
-    ...getGeneralInfo,
-    ...saveGeneralInfo,
-    ...getPages,
-    ...savePages,
+    GET_GENERAL_INFO,
+    SAVE_GENERAL_INFO,
+    GET_PAGES,
+    SAVE_PAGES,
+    GET_IMAGES,
+    DELETE_IMAGE,
 
-    async VALIDATE_TOKEN ({ state, commit }) {
-      const token = localStorage.getItem('token')
-      if (!token) return commit('SET_AUTH', false)
-      try {
-        const response = await fetch(`${state.host}/auth/token`, {
-          method: 'GET',
-          headers: {
-            Authorization: token
-          },
-          body: null
-        })
-        commit('SET_AUTH', response.status === 200)
-      } catch (err) {
-        console.warn(err)
-        commit('SET_AUTH', false)
-      }
-    },
-    AUTH_FAIL ({ commit }) {
-      commit('SET_AUTH', false)
-      commit('SET_POPUP_TITLE', 'AUTH FAILURE')
-      commit('SET_POPUP_TEXT', 'You are now in demo mode. You have no access to save changes')
-      commit('SHOW_POPUP')
-    },
-    AUTH_SUCCESS ({ commit }) {
-      commit('SET_AUTH', true)
-      commit('SET_POPUP_TITLE', 'AUTH SUCCESS')
-      commit('SET_POPUP_TEXT', 'You have access to save changes')
-      commit('SHOW_POPUP')
-    },
-    SAVE_SUCCESS ({ commit }) {
-      commit('SET_POPUP_TITLE', 'SAVE THE DATA')
-      commit('SET_POPUP_TEXT', 'Data has been successfully saved')
-      commit('SHOW_POPUP')
-    },
-    SAVE_FAILURE ({ commit }) {
-      commit('SET_POPUP_TITLE', 'SAVE THE DATA')
-      commit('SET_POPUP_TEXT', 'Error saving the data')
-      commit('SHOW_POPUP')
-    },
-    READ_FAILURE ({ commit }) {
-      commit('SET_POPUP_TITLE', 'READ THE DATA')
-      commit('SET_POPUP_TEXT', 'Error reading the data')
-      commit('SHOW_POPUP')
-    },
-    ACCESS_DENIED ({ commit }) {
-      commit('SET_POPUP_TITLE', 'SAVE THE DATA')
-      commit('SET_POPUP_TEXT', 'Access denied')
-      commit('SHOW_POPUP')
+    async VALIDATE_TOKEN ({ state, commit, dispatch }) {
+      commit('SET_PROGRESS', true)
+      const response = await validateToken()
+      commit('SET_PROGRESS', false)
+      commit(response.status !== 200 ? 'AUTH_FAILURE' : 'AUTH_SUCCESS')
     }
   }
 })

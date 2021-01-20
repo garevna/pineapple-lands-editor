@@ -45,12 +45,10 @@
 
 import { mapState, mapGetters } from 'vuex'
 
-import ButtonConfig from '@/components/editor/ButtonConfig.vue'
-
 export default {
   name: 'PageInfoCard',
   components: {
-    ButtonConfig
+    ButtonConfig: () => import('@/components/editor/ButtonConfig.vue')
   },
   data: () => ({
     buttons: [],

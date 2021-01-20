@@ -68,12 +68,17 @@ h3, p {
 
 import { mapState } from 'vuex'
 
-import SubHeader from '@/components/inputs/SubHeader.vue'
-import SubSubHeader from '@/components/inputs/SubSubHeader.vue'
-import Paragraph from '@/components/inputs/Paragraph.vue'
-import IconFirst from '@/components/dgtek/IconFirst.vue'
-import IconSecond from '@/components/dgtek/IconSecond.vue'
-import IconThird from '@/components/dgtek/IconThird.vue'
+const {
+  SubHeader,
+  SubSubHeader,
+  Paragraph
+} = require('@/components/inputs').default
+
+const {
+  IconFirst,
+  IconSecond,
+  IconThird
+} = require('@/components/dgtek/icons').default
 
 export default {
   name: 'Benefits',

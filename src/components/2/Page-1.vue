@@ -4,12 +4,10 @@
 
 <script>
 
-import Page from '@/components/2/Page.vue'
-
 export default {
   name: 'page-1',
   components: {
-    Page
+    Page: () => import('@/components/2/Page.vue')
   }
 }
 

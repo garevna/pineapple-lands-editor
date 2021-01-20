@@ -1,21 +1,30 @@
-import * as info from './info.js'
-import * as pages from './pages.js'
+import * as info from './info'
 
-import * as dgtekAside from './dgtek-aside.js'
+import * as pages from './pages'
+import * as livePages from './live-pages'
 
-import * as userForm from './user-form.js'
-import * as howToConnect from './how-to-connect.js'
-import * as list from './list.js'
-import * as faq from './faq.js'
-import * as other from './other.js'
+import * as popups from './popups'
+
+import * as dgtekAside from './dgtek-aside'
+
+import * as userForm from './user-form'
+import * as howToConnect from './how-to-connect'
+import * as list from './list'
+import * as faq from './faq'
+import * as updates from './updates'
+
+import * as viewport from './viewport'
 
 export default {
   info,
   pages,
+  livePages,
+  popups,
   dgtekAside,
   userForm,
   howToConnect,
   list,
   faq,
-  other
+  updates,
+  viewport
 }

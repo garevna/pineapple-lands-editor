@@ -1,25 +1,31 @@
 <template>
   <v-row justify="center">
-      <v-dialog v-model="opened" persistent max-width="290">
-        <v-card class="pa-6">
-          <v-card-title>
-            <h2 text-color="primary">Sign In</h2>
-          </v-card-title>
+      <v-dialog v-model="opened" persistent max-width="360">
+        <v-card class="pa-2">
+          <v-toolbar flat class="transparent mb-8">
+            <v-toolbar-title>
+              <h3><v-icon x-large color="#444">$login</v-icon> Sign In</h3>
+            </v-toolbar-title>
+            <v-spacer />
+            <v-btn icon @click="$emit('update:opened', false)">
+              <v-icon x-large>mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar>
           <v-card-text>
-            <p>login</p>
             <v-text-field
-                v-model="login"
+              label="Login"
+              v-model="login"
+              outlined
             ></v-text-field>
-          </v-card-text>
-          <v-card-text>
-            <p>Password</p>
             <v-text-field
-                v-model="password"
+              label="Password"
+              v-model="password"
+              outlined
             ></v-text-field>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn text @click.native="submit">SUBMIT</v-btn>
+            <v-btn text @click="validate">SUBMIT</v-btn>
             <v-btn text @click="$emit('update:opened', false)">CLOSE</v-btn>
           </v-card-actions>
         </v-card>
@@ -32,68 +38,30 @@
 
 <script>
 
-import { mapGetters, mapActions } from 'vuex'
+import { mapMutations } from 'vuex'
 
-const crypto = require('cryptico')
+const { auth } = require('@/helpers').default
 
 export default {
   name: 'Auth',
   props: ['opened', 'auth'],
   data () {
     return {
-      secret: process.env.VUE_APP_SECRET,
       login: '',
       password: '',
       submit: null
     }
   },
-  computed: {
-    ...mapGetters('editor', ['hostEndpoint']),
-    keyRSA () {
-      return crypto.generateRSAKey(this.secret, 1024)
-    },
-    publicKey () {
-      return crypto.publicKeyString(this.keyRSA)
-    }
-  },
   methods: {
-    ...mapActions({
-      accessDenied: 'AUTH_FAIL',
+    ...mapMutations({
+      accessDenied: 'AUTH_FAILURE',
       accessGranted: 'AUTH_SUCCESS'
     }),
-    authFail () {
-      this.accessDenied()
-      this.$emit('update:opened', false)
-    },
-    authSuccess () {
-      this.accessGranted()
-      this.$emit('update:opened', false)
-    },
     validate: async function () {
-      const userlogin = crypto.encrypt(this.login, this.publicKey)
-      const pass = crypto.encrypt(this.password, this.publicKey)
-      this.login = ''
-      this.password = ''
-      if (!userlogin.status || !pass.status) return this.authFail()
-      const response = await fetch(`${this.hostEndpoint}/auth`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          login: userlogin.cipher,
-          password: pass.cipher
-        })
-      })
-      if (response.status !== 200) return this.authFail()
-      this.authSuccess()
-      const token = await response.text()
-      localStorage.setItem('token', token)
+      const response = await auth(this.login, this.password)
+      response.status !== 200 ? this.accessDenied() : this.accessGranted()
       this.$emit('update:opened', false)
     }
-  },
-  mounted () {
-    this.submit = this.validate.bind(this)
   }
 }
 </script>

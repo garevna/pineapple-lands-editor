@@ -8,9 +8,9 @@
         </v-col>
         <v-col cols="7">
           <LandInfoCard
-                  v-if="routeItem"
-                  :route="routeItem.short"
-                  :url="routeItem.url ? routeItem.url : routeItem.title"
+            v-if="routeItem"
+            :route="routeItem.short"
+            :url="routeItem.url ? routeItem.url : routeItem.title"
           />
         </v-col>
       </v-row>
@@ -27,14 +27,11 @@
 
 <script>
 
-import ListOfLands from '@/components/editor/ListOfLands.vue'
-import LandInfoCard from '@/components/editor/LandInfoCard.vue'
-
 export default {
   name: 'Home',
   components: {
-    ListOfLands,
-    LandInfoCard
+    ListOfLands: () => import('@/components/editor/ListOfLands.vue'),
+    LandInfoCard: () => import('@/components/editor/LandConfig.vue')
   },
   data: () => ({
     routeItem: null

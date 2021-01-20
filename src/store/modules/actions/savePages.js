@@ -1,20 +1,14 @@
 /*    FOR ROOT STORE    */
 
-export default {
-  SAVE_PAGES: async ({ state, commit }) => {
-    try {
-      const response = await fetch(`${state.host}/content/live-pages`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: localStorage.getItem('token')
-        },
-        body: JSON.stringify(state.pages)
-      })
-      commit('CLEAR_ERROR')
-      return response.status
-    } catch (err) {
-      commit('SET_ERROR')
-    }
+const { postData } = require('@/helpers').default
+const { pages } = require('@/configs/host').default
+
+export const SAVE_PAGES = async ({ state, commit }) => {
+  if (!state.pages.length) {
+    commit('SAVE_FAILURE')
+    return
   }
+  commit('SET_PROGRESS', true)
+  await postData(pages, state.pages)
+  commit('SET_PROGRESS', false)
 }

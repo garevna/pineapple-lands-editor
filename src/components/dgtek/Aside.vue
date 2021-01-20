@@ -86,10 +86,12 @@ strong {
 
 <script>
 
-import SubHeader from '@/components/inputs/SubHeader.vue'
-import Paragraph from '@/components/inputs/Paragraph.vue'
-import AsideColoredText from '@/components/inputs/AsideColoredText.vue'
-import SmallText from '@/components/inputs/SmallText.vue'
+const {
+  SubHeader,
+  Paragraph,
+  AsideColoredText,
+  SmallText
+} = require('@/components/inputs').default
 
 export default {
   name: 'Aside',

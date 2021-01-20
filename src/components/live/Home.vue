@@ -76,40 +76,6 @@
             </v-row>
         </div>
       </section>
-      <!-- ============================= BOTTOM NAV ============================= -->
-      <!-- <BottomNavigation /> -->
-      <!-- <div slot='nav'>
-        <v-row justify="center">
-          <v-card flat class="transparent mx-auto pa-2">
-            <div class="text-center">
-              <v-pagination
-                v-model="page"
-                light
-                color="#fa0"
-                :length="pages.length"
-                :total-visible="5"
-                v-if="pagination"
-              ></v-pagination>
-            </div>
-          </v-card>
-          <v-btn icon @click="pagination=true" v-if="!pagination">
-            <span>Pages</span>
-            <v-icon>mdi-file-search</v-icon>
-          </v-btn>
-          <v-btn icon @click="editSelectedPage" v-if="pagination">
-            <span>Edit current page</span>
-            <v-icon>mdi-file-edit</v-icon>
-          </v-btn>
-          <v-btn icon @click="pagination=false" v-if="pagination">
-            <span>Close</span>
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-          <v-btn @click="savePageContent" v-if="authorized">
-            <span>Save</span>
-            <v-icon>mdi-content-save-edit</v-icon>
-          </v-btn>
-        </v-row>
-      </div> -->
   </v-container>
 </template>
 
@@ -117,22 +83,21 @@
 
 import { mapState, mapActions } from 'vuex'
 
-import Top from '@/components/live/HomeTop.vue'
-import List from '@/components/List.vue'
-import GreenSection from '@/components/GreenSection.vue'
-import HowToConnect from '@/components/HowToConnect.vue'
-import Testimonials from '@/components/Testimonials.vue'
-import InternetPlans from '@/components/InternetPlans.vue'
-import FAQ from '@/components/FAQ.vue'
-import Footer from '@/components/Footer.vue'
-
-// import BottomNavigation from '@/components/live/BottomNavigation.vue'
+const {
+  LiveHomeTop,
+  HowToConnect,
+  GreenSection,
+  List,
+  InternetPlans,
+  Testimonials,
+  FAQ,
+  Footer
+} = require('@/components').default
 
 export default {
   name: 'Live',
   components: {
-    // BottomNavigation,
-    Top,
+    Top: LiveHomeTop,
     List,
     GreenSection,
     HowToConnect,
@@ -149,17 +114,6 @@ export default {
   },
   computed: {
     ...mapState(['viewport', 'viewportWidth'])
-  },
-  watch: {
-    page (val) {
-      if (this.selectors[val]) {
-        this.$vuetify.goTo(this.selectors[val], {
-          duration: 500,
-          offset: 0,
-          easing: 'easeInOutCubic'
-        })
-      }
-    }
   },
   methods: {
     ...mapActions('contact', {

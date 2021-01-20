@@ -1,17 +1,12 @@
 <template>
-<!--<v-card flat class="ma-0 pa-0">
-  <v-card-text class="transparent" dark>-->
-    <v-file-input dark
-          :label="label"
-          prepend-icon="mdi-camera"
-          @change="upload"
-          v-model="img"
-          :hint="setHint()"
-          :error="error"
-    >
-    </v-file-input>
-<!--  </v-card-text>
-</v-card>-->
+  <v-file-input dark
+    :label="label"
+    prepend-icon="mdi-camera"
+    @change="upload"
+    v-model="img"
+    :hint="setHint()"
+    :error="error"
+  ></v-file-input>
 </template>
 
 <script>

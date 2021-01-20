@@ -4,13 +4,13 @@
       <SubHeader5 :value.sync="title" />
     </v-card-title>
     <v-tooltip top color="info">
-        <template v-slot:activator="{ on }">
-          <v-spacer></v-spacer>
-          <v-btn icon large color="info" v-on="on" @click.stop="dialog = true">
-            <v-icon large style="font-size: 48px!important">mdi-playlist-edit</v-icon>
-          </v-btn>
-        </template>
-        <span>Customize Contact Form</span>
+      <template v-slot:activator="{ on }">
+        <v-spacer></v-spacer>
+        <v-btn icon large color="info" v-on="on" @click.stop="dialog = true">
+          <v-icon large style="font-size: 48px!important">mdi-playlist-edit</v-icon>
+        </v-btn>
+      </template>
+      <span>Customize Contact Form</span>
     </v-tooltip>
 
     <v-card-text class="mx-0 px-0" width="100%" v-if="fields">
@@ -47,7 +47,6 @@
                     v-if="field.type === 'textarea'"
                     :fieldIndex="index"
               />
-      <!-- </v-row> -->
       </div>
     </v-card-text>
 
@@ -55,17 +54,11 @@
       <Button :value.sync="button" :hideConfig="true" />
     </v-card-actions>
 
-    <Popup :opened.sync="popupOpened" />
-    <PopupError :opened.sync="popupErrorOpened" />
     <UserFormCustomization :dialog.sync="dialog" />
   </v-card>
 </template>
 
 <style scoped>
-
-/* .v-text-field.v-text-field--enclosed {
-  margin-bottom: 4px!important;
-} */
 
 .user-info {
   width: 640px;
@@ -112,47 +105,42 @@ h4 {
 
 <script>
 
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
-import SubHeader5 from '@/components/inputs/SubHeader5.vue'
-import Button from '@/components/inputs/Button.vue'
+const {
+  Selector,
+  Combo,
+  InputWithValidation,
+  InputPhoneNumber,
+  DateInput,
+  TimeInput,
+  InputMessage
+} = require('@/components/contact').default
 
-import UserFormCustomization from '@/components/editor/UserFormCustomization.vue'
+const { UserFormCustomization } = require('@/components/editor').default
 
-import Selector from '@/components/contact/Selector.vue'
-import Combo from '@/components/contact/Combo.vue'
-import InputWithValidation from '@/components/contact/InputWithValidation.vue'
-import InputPhoneNumber from '@/components/contact/InputPhoneNumber.vue'
-import DateInput from '@/components/contact/DateInput.vue'
-import TimeInput from '@/components/contact/TimeInput.vue'
-import InputMessage from '@/components/contact/InputMessage.vue'
-
-import Popup from '@/components/contact/Popup.vue'
-import PopupError from '@/components/contact/PopupError.vue'
-
-// const emailValidator = require('email-validator')
+const {
+  SubHeader5,
+  Button
+} = require('@/components/inputs').default
 
 export default {
   name: 'UserContact',
   components: {
     UserFormCustomization,
+    SubHeader5,
+    Button,
     InputPhoneNumber,
     InputMessage,
     InputWithValidation,
     Selector,
     Combo,
     DateInput,
-    TimeInput,
-    Popup,
-    PopupError,
-    SubHeader5,
-    Button
+    TimeInput
   },
   data () {
     return {
       dialog: false,
-      popupOpened: false,
-      popupErrorOpened: false,
       clicked: false,
       fields: this.$store.state.contact.contactFormFields
     }
@@ -193,16 +181,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions('contact', {
-      sendEmail: 'SEND_EMAIL'
-    }),
     initFields () {
       this.$store.commit('contact/CLEAR_ALL_FIELDS')
-    },
-
-    async sendUserRequest () {
-      if (await this.sendEmail()) this.popupOpened = true
-      else this.popupErrorOpened = true
     }
   },
   mounted () {

@@ -53,7 +53,6 @@
         style="display: none"
         @input="uploadFile($event.target.files[0])"
   >
-  <ErrorPopup :visibility.sync="errorPopupVisible" :errorName="errorName" :details="errorStack"/>
   <ImageGallery
         :activate.sync="gallery"
         :destination="destination"
@@ -73,20 +72,16 @@
 
 <script>
 
-import { mapState, mapActions } from 'vuex'
-
-import ImageGallery from '@/components/editor/ImageGallery.vue'
-import ErrorPopup from '@/components/editor/ErrorPopup.vue'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
   name: 'ChangePicture',
   components: {
-    ImageGallery,
-    ErrorPopup
+    ImageGallery: () => import('@/components/editor/ImageGallery.vue')
   },
   props: {
     destination: String, /* required; must be 'image', 'icon' or 'avatar' */
-    pictureURL: String, /* (sync) required; the url of image */
+    pictureURL: String, /* (sync) required; static url of image */
     index: Number, /* optional; if this is the array element */
     action: Boolean, /* optional; if we need the additional button */
     perform: Boolean /* (sync) optional; if the additinal button was clicked */
@@ -94,9 +89,6 @@ export default {
   data () {
     return {
       edit: false,
-      errorPopupVisible: false,
-      errorName: '',
-      errorStack: '',
       gallery: false,
       availableSections: ['avatar', 'icon', 'image'],
       availableMethods: ['uploadAvatar', 'uploadIcon', 'uploadImage']
@@ -110,16 +102,6 @@ export default {
     method () {
       return this.availableMethods[this.sectionNum]
     },
-    error: {
-      get () {
-        if (this.sectionNum !== 2 && !this.index) return 'Index must be defined'
-        return ''
-      },
-      set (val) {
-        this.errorName = 'ERROR'
-        this.errorStack = val
-      }
-    },
     imageURL: {
       get () {
         return this.pictureURL
@@ -129,16 +111,12 @@ export default {
       }
     }
   },
-  watch: {
-    error (val) {
-      if (!val) return
-      this.errorName = 'ERROR'
-      this.errorStack = val
-      this.errorPopupVisible = true
-      this.error = ''
-    }
-  },
   methods: {
+    ...mapMutations({
+      invalidFileType: 'INVALID_FILE_TYPE',
+      invalidFileSize: 'INVALID_FILE_SIZE',
+      saveError: 'SAVE_FAILURE'
+    }),
     ...mapActions('editor', {
       showGallery: 'SHOW_GALLERY',
       hideGallery: 'HIDE_GALLERY',
@@ -148,17 +126,14 @@ export default {
     ...mapActions('testimonials', {
       uploadAvatar: 'UPLOAD_AVATAR'
     }),
+
     testFile (file) {
       if (!file.type.startsWith('image')) {
-        this.errorName = 'Invalid file type'
-        this.errorStack = 'File must be an image of any type such as: jpg, png, gif...'
-        this.errorPopupVisible = true
+        this.invalidFileType()
         return false
       }
       if (file.size > this.fileLimit) {
-        this.errorName = 'Invalid file size'
-        this.errorStack = `File is too large. Please select file up to ${Math.round(this.fileLimit / 1000)}Kb`
-        this.errorPopupVisible = true
+        this.invalidFileSize()
         return false
       }
       return Boolean(file)
@@ -170,7 +145,7 @@ export default {
         const url = await this[this.method](file)
         this.$emit('update:pictureURL', url)
       } catch (err) {
-        this.error = err.message
+        this.saveError()
       }
     }
   }

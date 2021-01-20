@@ -131,17 +131,12 @@ a {
 </style>
 
 <script>
-import { VContainer, VRow, VCol, VCard, VCardTitle, VCardText } from 'vuetify/lib'
-import Logo from '@/components/dgtek/Logo.vue'
+
+const { Logo } = require('@/components/dgtek/icons').default
+
 export default {
   name: 'Footer',
   components: {
-    VContainer,
-    VRow,
-    VCol,
-    VCard,
-    VCardTitle,
-    VCardText,
     Logo
   },
   props: ['viewport'],

@@ -22,27 +22,27 @@ const mutations = {
   UPDATE_FIELD: (state, payload) => {
     state.contactFormFields[payload.num][payload.prop] = payload.value
   },
-  CREATE_MESSAGE: (state) => {
-    let details = ''
-    let message = ''
-    for (const field of state.contactFormFields) {
-      if (field.type === 'message') {
-        message = `
-          <h4>Message:</h4>
-          <p>${field.value.split('\n').join('<br>')}</p>
-        `
-      } else details += `<p>${field.placeholder}: ${field.value}</p>`
-    }
-
-    state.messageForMail = `
-      <p>${state.emailText}</p>
-      <fieldset>
-        <legend>Details:</legend>
-        ${details}
-      </fieldset>
-      ${message}
-    `
-  },
+  // CREATE_MESSAGE: (state) => {
+  //   let details = ''
+  //   let message = ''
+  //   for (const field of state.contactFormFields) {
+  //     if (field.type === 'message') {
+  //       message = `
+  //         <h4>Message:</h4>
+  //         <p>${field.value.split('\n').join('<br>')}</p>
+  //       `
+  //     } else details += `<p>${field.placeholder}: ${field.value}</p>`
+  //   }
+  //
+  //   state.messageForMail = `
+  //     <p>${state.emailText}</p>
+  //     <fieldset>
+  //       <legend>Details:</legend>
+  //       ${details}
+  //     </fieldset>
+  //     ${message}
+  //   `
+  // },
   SET_ERROR: (state, payload) => {
     state.contactFormFields[payload.num].error = payload.value
   },

@@ -8,20 +8,22 @@ export default new Vuetify({
   icons: {
     iconfont: 'mdi',
     values: {
-      expand: 'mdi-chevron-down',
-      valid: 'mdi-check-bold',
-      invalid: 'mdi-alert-outline',
-      home: 'mdi-home-circle',
-      config: 'mdi-cog',
-      search: 'mdi-image-search',
-      nav: 'mdi-magnify',
-      upload: 'mdi-file-upload',
-      pages: 'mdi-book-open-page-variant',
-      delete: 'mdi-delete-forever',
+      active: 'mdi-eye',
       add: 'mdi-plus-thick',
       buttonConfig: 'mdi-gesture-tap-button',
+      close: 'mdi-close',
+      config: 'mdi-cog',
+      delete: 'mdi-delete-forever',
+      expand: 'mdi-chevron-down',
       hidden: 'mdi-eye-off',
-      active: 'mdi-eye'
+      home: 'mdi-home-circle',
+      invalid: 'mdi-alert-outline',
+      login: 'mdi-login',
+      nav: 'mdi-magnify',
+      pages: 'mdi-book-open-page-variant',
+      search: 'mdi-image-search',
+      upload: 'mdi-file-upload',
+      valid: 'mdi-check-bold'
     }
   },
   theme: {

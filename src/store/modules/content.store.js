@@ -3,23 +3,23 @@
 
 const {
   info,
-  pages,
+  livePages,
   dgtekAside,
   userForm,
   howToConnect,
   list,
   faq,
-  other
+  updates
 } = require('./mutations').default
 
 const {
-  getContent,
-  saveContent,
-  addNewPage,
-  setNewPageContent
+  GET_CONTENT,
+  SAVE_CONTENT
+  // addNewPage,
+  // setNewPageContent
 } = require('./actions').default
 
-const userFormInitial = require('@/store/modules/userFormInitial.js').default
+// const userFormInitial = require('@/configs/userFormInitial.js').default
 
 const state = {
   browserTabTitle: 'pineapple.net',
@@ -34,24 +34,22 @@ const state = {
   userForm: {}
 }
 
-const getters = {
-  pageContentEndpoint: (state, getters, rootState) => `${rootState.host}/content`,
-  testimonialsEndpoint: (state, getters, rootState) => `${rootState.host}/testimonials`
-}
-
 const mutations = {
   UPDATE_PAGE_NUM: (state, payload) => { state.pageNum = payload },
   UPDATE_TOP: (state, payload) => { state.top[payload.prop] = payload.value },
+  UPDATE_BROWSER_TAB_TITLE: (state, val) => { state.browserTabTitle = val },
+  UPDATE_EMAIL_SUBJECT: (state, val) => { state.emailSubject = val },
+  UPDATE_EMAIL_TEXT: (state, val) => { state.emailText = val },
   UPDATE_MAIN_NAV: (state, payload) => {
-    state.mainNavButtons = Object.assign([], payload.map(item => item.text))
-    state.mainNavSectors = Object.assign([], payload.map(item => item.goto))
+    state.mainNavButtons = Object.assign([], payload.mainNavButtons)
+    state.mainNavSectors = Object.assign([], payload.mainNavSectors)
   },
 
   /* INFO */
   ...info.default,
 
   /* LIVE - PAGES */
-  ...pages.default,
+  ...livePages,
 
   /* DGTEK ASIDE */
   ...dgtekAside.default,
@@ -68,20 +66,21 @@ const mutations = {
   /* LIST */
   ...list.default,
 
-  ...other.default
+  /* CONTENT OF LAND UPDATES */
+  ...updates.default
 }
 
 const actions = {
-  ...getContent,
-  ...saveContent,
-  ...addNewPage,
-  ...setNewPageContent
+  GET_CONTENT,
+  SAVE_CONTENT
+  // ...addNewPage,
+  // ...setNewPageContent
 }
 
 export default {
   namespaced: true,
   state,
-  getters,
+  // getters,
   actions,
   mutations
 }

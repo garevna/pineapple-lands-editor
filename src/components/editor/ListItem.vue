@@ -22,14 +22,17 @@
 
 <script>
 
-import ChangePicture from '@/components/editor/ChangePicture.vue'
-import SubSubHeader from '@/components/inputs/SubSubHeader.vue'
-import Paragraph from '@/components/inputs/Paragraph.vue'
+const {
+  SubSubHeader,
+  Paragraph
+} = require('@/components/inputs').default
+
+// const { ChangePicture } = require('@/components/editor').default
 
 export default {
   name: 'ListItem',
   components: {
-    ChangePicture,
+    ChangePicture: () => import('@/components/editor/ChangePicture.vue'),
     SubSubHeader,
     Paragraph
   },

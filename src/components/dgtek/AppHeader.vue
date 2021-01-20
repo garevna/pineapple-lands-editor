@@ -154,21 +154,12 @@ a:last-child.active {
 </style>
 
 <script>
-import { VContainer, VAppBar, VSpacer, VRow, VExpansionPanels, VExpansionPanel, VExpansionPanelHeader, VExpansionPanelContent, VList, VBtn } from 'vuetify/lib'
-import Logo from '@/components/dgtek/Logo.vue'
+
+const { Logo } = require('@/components/dgtek/icons').default
+
 export default {
   name: 'AppHeader',
   components: {
-    VContainer,
-    VAppBar,
-    VSpacer,
-    VRow,
-    VExpansionPanels,
-    VExpansionPanel,
-    VExpansionPanelHeader,
-    VExpansionPanelContent,
-    VList,
-    VBtn,
     Logo
   },
   props: ['page'],

@@ -1,29 +1,27 @@
 <template>
-  <!-- <v-row align="center" justify="center"> -->
-    <v-card class="mx-auto pa-4" max-width="1440">
-      <h5 class="mx-8 mb-8">Building Address Details</h5>
-      <v-row>
-        <v-col cols="4">
-          <v-text-field v-model="streetNumber" label="Number"></v-text-field>
-        </v-col>
-        <v-col cols="8">
-          <v-text-field v-model="streetName" label="Street"></v-text-field>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="6">
-          <v-text-field v-model="city" label="City"></v-text-field>
-        </v-col>
-        <v-col cols="3">
-          <v-text-field v-model="state" label="State"></v-text-field>
-        </v-col>
-        <v-col cols="3">
-          <v-text-field v-model="postcode" label="Post code"></v-text-field>
-        </v-col>
-      </v-row>
-      <v-text-field v-model="formatted" label="Building name"></v-text-field>
-    </v-card>
-  <!-- </v-row> -->
+  <v-card class="mx-auto pa-4" max-width="1440">
+    <h5 class="mx-8 mb-8">Building Address Details</h5>
+    <v-row>
+      <v-col cols="4">
+        <v-text-field v-model="streetNumber" label="Number"></v-text-field>
+      </v-col>
+      <v-col cols="8">
+        <v-text-field v-model="streetName" label="Street"></v-text-field>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="6">
+        <v-text-field v-model="city" label="City"></v-text-field>
+      </v-col>
+      <v-col cols="3">
+        <v-text-field v-model="state" label="State"></v-text-field>
+      </v-col>
+      <v-col cols="3">
+        <v-text-field v-model="postcode" label="Post code"></v-text-field>
+      </v-col>
+    </v-row>
+    <v-text-field v-model="formatted" label="Building name"></v-text-field>
+  </v-card>
 </template>
 
 <script>
@@ -32,10 +30,6 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'PageCard',
-  // props: ['current'],
-  data: () => ({
-    //
-  }),
   computed: {
     ...mapState(['pages', 'currentLand']),
     ...mapState('content', ['address']),

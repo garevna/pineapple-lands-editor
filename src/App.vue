@@ -8,10 +8,11 @@
 
     <!-- ============================= BOTTOM NAV ============================= -->
     <BottomNavigation>
-      <div slot='navigation'>
+      <!-- <div slot='navigation'>
         <slot name="nav" />
-      </div>
+      </div> -->
     </BottomNavigation>
+    <popup />
   </v-app>
 </template>
 
@@ -40,8 +41,8 @@ html, body {
 }
 
 .theme--light.v-icon.v-icon {
-  font-size: 20px!important;
-  color: #09b!important;
+  font-size: 20px;
+  color: #09b;
 }
 
 .theme--light.v-system-bar .v-icon {
@@ -79,9 +80,6 @@ h4 {
 }
 h5 {
   font-size: 20px;
-}
-h4, h5 {
-  font-weight: 600;
 }
 
 p {
@@ -182,8 +180,10 @@ import 'pineapple-main-nav-bar/dist/pineapple-main-nav-bar.css'
 
 import { mapState, mapGetters, mapActions } from 'vuex'
 
-import BottomNavigation from '@/components/BottomNavigation.vue'
-import MainNavigationDriver from '@/components/MainNavigationDriver.vue'
+const {
+  BottomNavigation,
+  MainNavigationDriver
+} = require('@/components').default
 
 export default {
   name: 'App',

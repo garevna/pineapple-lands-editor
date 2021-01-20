@@ -46,16 +46,18 @@ p {
 
 import { mapState, mapGetters } from 'vuex'
 
-import TopPicture from '@/components/multipage/TopPicture.vue'
-import ChangePicture from '@/components/editor/ChangePicture.vue'
-import SubHeader from '@/components/inputs/SubHeader.vue'
-import Paragraph from '@/components/inputs/Paragraph.vue'
-import Button from '@/components/inputs/Button.vue'
+const {
+  SubHeader,
+  Paragraph,
+  Button
+} = require('@/components/inputs').default
+
+const { ChangePicture } = require('@/components/editor').default
 
 export default {
   name: 'Top',
   components: {
-    TopPicture,
+    TopPicture: () => import('@/components/multipage/TopPicture.vue'),
     ChangePicture,
     SubHeader,
     Paragraph,

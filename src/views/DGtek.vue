@@ -62,18 +62,6 @@
       </section>
       </v-row>
     </v-container>
-    <!-- ============================= BOTTOM NAV ============================= -->
-    <!-- <v-bottom-navigation
-          fixed
-          dark
-          class="buttons"
-          v-if="authorized"
-    >
-      <v-btn @click="savePageContent" v-if="authorized">
-        <span>Save</span>
-        <v-icon>mdi-content-save-edit</v-icon>
-      </v-btn>
-    </v-bottom-navigation> -->
   </v-container>
 </template>
 
@@ -81,14 +69,19 @@
 
 import { mapState, mapActions } from 'vuex'
 
-import AppHeader from '@/components/dgtek/AppHeader.vue'
-import Top from '@/components/dgtek/Top.vue'
-import Aside from '@/components/dgtek/Aside.vue'
-import ContactForm from '@/components/UserContact.vue'
-import Benefits from '@/components/dgtek/Benefits.vue'
-import Testimonials from '@/components/dgtek/Testimonials.vue'
-import FAQ from '@/components/FAQ.vue'
-import Footer from '@/components/dgtek/Footer.vue'
+const {
+  AppHeader,
+  Top,
+  Aside,
+  Benefits,
+  Testimonials,
+  Footer
+} = require('@/components/dgtek').default
+
+const {
+  UserContact: ContactForm,
+  FAQ
+} = require('@/components').default
 
 export default {
   name: 'DGtek',
@@ -108,39 +101,19 @@ export default {
     ready: false
   }),
   computed: {
-    ...mapState(['viewport', 'viewportWidth'])
+    ...mapState(['viewport'])
   },
   methods: {
-    // ...mapActions({
-    //   validateToken: 'VALIDATE_TOKEN',
-    //   saveSuccess: 'SAVE_SUCCESS',
-    //   saveFailure: 'SAVE_FAILURE',
-    //   accessDenied: 'ACCESS_DENIED'
-    // }),
     ...mapActions('content', {
       getContent: 'GET_CONTENT'
     })
-    // ...mapActions('contact', {
-    //   userFormConfig: 'UPDATE_USER_FORM_CONFIGURATION'
-    // }),
-    // async savePageContent () {
-    //   const response = await this.saveContent(this.route)
-    //   const actionName = response === 200 ? 'saveSuccess' : response === 403 || response === 401 ? 'accessDenied' : 'saveFailure'
-    //   this[actionName]()
-    // }
   },
   beforeMount () {
     this.getContent(this.route)
       .then((response) => {
         this.ready = !!response
       })
-  },
-  created () {
-    this.getContent()
   }
-  // mounted () {
-  //   window.addEventListener('resize', this.onResize, { passive: true })
-  // }
 }
 
 </script>

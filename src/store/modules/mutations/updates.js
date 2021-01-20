@@ -1,3 +1,5 @@
+/* UPDATES - for CONTENT module */
+
 export default {
   /* ========================== INTERNET PLANS ========================== */
   UPDATE_INTERNET_PLANS_CONTENT: (state, payload) => Object.assign(state.internetPlans, { [payload.prop]: payload.value }),
@@ -27,13 +29,8 @@ export default {
   },
 
   CLEAR_ALL: (state) => {
-    for (const prop of Object.keys(state)) prop === 'footer' || delete state[prop]
-    // state.browserTabTitle = state.browserTabTitle || 'Pineapple NET'
-    // state.emailSubject = state.emailSubject || 'Pineapple NET'
-    // state.emailText = state.emailText || 'Thank you for your interest in Pineapple NET! A member of our team will be in touch shortly.'
-    // state.mainNavButtons = []
-    // state.mainNavSectors = []
-    // state.footer.text = state.footer.text || 'Leave your inquiry and we\'ll get back to you within 24 hours on business days'
-    // state.footer.title = state.footer.title || 'READY TO GET STARTED?'
+    for (const prop of Object.keys(state)) {
+      prop === 'footer' || delete state[prop]
+    }
   }
 }

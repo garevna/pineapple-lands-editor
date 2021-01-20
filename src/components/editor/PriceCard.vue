@@ -1,5 +1,5 @@
 <template>
-  <v-card class="price-card">
+  <v-card elevation="4" class="pa-4" width="280" height="380">
     <v-img src="@/assets/price-card-image.png" class="price-card-image"></v-img>
 
     <v-card-text class="mt-2 mt-sm-0" align="center" style="position: relative; z-index: 1">
@@ -19,12 +19,12 @@
 
 <style>
 
-.price-card {
+/* .price-card {
   padding: 30px 20px;
   margin: 40px 20px;
   width: 280px;
-  height: 380px;
-}
+  height: 480px;
+} */
 
 p, .question {
   font-size: 16px;
@@ -71,7 +71,7 @@ p {
 
 <script>
 
-import SubHeader from '@/components/inputs/SubHeader.vue'
+const { SubHeader } = require('@/components/inputs').default
 
 export default {
   name: 'PriceCard',

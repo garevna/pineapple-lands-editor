@@ -69,19 +69,6 @@
         </v-carousel-item>
       </v-carousel>
     </v-card>
-    <!-- <v-card-text class="text-center">
-      <v-btn
-          color="buttons"
-          dark
-          rounded
-          width="220"
-          height="48"
-          class="submit-button px-auto mx-auto"
-          @click="$emit('update:page', 'plans')"
-      >
-          {{ content.button }}
-      </v-btn>
-    </v-card-text> -->
   </v-container>
 </template>
 
@@ -109,16 +96,14 @@
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
-import TestimonialsCard from '@/components/TestimonialsCard.vue'
-import SubHeader from '@/components/inputs/SubHeader.vue'
-// import Button from '@/components/inputs/Button.vue'
+const { SubHeader } = require('@/components/inputs').default
 
 export default {
   name: 'Testimonials',
   components: {
-    TestimonialsCard,
+    TestimonialsCard: () => import('@/components/TestimonialsCard.vue'),
     SubHeader
   },
   props: ['page'],
@@ -130,7 +115,6 @@ export default {
     ...mapState('content', {
       content: 'testimonials'
     }),
-    // ...mapState('testimonials', ['testimonials']),
     ...mapState(['viewportWidth']),
     cardWidth () {
       return this.viewportWidth < 600 ? this.viewportWidth - 100 : 376
@@ -143,10 +127,7 @@ export default {
         return this.content.header
       },
       set (val) {
-        this.$store.commit('content/UPDATE_TESTIMONIALS', {
-          prop: 'header',
-          value: val
-        })
+        this.update({ prop: 'header', value: val })
       }
     },
     button: {
@@ -154,10 +135,7 @@ export default {
         return this.content.button
       },
       set (val) {
-        this.$store.commit('content/UPDATE_TESTIMONIALS', {
-          prop: 'button',
-          value: val
-        })
+        this.update({ prop: 'button', value: val })
       }
     },
     goto: {
@@ -165,14 +143,14 @@ export default {
         return this.content.goto
       },
       set (val) {
-        this.$store.commit('content/UPDATE_TESTIMONIALS', {
-          prop: 'goto',
-          value: val
-        })
+        this.update({ prop: 'goto', value: val })
       }
     }
   },
   methods: {
+    ...mapMutations('content', {
+      update: 'UPDATE_TESTIMONIALS'
+    }),
     async getReviews () {
       this.testimonials = (await (await fetch('https://dka.dgtek.net/api/frontend/testimonials')).json()).data
     }

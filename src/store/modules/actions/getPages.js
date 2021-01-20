@@ -1,16 +1,15 @@
-/*    FOR ROOT STORE    */
+/*    LIVE PAGES --- FOR ROOT STORE    */
 
-export default {
-  GET_PAGES: async ({ state, commit }) => {
-    try {
-      const response = await (await fetch(`${state.host}/content/live-pages`)).json()
-      commit('SET_PAGES', response)
-      commit('CLEAR_ERROR')
-      return true
-    } catch (error) {
-      console.warn('ERROR:\n', error)
-      commit('SET_ERROR')
-      return null
-    }
+const getData = require('@/helpers/getData').default
+const { pages } = require('@/configs/host').default
+
+export const GET_PAGES = async ({ state, commit }) => {
+  commit('SET_PROGRESS', true)
+  const response = await getData(pages)
+  if (response.status !== 200) {
+    commit('READ_FAILURE')
+    return
   }
+  commit('SET_PROGRESS', false)
+  commit('SET_PAGES', response.data)
 }

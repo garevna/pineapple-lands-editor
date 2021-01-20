@@ -55,11 +55,11 @@ const routes = [
     name: 'dgtek',
     component: () => import(/* webpackChunkName: "dgtek" */ '@/views/DGtek.vue')
   },
-  {
-    path: '/overall',
-    name: 'overall',
-    component: () => import(/* webpackChunkName: "overall" */ '@/views/LandsOveral.vue')
-  },
+  // {
+  //   path: '/overall',
+  //   name: 'overall',
+  //   component: () => import(/* webpackChunkName: "overall" */ '@/views/LandsOveral.vue')
+  // },
   {
     path: '/testimonials',
     name: 'testimonials',
@@ -76,10 +76,19 @@ const routes = [
     component: () => import(/* webpackChunkName: "live" */ '@/views/Live.vue')
   },
   {
+    path: '/live-pages',
+    name: 'live-pages',
+    component: () => import('@/views/LivePages.vue')
+  },
+  {
     path: '/:route',
     name: 'live-page',
     component: () => import(/* webpackChunkName: "live-page" */ '@/views/LivePage.vue'),
-    props: true
+    props: true,
+    beforeEnter: (to, from, next) => {
+      if (from.name !== 'live-pages') next({ name: 'live-pages' })
+      next()
+    }
   }
 ]
 
