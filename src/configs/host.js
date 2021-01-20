@@ -1,6 +1,6 @@
 export default {
-  // hostname: 'https://api.pineapple.net.au',
-  hostname: 'https://pineapple-net-land.glitch.me',
+  hostname: 'https://api.pineapple.net.au',
+  // hostname: 'https://pineapple-net-land.glitch.me',
   email: 'https://dka.dgtek.net/api/frontend/mail',
   general: 'content/general',
   testimonials: 'testimonials',
