@@ -207,9 +207,19 @@ export default {
       validateToken: 'VALIDATE_TOKEN',
       getGeneralInfo: 'GET_GENERAL_INFO'
     }),
+    ...mapActions('testimonials', {
+      getTestimonials: 'GET_CONTENT'
+    }),
+    ...mapActions('internetPlans', {
+      getPlans: 'GET_DATA'
+    }),
     onResize () {
       this.$store.commit('CHANGE_VIEWPORT')
     }
+  },
+  created () {
+    this.getTestimonials()
+    this.getPlans()
   },
   beforeMount () {
     this.validateToken()
@@ -217,7 +227,6 @@ export default {
     document.title = 'CRM'
   },
   mounted () {
-    this.$store.dispatch('testimonials/GET_CONTENT')
     this.onResize()
     window.addEventListener('resize', this.onResize, { passive: true })
   },

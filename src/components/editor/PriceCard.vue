@@ -89,7 +89,7 @@ export default {
           plan: this.plan,
           index: this.index,
           prop: 'price',
-          value: parseInt(val)
+          value: parseFloat(val)
         })
       }
     },

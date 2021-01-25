@@ -77,10 +77,15 @@
 
 import { mapState } from 'vuex'
 
-import SubHeader from '@/components/inputs/SubHeader.vue'
-import PriceCard from '@/components/plans/PriceCard.vue'
-import SwitchMode from '@/components/plans/SwitchToggle.vue'
-import Button from '@/components/inputs/Button.vue'
+const {
+  SubHeader,
+  Button
+} = require('@/components/inputs').default
+
+const {
+  PriceCard,
+  SwitchToggle: SwitchMode
+} = require('@/components/plans').default
 
 export default {
   name: 'InternetPlans',

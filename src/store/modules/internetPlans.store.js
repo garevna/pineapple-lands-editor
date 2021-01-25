@@ -4,15 +4,15 @@ const { internetPlans } = require('@/configs/host').default
 const state = {
   plans: {
     residential: [
-      { upload: 0, download: 0, price: 0, selected: false },
-      { upload: 0, download: 0, price: 9, selected: false },
-      { upload: 0, download: 0, price: 0, selected: false },
-      { upload: 0, download: 0, price: 0, selected: false }
+      { upload: 0, download: 0, price: 0.0, selected: false },
+      { upload: 0, download: 0, price: 0.0, selected: false },
+      { upload: 0, download: 0, price: 0.0, selected: false },
+      { upload: 0, download: 0, price: 0.0, selected: false }
     ],
     business: [
-      { upload: 0, download: 0, price: 0, selected: false },
-      { upload: 0, download: 0, price: 0, selected: false },
-      { upload: 0, download: 0, price: 0, selected: false }
+      { upload: 0, download: 0, price: 0.0, selected: false },
+      { upload: 0, download: 0, price: 0.0, selected: false },
+      { upload: 0, download: 0, price: 0.0, selected: false }
     ]
   }
 }
@@ -42,7 +42,7 @@ const actions = {
       return
     }
     commit('SET_PROGRESS', false, { root: true })
-    commit('SET_PLANS', response.data)
+    commit('SET_PLANS', response.data.plans)
   },
 
   async SAVE_PLANS ({ state, getters, commit }) {
@@ -50,7 +50,7 @@ const actions = {
       commit('ACCESS_DENIED', null, { root: true })
       return
     }
-    const response = await postData(internetPlans, state.plans)
+    const response = await postData(internetPlans, state)
     commit(response.status === 200 ? 'SAVE_SUCCESS' : 'SAVE_FAILURE', null, { root: true })
   },
 

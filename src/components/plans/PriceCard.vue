@@ -11,20 +11,6 @@
       <p>{{ item.upload }} Mbps Upload</p>
       <p>Unlimited Data</p>
     </v-card-text>
-
-    <!-- <v-card-actions class="text-center my-4 mb-md-8">
-      <v-btn
-          color="buttons"
-          dark
-          rounded
-          width="100%"
-          height="40"
-          class="px-auto mx-auto mb-8 mb-md-12"
-          @click="$emit('update:contact', true)"
-      >
-        Contact Us
-      </v-btn>
-    </v-card-actions> -->
   </v-card>
 </template>
 

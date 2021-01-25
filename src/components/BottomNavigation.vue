@@ -121,8 +121,7 @@ export default {
       savePages: 'SAVE_PAGES'
     }),
     ...mapActions('content', {
-      saveContent: 'SAVE_CONTENT',
-      addNewPage: 'ADD_NEW_PAGE'
+      saveContent: 'SAVE_CONTENT'
     }),
     ...mapActions('testimonials', {
       saveTestimonials: 'SAVE_CONTENT'
@@ -136,12 +135,6 @@ export default {
       this.$store.commit('SET_CURRENT_LAND', `live-${this.pages[this.page - 1].id}`)
       this.$router.push({ path: this.currentLand })
     },
-
-    // async addNewPage () {
-    //   const id = Date.now().toString()
-    //   this.$store.commit('SET_CURRENT_LAND', `live-${id}`)
-    //   this.$router.push({ path: `/live-${id}` })
-    // },
 
     async savePageContent () {
       return await this.saveContent(this.currentLand)
