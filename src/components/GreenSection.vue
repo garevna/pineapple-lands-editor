@@ -2,35 +2,24 @@
   <v-container fluid class="deepgreen py-12 mt-12">
     <v-card flat class="transparent mx-auto" max-width="600">
       <v-card-text class="text-center" width="100%">
-        <h2>{{ greenSection.header }}</h2>
-        <p>{{ greenSection.text }}</p>
+        <h2>{{ greenSection && greenSection.header }}</h2>
+        <p>{{ greenSection && greenSection.text }}</p>
       </v-card-text>
       <v-card-text class="text-center">
         <p>
           <span>Pineapple NET is powered by </span>
           <v-img
-                src="@/assets/icons/dgtek-logo-white.svg"
-                class="logo"
-                width="50"
-                contain
+            src="@/assets/icons/dgtek-logo-white.svg"
+            class="logo"
+            width="50"
+            contain
+            @click="$openExternalLink('https://dgtek.net')"
           ></v-img>
         </p>
       </v-card-text>
     </v-card>
   </v-container>
 </template>
-
-<style scoped>
-h2, p {
-  color: #fff;
-  width: 100%;
-}
-.logo {
-  display: inline-block;
-  vertical-align: middle;
-  margin-left: 16px;
-}
-</style>
 
 <script>
 
@@ -44,3 +33,15 @@ export default {
 
 }
 </script>
+
+<style scoped>
+h2, p {
+  color: #fff;
+  width: 100%;
+}
+.logo {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 16px;
+}
+</style>

@@ -1,32 +1,42 @@
-# Pineapple lands editor
+# Pineapple lands content editor
 
 #### Dashboard for landing pages of pineapple.net.au
 
 [**Release**](https://pa.pineapple.net.au)
 
+[**Demo**](https://garevna.github.io/pineapple-lands-editor)
+
+>> for demo auth:
+
+>> login: **demo**
+
+>> password: **demo**
+
+_______________________________________________
+
 ## Project setup
 ```
-npm install
+yarn install
+```
+
+### Build web-worker
+```
+yarn worker
 ```
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+yarn serve
 ```
 
 ### Compiles and minifies for production
 ```
-npm run build
-```
-
-### Run your unit tests
-```
-npm run test:unit
+yarn build
 ```
 
 ### Lints and fixes files
 ```
-npm run lint
+yarn lint
 ```
 
 ### Customize configuration

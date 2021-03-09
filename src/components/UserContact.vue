@@ -16,13 +16,13 @@
     <v-card-text class="mx-0 px-0" width="100%" v-if="fields">
       <div v-for="(field, index) in fields" :key="index">
             <InputWithValidation
-                    v-if="field.type === 'input-with-validation'"
+                    v-if="field.type === 'input-with-validation' || field.type === 'phone-number'"
                     :fieldIndex="index"
               />
-              <InputPhoneNumber
+              <!-- <InputPhoneNumber
                     v-if="field.type === 'phone-number'"
                     :fieldIndex="index"
-              />
+              /> -->
               <Selector
                     v-if="field.type === 'selector'"
                     :fieldIndex="index"
@@ -105,24 +105,20 @@ h4 {
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
-const {
+import {
   Selector,
   Combo,
   InputWithValidation,
-  InputPhoneNumber,
   DateInput,
   TimeInput,
   InputMessage
-} = require('@/components/contact').default
+} from '@/components/contact'
 
-const { UserFormCustomization } = require('@/components/editor').default
+import { UserFormCustomization } from '@/components/editor'
 
-const {
-  SubHeader5,
-  Button
-} = require('@/components/inputs').default
+import { SubHeader5, Button } from '@/components/inputs'
 
 export default {
   name: 'UserContact',
@@ -130,7 +126,6 @@ export default {
     UserFormCustomization,
     SubHeader5,
     Button,
-    InputPhoneNumber,
     InputMessage,
     InputWithValidation,
     Selector,
@@ -142,7 +137,7 @@ export default {
     return {
       dialog: false,
       clicked: false,
-      fields: this.$store.state.contact.contactFormFields
+      fields: null
     }
   },
   computed: {
@@ -153,10 +148,7 @@ export default {
         return this.userForm.title
       },
       set (val) {
-        this.$store.commit('content/UPDATE_USER_FORM', {
-          prop: 'title',
-          value: val
-        })
+        this.update({ prop: 'title', value: val })
       }
     },
     button: {
@@ -164,10 +156,7 @@ export default {
         return this.userForm.button
       },
       set (val) {
-        this.$store.commit('content/UPDATE_USER_FORM', {
-          prop: 'button',
-          value: val
-        })
+        this.update({ prop: 'button', value: val })
       }
     }
   },
@@ -176,17 +165,20 @@ export default {
       deep: true,
       immediate: true,
       handler (val) {
-        this.fields = JSON.parse(JSON.stringify(this.$store.state.contact.contactFormFields))
+        this.fields = JSON.parse(JSON.stringify(val))
       }
     }
   },
   methods: {
+    ...mapMutations('content', {
+      update: 'UPDATE_USER_FORM'
+    }),
     initFields () {
-      this.$store.commit('contact/CLEAR_ALL_FIELDS')
+      this.fields = JSON.parse(JSON.stringify(this.contactFormFields))
     }
   },
   mounted () {
-    this.fields = JSON.parse(JSON.stringify(this.$store.state.contact.contactFormFields))
+    this.fields = JSON.parse(JSON.stringify(this.contactFormFields))
   }
 }
 

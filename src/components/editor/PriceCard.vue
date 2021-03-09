@@ -71,7 +71,9 @@ p {
 
 <script>
 
-const { SubHeader } = require('@/components/inputs').default
+import { mapMutations } from 'vuex'
+
+import { SubHeader } from '@/components/inputs'
 
 export default {
   name: 'PriceCard',
@@ -85,12 +87,16 @@ export default {
         return this.item.price
       },
       set (val) {
-        this.$store.commit('internetPlans/CHANGE_PLAN', {
-          plan: this.plan,
-          index: this.index,
+        this.update({
           prop: 'price',
           value: parseFloat(val)
         })
+        // this.$store.commit('internetPlans/CHANGE_PLAN', {
+        //   plan: this.plan,
+        //   index: this.index,
+        //   prop: 'price',
+        //   value: parseFloat(val)
+        // })
       }
     },
     download: {
@@ -98,12 +104,16 @@ export default {
         return this.item.download
       },
       set (val) {
-        this.$store.commit('internetPlans/CHANGE_PLAN', {
-          plan: this.plan,
-          index: this.index,
+        this.update({
           prop: 'download',
           value: parseInt(val)
         })
+        // this.$store.commit('internetPlans/CHANGE_PLAN', {
+        //   plan: this.plan,
+        //   index: this.index,
+        //   prop: 'download',
+        //   value: parseInt(val)
+        // })
       }
     },
     upload: {
@@ -111,13 +121,30 @@ export default {
         return this.item.upload
       },
       set (val) {
-        this.$store.commit('internetPlans/CHANGE_PLAN', {
-          plan: this.plan,
-          index: this.index,
+        this.update({
           prop: 'upload',
           value: parseInt(val)
         })
+        // this.$store.commit('internetPlans/CHANGE_PLAN', {
+        //   plan: this.plan,
+        //   index: this.index,
+        //   prop: 'upload',
+        //   value: parseInt(val)
+        // })
       }
+    }
+  },
+  methods: {
+    ...mapMutations('internetPlans', {
+      updatePlan: 'CHANGE_PLAN'
+    }),
+    update (prop, value) {
+      this.updatePlan({
+        plan: this.plan,
+        index: this.index,
+        prop,
+        value
+      })
     }
   }
 }

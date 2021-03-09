@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="homefone" v-if="testimonials">
+  <v-container fluid class="homefone" v-if="testimonialsReady">
     <v-card flat class="transparent mx-auto mt-12 mb-0 text-center" max-width="1360">
       <v-card-title class="text-center" max-width="940">
         <SubHeader :value.sync="header" class="mx-auto" />
@@ -72,7 +72,13 @@
       </v-carousel>
     </v-card>
     <v-card-text class="text-center">
-      <Button :value.sync="content.button" :goto.sync="goto" class="mx-auto" style="max-width: 480px" />
+      <Button
+        v-if="content.button"
+        :value.sync="content.button"
+        :goto.sync="goto"
+        class="mx-auto"
+        style="max-width: 480px"
+      />
     </v-card-text>
   </v-container>
 </template>
@@ -91,12 +97,9 @@
 
 <script>
 
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
-const {
-  SubHeader,
-  Button
-} = require('@/components/inputs').default
+import { SubHeader, Button } from '@/components/inputs'
 
 export default {
   name: 'Testimonials',
@@ -115,10 +118,10 @@ export default {
       content: 'testimonials'
     }),
     ...mapState('testimonials', ['testimonials']),
-    ...mapState(['viewportWidth']),
+    ...mapState(['viewportWidth', 'testimonialsReady']),
     header: {
       get () {
-        return this.content.header
+        return this.content?.header || 'Loading...'
       },
       set (val) {
         this.update('header', val)
@@ -126,7 +129,7 @@ export default {
     },
     button: {
       get () {
-        return this.content.button
+        return this.content?.button || 'Loading...'
       },
       set (val) {
         this.update('button', val)
@@ -134,7 +137,7 @@ export default {
     },
     goto: {
       get () {
-        return this.content.goto
+        return this.content?.goto || null
       },
       set (val) {
         this.update('goto', val)
@@ -145,15 +148,15 @@ export default {
     ...mapMutations('content', {
       updateTestimonials: 'UPDATE_TESTIMONIALS'
     }),
-    ...mapActions('testimonials', {
-      getContent: 'GET_CONTENT'
-    }),
+    // ...mapActions('testimonials', {
+    //   getContent: 'GET_CONTENT'
+    // }),
     update (prop, value) {
       this.updateTestimonials({ prop, value })
     }
   },
   mounted () {
-    this.getContent()
+    // this.getContent()
   }
 }
 

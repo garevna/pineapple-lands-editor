@@ -17,21 +17,27 @@
 </style>
 
 <script>
+
+import { mapState, mapMutations } from 'vuex'
+
 export default {
   name: 'BlackText',
   props: ['index'],
   computed: {
+    ...mapState('content', ['info']),
     inputValue: {
       get () {
-        return this.$store.state.content.info.offer[this.index].blackText
+        return this.info.offer[this.index].blackText
       },
-      set (val) {
-        this.$store.commit('content/UPDATE_OFFER_BLACK_TEXT', {
-          num: this.index,
-          value: val
-        })
+      set (value) {
+        this.update({ num: this.index, value })
       }
     }
+  },
+  methods: {
+    ...mapMutations('content', {
+      update: 'UPDATE_OFFER_BLACK_TEXT'
+    })
   }
 }
 </script>

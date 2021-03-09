@@ -4,7 +4,7 @@
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'live-page',
@@ -13,7 +13,16 @@ export default {
   },
   props: ['route'],
   computed: {
-    ...mapState(['currentLand'])
+    ...mapState(['currentLand', 'pageContentReady'])
+  },
+  methods: {
+    ...mapMutations({
+      setReady: 'SET_PAGE_CONTENT_READY'
+    })
+  },
+  beforeRouteLeave (to, from, next) {
+    this.setReady(false)
+    next()
   }
 }
 

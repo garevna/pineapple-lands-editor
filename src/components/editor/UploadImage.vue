@@ -1,5 +1,6 @@
 <template>
-  <v-file-input dark
+  <v-file-input
+    dark
     :label="label"
     prepend-icon="mdi-camera"
     @change="upload"

@@ -1,8 +1,9 @@
 <template>
   <v-card
-          flat
-          width="100%"
-          class="transparent my-10"
+    v-if="internetPlansReady"
+    flat
+    width="100%"
+    class="transparent my-10"
   >
     <v-card-title>
       <SubHeader :value.sync=header />
@@ -14,15 +15,14 @@
 
     <v-slide-x-transition leave-absolute>
       <v-card
-              flat
-              class="d-flex flex-wrap justify-center transparent"
+        flat
+        class="d-flex flex-wrap justify-center transparent"
       >
         <PriceCard class="d-none d-md-block"
-                  v-for="(item, index) in plans[plan]"
-                  :key="index"
-                  :item="item"
-                  :index="index"
-                  :contact.sync="contact"
+          v-for="(item, index) in plans[plan]"
+          :key="index"
+          :item="item"
+          :index="index"
         />
 
       <v-carousel
@@ -46,10 +46,9 @@
                 justify="center"
               >
               <PriceCard
-                        :mode="plan"
-                        :item="item"
-                        :index="index"
-                        :contact.sync="contact"
+                :mode="plan"
+                :item="item"
+                :index="index"
               />
               </v-row>
             </v-sheet>
@@ -58,7 +57,13 @@
       </v-card>
     </v-slide-x-transition>
     <v-card-text class="text-center">
-      <Button :value.sync="button" :goto.sync="goto" class="mx-auto" style="max-width: 480px" />
+      <Button
+        v-if="button"
+        :value.sync="button"
+        :goto.sync="goto"
+        class="mx-auto"
+        style="max-width: 480px"
+      />
     </v-card-text>
   </v-card>
 </template>
@@ -75,54 +80,45 @@
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
-const {
-  SubHeader,
-  Button
-} = require('@/components/inputs').default
+import { SubHeader, Button } from '@/components/inputs'
 
-const {
-  PriceCard,
-  SwitchToggle: SwitchMode
-} = require('@/components/plans').default
+import { PriceCard, SwitchToggle } from '@/components/plans'
 
 export default {
   name: 'InternetPlans',
   components: {
     SubHeader,
     PriceCard,
-    SwitchMode,
+    SwitchMode: SwitchToggle,
     Button
   },
   props: ['page'],
   data () {
     return {
-      contact: false,
-      ready: false
+      contact: false
     }
   },
   computed: {
-    ...mapState(['viewportWidth', 'plan']),
+    ...mapState(['viewportWidth', 'plan', 'internetPlansReady']),
     ...mapState('internetPlans', ['plans']),
     ...mapState('content', ['internetPlans']),
     header: {
       get () {
         return this.internetPlans ? this.internetPlans.header : 'FIBRE INTERNET PLANS'
       },
-      set (val) {
-        this.$store.commit('content/UPDATE_INTERNET_PLANS', { prop: 'header', value: val })
+      set (value) {
+        this.update({ prop: 'header', value })
       }
     },
     button: {
       get () {
-        return this.internetPlans ? this.internetPlans.button || 'Contact Us' : 'Contact Us'
+        // return this.internetPlans ? this.internetPlans.button || 'Contact Us' : 'Contact Us'
+        return this.internetPlans ? this.internetPlans.button : null
       },
       set (value) {
-        this.$store.commit('content/UPDATE_INTERNET_PLANS', {
-          prop: 'button',
-          value
-        })
+        this.update({ prop: 'button', value })
       }
     },
     goto: {
@@ -130,22 +126,17 @@ export default {
         return this.internetPlans ? this.internetPlans.goto || '#contact' : '#contact'
       },
       set (value) {
-        this.$store.commit('content/UPDATE_INTERNET_PLANS', {
-          prop: 'goto',
-          value
-        })
+        this.update({ prop: 'goto', value })
       }
     },
     carouselHeight () {
       return this.viewportWidth < 960 ? this.viewportWidth < 600 ? 420 : 480 : 420
     }
   },
-  watch: {
-    contact (val) {
-      if (!val) return
-      this.$emit('update:page', '#footer')
-      this.contact = false
-    }
+  methods: {
+    ...mapMutations('content', {
+      update: 'UPDATE_INTERNET_PLANS'
+    })
   }
 }
 </script>

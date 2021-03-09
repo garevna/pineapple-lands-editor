@@ -80,7 +80,7 @@
 
 import { mapState } from 'vuex'
 
-const { ListOfLands } = require('@/components/editor').default
+import { ListOfLands } from '@/components/editor'
 const { routesNames } = require('@/configs/main-nav-bar-titles')
 
 export default {

@@ -10,7 +10,7 @@ import SubHeader5 from './SubHeader5.vue'
 import SubSubHeader from './SubSubHeader.vue'
 import TopHeader from './TopHeader.vue'
 
-export default {
+export {
   AsideColoredText,
   BlackText,
   Button,

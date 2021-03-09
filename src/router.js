@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-// import Home from '../views/Home.vue'
+
+const requestsNames = ['__sendLandRequest', '__sendLiveRequest', '__sendListRequest', '__sendPageRequest']
+
+Object.assign(VueRouter.prototype, ...requestsNames.map(name => ({ [name]: Vue.prototype[name] })))
 
 Vue.use(VueRouter)
 
@@ -13,47 +16,83 @@ const routes = [
   {
     path: '/fast-fibre-internet',
     name: 'fast-fibre-internet',
-    component: () => import(/* webpackChunkName: "first" */ '@/views/First.vue')
+    component: () => import(/* webpackChunkName: "fast-fibre-internet" */ '@/views/fast-fibre-internet.vue'),
+    beforeEnter: (to, from, next) => {
+      router.__sendLandRequest('fast-fibre-internet')
+      next()
+    }
   },
   {
     path: '/connect-melbourne-cbd',
     name: 'connect-melbourne-cbd',
-    component: () => import(/* webpackChunkName: "second" */ '@/views/Second.vue')
+    component: () => import(/* webpackChunkName: "connect-melbourne-cbd" */ '@/views/connect-melbourne-cbd.vue'),
+    beforeEnter: (to, from, next) => {
+      router.__sendLandRequest('connect-melbourne-cbd')
+      next()
+    }
   },
   {
     path: '/conservatory',
     name: 'conservatory',
-    component: () => import(/* webpackChunkName: "second-1" */ '@/components/2/Page-1.vue')
+    component: () => import(/* webpackChunkName: "conservatory" */ '@/views/Conservatory.vue'),
+    beforeEnter: (to, from, next) => {
+      router.__sendLandRequest('conservatory')
+      next()
+    }
   },
   {
     path: '/qv1',
     name: 'qv1',
-    component: () => import(/* webpackChunkName: "second-2" */ '@/components/2/Page-2.vue')
+    component: () => import(/* webpackChunkName: "qv1" */ '@/views/QV1.vue'),
+    beforeEnter: (to, from, next) => {
+      router.__sendLandRequest('qv1')
+      next()
+    }
   },
   {
     path: '/aurora',
     name: 'aurora',
-    component: () => import(/* webpackChunkName: "second-3" */ '@/components/2/Page-3.vue')
+    component: () => import(/* webpackChunkName: "aurora" */ '@/views/Aurora.vue'),
+    beforeEnter: (to, from, next) => {
+      router.__sendLandRequest('aurora')
+      next()
+    }
   },
   {
     path: '/3months',
     name: '3months',
-    component: () => import(/* webpackChunkName: "third" */ '@/views/Third.vue')
+    component: () => import(/* webpackChunkName: "3months" */ '@/views/3months.vue'),
+    beforeEnter: (to, from, next) => {
+      router.__sendLandRequest('3months')
+      next()
+    }
   },
   {
     path: '/refer-a-friend',
     name: 'refer-a-friend',
-    component: () => import(/* webpackChunkName: "fourth" */ '@/views/Fourth.vue')
+    component: () => import(/* webpackChunkName: "refer-a-friend" */ '@/views/refer-a-friend.vue'),
+    beforeEnter: (to, from, next) => {
+      router.__sendLandRequest('refer-a-friend')
+      next()
+    }
   },
   {
     path: '/nbn',
     name: 'nbn',
-    component: () => import(/* webpackChunkName: "fifth" */ '@/views/Fifth.vue')
+    component: () => import(/* webpackChunkName: "nbn" */ '@/views/NBN.vue'),
+    beforeEnter: (to, from, next) => {
+      router.__sendLandRequest('nbn')
+      next()
+    }
   },
   {
-    path: '/dgtek',
-    name: 'dgtek',
-    component: () => import(/* webpackChunkName: "dgtek" */ '@/views/DGtek.vue')
+    path: '/dgtek-free-upgrade',
+    name: 'dgtek-free-upgrade',
+    component: () => import(/* webpackChunkName: "dgtek-free-upgrade" */ '@/views/dgtek-free-upgrade.vue'),
+    beforeEnter: (to, from, next) => {
+      router.__sendLandRequest('dgtek-free-upgrade')
+      next()
+    }
   },
   // {
   //   path: '/overall',
@@ -73,12 +112,22 @@ const routes = [
   {
     path: '/live',
     name: 'live',
-    component: () => import(/* webpackChunkName: "live" */ '@/views/Live.vue')
+    component: () => import(/* webpackChunkName: "live" */ '@/views/Live.vue'),
+    beforeEnter: (to, from, next) => {
+      // router.__liveWorker.postMessage({ action: 'get', store: 'live', key: 'home' })
+      router.__sendLiveRequest()
+      next()
+    }
   },
   {
     path: '/live-pages',
     name: 'live-pages',
-    component: () => import('@/views/LivePages.vue')
+    component: () => import(/* webpackChunkName: "live-list" */ '@/views/LivePages.vue'),
+    beforeEnter: (to, from, next) => {
+      // router.__liveWorker.postMessage({ action: 'get', store: 'live', key: 'list' })
+      router.__sendListRequest()
+      next()
+    }
   },
   {
     path: '/:route',
@@ -87,6 +136,8 @@ const routes = [
     props: true,
     beforeEnter: (to, from, next) => {
       if (from.name !== 'live-pages') next({ name: 'live-pages' })
+      // router.__liveWorker.postMessage({ action: 'get', store: 'live', key: to.path.slice(6) })
+      router.__sendPageRequest(to.path.slice(6))
       next()
     }
   }
@@ -94,6 +145,7 @@ const routes = [
 
 const router = new VueRouter({
   mode: 'history',
+  Vue: Vue,
   base: process.env.BASE_URL,
   routes
 })

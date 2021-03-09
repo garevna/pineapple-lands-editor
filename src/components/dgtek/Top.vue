@@ -53,13 +53,10 @@ p {
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
-const { ChangePicture } = require('@/components/editor').default
-const {
-  TopHeader,
-  Paragraph
-} = require('@/components/inputs').default
+import { ChangePicture } from '@/components/editor'
+import { TopHeader, Paragraph } from '@/components/inputs'
 
 export default {
   name: 'Top',
@@ -71,6 +68,7 @@ export default {
   props: ['page'],
   data () {
     return {
+      link: '',
       imageSrc: '',
       clicked: false
     }
@@ -81,43 +79,48 @@ export default {
       get () {
         return this.top ? this.top.header : ''
       },
-      set (val) {
-        this.$store.commit('content/UPDATE_TOP', { prop: 'header', value: val })
+      set (value) {
+        this.update({ prop: 'header', value })
       }
     },
     topText: {
       get () {
         return this.top ? this.top.text : ''
       },
-      set (val) {
-        this.$store.commit('content/UPDATE_TOP', { prop: 'text', value: val })
+      set (value) {
+        this.update({ prop: 'text', value })
       }
     },
     topButton: {
       get () {
         return this.top ? this.top.button : ''
       },
-      set (val) {
-        this.$store.commit('content/UPDATE_TOP', { prop: 'button', value: val })
+      set (value) {
+        this.update({ prop: 'button', value })
       }
     },
     topButtonGoto: {
       get () {
         return this.top ? this.top.goto : ''
       },
-      set (val) {
-        this.$store.commit('content/UPDATE_TOP', { prop: 'goto', value: val })
+      set (value) {
+        this.update({ prop: 'goto', value })
       }
     }
   },
   watch: {
-    imageSrc (val) {
-      this.$store.commit('content/UPDATE_TOP', { prop: 'pictureURL', value: val })
+    imageSrc (value) {
+      this.update({ prop: 'pictureURL', value })
     },
-    clicked (val) {
-      if (!val) return
+    clicked (value) {
+      if (!value) return
       this.clicked = false
     }
+  },
+  methods: {
+    ...mapMutations('content', {
+      update: 'UPDATE_TOP'
+    })
   }
 }
 </script>

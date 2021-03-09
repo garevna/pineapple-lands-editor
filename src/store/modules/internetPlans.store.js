@@ -1,5 +1,5 @@
-const { getData, postData } = require('@/helpers').default
-const { internetPlans } = require('@/configs/host').default
+// const { getData, postData } = require('@/helpers').default
+// const { internetPlans } = require('@/configs/host').default
 
 const state = {
   plans: {
@@ -19,41 +19,22 @@ const state = {
 
 const getters = {
   plan: (state, getters, rootState) => rootState.plan,
-  tarif: (state, getters) => state.plans[getters.plan].find(item => item.selected),
+  tarif: (state, getters) => state.plans && getters.plan && state.plans[getters.plan] ? state.plans[getters.plan].find(item => item.selected) : null,
   authorized: (state, getters, rootState) => rootState.authorized
 }
 
 const mutations = {
-  SET_PLANS (state, plans) {
+  SET_PLANS (state, payload) {
+    const { plans } = payload
     state.plans = plans
   },
   CHANGE_PLAN (state, payload) {
-    state.plans[payload.plan][payload.index][payload.prop] = payload.value
+    const { prop, value } = payload.prop
+    state.plans[payload.plan][payload.index][prop] = value
   }
 }
 
 const actions = {
-
-  async GET_DATA ({ state, getters, commit }) {
-    commit('SET_PROGRESS', true, { root: true })
-    const response = await getData(internetPlans)
-    if (response.status !== 200) {
-      commit('READ_FAILURE', null, { root: true })
-      return
-    }
-    commit('SET_PROGRESS', false, { root: true })
-    commit('SET_PLANS', response.data.plans)
-  },
-
-  async SAVE_PLANS ({ state, getters, commit }) {
-    if (!getters.authorized) {
-      commit('ACCESS_DENIED', null, { root: true })
-      return
-    }
-    const response = await postData(internetPlans, state)
-    commit(response.status === 200 ? 'SAVE_SUCCESS' : 'SAVE_FAILURE', null, { root: true })
-  },
-
   SELECT_PLAN ({ commit }, payload) {
     commit('CHANGE_PLAN', payload, { root: true })
   },

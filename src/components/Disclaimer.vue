@@ -29,8 +29,7 @@
 
 import { mapState } from 'vuex'
 
-import SubHeader from '@/components/inputs/SubHeader.vue'
-import Paragraph from '@/components/inputs/Paragraph.vue'
+import { SubHeader, Paragraph } from '@/components/inputs'
 
 export default {
   name: 'Aside',

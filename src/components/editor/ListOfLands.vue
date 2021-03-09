@@ -68,7 +68,7 @@
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'ListOfLands',
@@ -86,9 +86,13 @@ export default {
     })
   },
   methods: {
+    ...mapMutations({
+      setReady: 'SET_PAGE_CONTENT_READY'
+    }),
     clickHandler (item) {
-      if (this.nav) {
-        this.$route.name === item.route || this.$router.push({ name: item.route })
+      if (this.nav && this.$route.name !== item.route) {
+        this.setReady(false)
+        this.$router.push({ name: item.route })
       } else {
         this.$emit('update:route', item)
       }

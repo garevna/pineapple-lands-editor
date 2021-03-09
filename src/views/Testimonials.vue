@@ -1,15 +1,15 @@
 <template>
-  <v-container fluid class="homefone pt-12" v-if="testimonials">
+  <v-container fluid class="homefone pt-12" v-if="testimonialsReady">
     <v-card flat class="transparent mx-auto mt-0 mb-12 text-center" max-width="1440">
       <v-row justify="center">
         <v-col
                 cols="12"
                 md="6"
                 lg="4"
-                v-for="(testimonial, index) in testimonials"
+                v-for="(review, index) in testimonials"
                 :key="index"
         >
-          <TestimonialsCard :index="index" :content="testimonial" :removed.sync="removed" />
+          <TestimonialsCard :index="index" :content="review" :removed.sync="removed" />
         </v-col>
       </v-row>
       <v-row justify="center">
@@ -52,9 +52,9 @@
 
 <script>
 
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
-const { TestimonialsCard } = require('@/components/editor').default
+import { TestimonialsCard } from '@/components/editor'
 
 export default {
   name: 'Testimonials',
@@ -64,13 +64,11 @@ export default {
   props: ['page'],
   data: () => ({
     model: 0,
-    testimonials: [],
     removed: false
   }),
   computed: {
-    ...mapState('testimonials', {
-      reviews: 'testimonials'
-    })
+    ...mapState(['testimonialsReady']),
+    ...mapState('testimonials', ['testimonials'])
   },
   watch: {
     removed (val) {
@@ -78,25 +76,11 @@ export default {
       this.$store.commit('testimonials/REMOVE_ITEM', val)
       this.testimonials = this.$store.state.testimonials.testimonials
       this.removed = null
-    },
-    testimonials: {
-      deep: true,
-      handler () {
-        this.testimonials = this.$store.state.testimonials.testimonials
-      }
     }
   },
   methods: {
-    ...mapActions('testimonials', {
-      getTestimonials: 'GET_CONTENT'
-    }),
-    addReview () {
-      this.$store.commit('testimonials/ADD_ITEM')
-    }
-  },
-  mounted () {
-    this.getTestimonials().then(() => {
-      this.testimonials = this.reviews
+    ...mapMutations('testimonials', {
+      addReview: 'ADD_ITEM'
     })
   }
 }

@@ -23,31 +23,6 @@
       <v-card flat class="pa-4" >
         <v-expansion-panels>
           <LandConfigCommonInfo />
-          <!-- <v-expansion-panel v-if="$route.name !=='live-page'">
-            <v-expansion-panel-header>
-              <h5>{{ header }}</h5>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-              <v-text-field
-                      v-if="tabTitle"
-                      label="Browser tab title"
-                      outlined
-                      v-model="tabTitle"
-              ></v-text-field>
-              <v-text-field
-                      v-if="mailSubject"
-                      label="Email subject"
-                      outlined
-                      v-model="mailSubject"
-              ></v-text-field>
-              <v-text-field
-                      v-if="mailText"
-                      label="Email text for user"
-                      outlined
-                      v-model="mailText"
-              ></v-text-field>
-            </v-expansion-panel-content>
-          </v-expansion-panel> -->
           <LandConfigMenu />
         </v-expansion-panels>
       </v-card>

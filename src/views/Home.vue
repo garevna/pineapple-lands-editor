@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid v-if="generalInfoReady">
     <v-card class="mx-auto pa-6" max-width="600">
       <h2 style="color: #09b">General Info About Pineapple NET</h2>
       <v-card-text>
@@ -39,9 +39,9 @@
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
-const { Paragraph } = require('@/components/inputs').default
+import { Paragraph } from '@/components/inputs'
 
 export default {
   name: 'Home',
@@ -49,13 +49,13 @@ export default {
     Paragraph
   },
   computed: {
-    ...mapState(['authorized', 'generalInfoEndpoint', 'officeAddress', 'officePhone', 'officeEmail', 'officeABN', 'linkedIn', 'faceBook']),
+    ...mapState(['authorized', 'officeAddress', 'officePhone', 'officeEmail', 'officeABN', 'linkedIn', 'faceBook', 'generalInfoReady']),
     address: {
       get () {
         return this.officeAddress
       },
       set (val) {
-        this.$store.commit('UPDATE_GENERAL_INFO', { prop: 'officeAddress', value: val })
+        this.update({ officeAddress: val })
       }
     },
     phone: {
@@ -63,7 +63,7 @@ export default {
         return this.officePhone
       },
       set (val) {
-        this.$store.commit('UPDATE_GENERAL_INFO', { prop: 'officePhone', value: val })
+        this.update({ officePhone: val })
       }
     },
     email: {
@@ -71,7 +71,7 @@ export default {
         return this.officeEmail
       },
       set (val) {
-        this.$store.commit('UPDATE_GENERAL_INFO', { prop: 'officeEmail', value: val })
+        this.update({ officeEmail: val })
       }
     },
     abn: {
@@ -79,7 +79,7 @@ export default {
         return this.officeABN
       },
       set (val) {
-        this.$store.commit('UPDATE_GENERAL_INFO', { prop: 'officeABN', value: val })
+        this.update({ officeABN: val })
       }
     },
     linkedin: {
@@ -87,7 +87,7 @@ export default {
         return this.linkedIn
       },
       set (val) {
-        this.$store.commit('UPDATE_GENERAL_INFO', { prop: 'linkedIn', value: val })
+        this.update({ linkedIn: val })
       }
     },
     fb: {
@@ -95,9 +95,14 @@ export default {
         return this.faceBook
       },
       set (val) {
-        this.$store.commit('UPDATE_GENERAL_INFO', { prop: 'faceBook', value: val })
+        this.update({ faceBook: val })
       }
     }
+  },
+  methods: {
+    ...mapMutations({
+      update: 'UPDATE_GENERAL_INFO'
+    })
   }
 }
 </script>

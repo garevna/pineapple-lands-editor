@@ -1,8 +1,9 @@
 <template>
   <v-card
-        flat
-        class="aside-card transparent mx-auto my-12"
-        width="480"
+    v-if="info"
+    flat
+    class="aside-card transparent mx-auto my-12"
+    width="480"
   >
     <v-card flat class="transparent">
       <v-card-title>
@@ -12,9 +13,9 @@
         <Paragraph :value.sync="text" />
       </v-card-text>
       <v-card
-            flat class="ml-4"
-            v-for="(item, index) in offer"
-            :key="index"
+        flat class="transparent ml-4"
+        v-for="(item, index) of offer"
+        :key="id(index)"
       >
         <v-btn
             absolute
@@ -27,8 +28,7 @@
             width="28"
             height="28"
             style="margin-left: -40px; margin-top: 48px"
-            @click="$store.commit('content/REMOVE_OFFER', index)"
-            v-if="info.offer.length > 0"
+            @click="deleteOffer(index)"
         >
           <v-icon>$delete</v-icon>
         </v-btn>
@@ -52,7 +52,7 @@
           right
           color="#09b"
           style="margin-bottom: -8px"
-          @click="addOffer"
+          @click="newOffer"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
@@ -63,6 +63,78 @@
     </v-card-text>
   </v-card>
 </template>
+
+<script>
+
+import { mapState, mapMutations } from 'vuex'
+
+const {
+  SubHeader,
+  Paragraph,
+  GreenText,
+  BlackText
+} = require('@/components/inputs')
+
+export default {
+  name: 'Aside',
+  components: {
+    SubHeader,
+    Paragraph,
+    GreenText,
+    BlackText
+  },
+  data () {
+    return {
+      changeGreen: false,
+      changeBlack: false,
+      offer: this.$store.state.content.offer
+    }
+  },
+  computed: {
+    ...mapState('content', ['info']),
+    header: {
+      get () {
+        return this.info?.header
+      },
+      set (val) {
+        this.update({ prop: 'header', value: val })
+      }
+    },
+    text: {
+      get () {
+        return this.info?.text
+      },
+      set (val) {
+        this.update({ prop: 'text', value: val })
+      }
+    }
+  },
+  methods: {
+    ...mapMutations('content', {
+      update: 'UPDATE_INFO',
+      addOffer: 'ADD_OFFER',
+      removeOffer: 'REMOVE_OFFER'
+    }),
+    id (index) {
+      return `item-${Date.now() + index}`
+    },
+    init () {
+      this.offer = this.info ? this.info.offer : []
+    },
+    newOffer () {
+      this.addOffer()
+      this.changeGreen = true
+    },
+    deleteOffer (index) {
+      this.removeOffer(index)
+      this.changeGreen = true
+    }
+  },
+  mounted () {
+    this.init()
+  }
+}
+</script>
 
 <style scoped>
 p {
@@ -83,67 +155,3 @@ strong {
 }
 
 </style>
-
-<script>
-
-// import { mapState } from 'vuex'
-
-import SubHeader from '@/components/inputs/SubHeader.vue'
-import Paragraph from '@/components/inputs/Paragraph.vue'
-import GreenText from '@/components/inputs/GreenText.vue'
-import BlackText from '@/components/inputs/BlackText.vue'
-
-export default {
-  name: 'Aside',
-  components: {
-    SubHeader,
-    Paragraph,
-    GreenText,
-    BlackText
-  },
-  data () {
-    return {
-      changed: false,
-      offer: this.$store.state.content.info.offer
-    }
-  },
-  computed: {
-    info () {
-      return this.$store.state.content.info
-    },
-    header: {
-      get () {
-        return this.info.header
-      },
-      set (val) {
-        this.$store.commit('content/UPDATE_INFO', { prop: 'header', value: val })
-      }
-    },
-    text: {
-      get () {
-        return this.info.text
-      },
-      set (val) {
-        this.$store.commit('content/UPDATE_INFO', { prop: 'text', value: val })
-      }
-    }
-  },
-  watch: {
-    changed (val) {
-      if (!val) return
-      this.offer = this.$store.state.content.info.offer
-      this.changed = false
-    }
-  },
-  methods: {
-    addOffer () {
-      this.$store.commit('content/ADD_OFFER')
-      this.changed = true
-    },
-    removeOffer (index) {
-      this.$store.commit('content/REMOVE_OFFER', index)
-      this.changed = true
-    }
-  }
-}
-</script>

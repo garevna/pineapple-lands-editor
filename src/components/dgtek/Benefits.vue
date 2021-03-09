@@ -68,11 +68,11 @@ h3, p {
 
 import { mapState } from 'vuex'
 
-const {
+import {
   SubHeader,
   SubSubHeader,
   Paragraph
-} = require('@/components/inputs').default
+} from '@/components/inputs'
 
 const {
   IconFirst,

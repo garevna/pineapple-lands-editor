@@ -11,14 +11,14 @@ import Footer from './Footer.vue'
 
 import Top from './Top.vue'
 import LiveHomeTop from './live/HomeTop.vue'
-import MultipageTop from './multipage/Top.vue'
-import Top2 from './2/HomeTop.vue'
-import Top5 from './5/Top.vue'
+import TopOfPage from './multipage/TopOfPage.vue'
+import ConnectMelbournecbdHomePageTop from './connect-melbourne-cbd/HomeTop.vue'
+import TopNBN from './nbn/Top.vue'
 
 import BottomNavigation from './BottomNavigation.vue'
 import MainNavigationDriver from './MainNavigationDriver.vue'
 
-export default {
+export {
   Aside,
   UserContact,
   HowToConnect,
@@ -31,9 +31,9 @@ export default {
   Footer,
   Top,
   LiveHomeTop,
-  MultipageTop,
-  Top2,
-  Top5,
+  TopOfPage,
+  ConnectMelbournecbdHomePageTop,
+  TopNBN,
   BottomNavigation,
   MainNavigationDriver
 }

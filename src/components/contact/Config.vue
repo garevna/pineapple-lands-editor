@@ -6,20 +6,6 @@
           {{ field.type }}
         </h3>
       </v-card-title>
-      <!-- <v-card-text>
-        <p style="text-align: left; color: #09b">
-          Define the name for the field (it will be shown as field label)
-        </p>
-        <v-text-field
-              label="Field label (prompt text)"
-              v-model="field.placeholder"
-              prompt="Field label (prompt text)"
-              prepend-inner-icon="mdi-pencil"
-        ></v-text-field>
-      </v-card-text> -->
-      <!-- <v-card-text>
-        <v-checkbox v-model="field.required" class="mx-2" label="Required"></v-checkbox>
-      </v-card-text> -->
       <v-card-title v-if="field.type === 'combo' || field.type === 'list'">
         <p style="color: #09b">Define the set of available values</p>
       </v-card-title>
@@ -86,6 +72,8 @@
 
 <script>
 
+import { mapState, mapMutations } from 'vuex'
+
 export default {
   name: 'Config',
   props: ['dialog', 'fieldIndex'],
@@ -94,12 +82,15 @@ export default {
       field: null
     }
   },
+  computed: {
+    ...mapState('content', ['userForm'])
+  },
   watch: {
     field: {
       deep: true,
       handler (val) {
         for (const prop in val) {
-          this.$store.commit('content/UPDATE_USER_FORM_FIELD_OPTION', {
+          this.update({
             num: this.fieldIndex,
             prop,
             value: val[prop]
@@ -108,9 +99,13 @@ export default {
       }
     }
   },
+  methods: {
+    ...mapMutations('content', {
+      update: 'UPDATE_USER_FORM_FIELD_OPTION'
+    })
+  },
   mounted () {
-    this.field = this.$store.state.content.userForm.fieldsToShow[this.fieldIndex]
-    delete this.field.undefined
+    this.field = this.userForm.fieldsToShow[this.fieldIndex]
   }
 }
 </script>

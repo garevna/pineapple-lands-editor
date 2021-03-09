@@ -51,12 +51,20 @@
         </tr>
       </tbody>
     </table>
+    <v-card-actions>
+      <v-spacer />
+      <v-btn
+        dark
+        color="#09b"
+        @click="save"
+      >Save</v-btn>
+    </v-card-actions>
   </v-card>
 </template>
 
 <script>
 
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'LandConfigAddress',
@@ -122,33 +130,21 @@ export default {
   },
   methods: {
     ...mapMutations({
-      updatePageAddress: 'UPDATE_PAGE_ADDRESS'
+      updatePages: 'UPDATE_PAGE_ADDRESS'
     }),
     ...mapMutations('content', {
-      updateAddress: 'UPDATE_PAGE_ADDRESS'
-    }),
-    ...mapActions({
-      savePages: 'SAVE_PAGES'
+      updateContent: 'UPDATE_PAGE_ADDRESS'
     }),
     save () {
       for (const propName in this.address) {
-        this.updatePageAddress({
-          index: this.pageIndex,
-          propName,
-          propValue: this.address[propName]
-        })
+        this.updatePages({ index: this.pageIndex, propName, propValue: this.address[propName] })
       }
-      this.savePages()
+      this.__saveLivePage(this.pageId, this.$store.state.content)
+      this.__saveLivePages(this.pages)
     },
     update (propName, propValue) {
-      this.updateAddress({ propName, propValue })
+      this.updateContent({ propName, propValue })
     }
-  },
-  mounted () {
-    this.save()
-  },
-  beforeDestroy () {
-    this.save()
   }
 }
 </script>

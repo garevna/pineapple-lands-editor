@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="ready">
+  <v-container v-if="liveListReady">
     <v-data-table
       fixed-header
       :headers="headers"
@@ -92,7 +92,7 @@
 
 <script>
 
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'LivePages',
@@ -100,8 +100,6 @@ export default {
     LandConfigAddress: () => import('@/components/editor/LandConfigAddress.vue')
   },
   data: () => ({
-    ready: false,
-    pageContentReady: false,
     selectedId: null,
     dialog: false,
     headers: [
@@ -117,38 +115,20 @@ export default {
     options: {
       page: 1,
       itemsPerPage: 10
-    }
+    },
+    ready: false
   }),
   computed: {
-    ...mapState(['pages', 'popup']),
+    ...mapState(['pages', 'liveListReady', 'pageContentReady']),
     currentPageId () {
       return this.expanded.length ? this.expanded[0].id : null
     }
   },
   watch: {
-    expanded: {
-      deep: true,
-      handler (items) {
-        if (!items.length) return
-        this.selectedId = items[0].id
-        this.pageContentReady = false
-        this.setCurrentLand(`live-${items[0].id}`)
-        this.getCurrentPageContent(`live-${items[0].id}`)
-          .then(response => {
-            this.pageContentReady = true
-          })
-      }
-    },
-    // 'popup.action': {
-    //   handler (val) {
-    //     console.log('Confirm delete: ', val)
-    //   }
-    // },
-    pages: {
-      deep: true,
+    liveListReady: {
+      immediate: true,
       handler (val) {
         if (!val) return
-
         this.items = this.pages.map(page => ({
           eye: page.hidden,
           address: page.address,
@@ -159,25 +139,35 @@ export default {
           id: page.id
         }))
       }
+    },
+    items: {
+      deep: true,
+      handler (val) {
+        //
+      }
+    },
+    expanded: {
+      deep: true,
+      handler (items) {
+        if (!items.length) return
+        this.selectedId = items[0].id
+        this.setReady(false)
+        this.__liveWorker.postMessage({
+          store: 'live',
+          action: 'get',
+          key: items[0].id
+        })
+      }
     }
   },
   methods: {
-    ...mapActions({
-      getPagesList: 'GET_PAGES',
-      savePageList: 'SAVE_PAGES'
-    }),
     ...mapMutations({
       setCurrentLand: 'SET_CURRENT_LAND',
-      // dialogDelete: 'DIALOG_DELETE',
-      // confirmDelete: 'CONFIRM_DELETE',
+      setReady: 'SET_PAGE_CONTENT_READY',
       addPageToPages: 'ADD_PAGE'
     }),
     ...mapMutations('content', {
       updatePageContent: 'UPDATE_ALL'
-    }),
-    ...mapActions('content', {
-      getCurrentPageContent: 'GET_CONTENT',
-      saveCurrentPageContent: 'SAVE_CONTENT'
     }),
 
     getAddressString (address) {
@@ -198,7 +188,7 @@ export default {
     },
 
     async createNewPage () {
-      this.pageContentReady = false
+      this.setReady(false)
       const id = Date.now().toString()
       const content = require('@/configs/empty-building-page').default
       this.updatePageContent(content)
@@ -208,21 +198,12 @@ export default {
         id
       })
       this.setCurrentLand(`live-${id}`)
-      await this.saveCurrentPageContent(`live-${id}`)
-      await this.savePageList()
+      // await this.saveCurrentPageContent(`live-${id}`)
+      // await this.savePageList()
       this.expanded = [this.items[0]]
       Object.assign(this.options, { page: 1 })
-      this.pageContentReady = true
-    },
-
-    reload () {
-      //
+      this.setReady(true)
     }
-  },
-  created () {
-    this.getPagesList().then(() => {
-      this.ready = true
-    })
   }
 }
 </script>

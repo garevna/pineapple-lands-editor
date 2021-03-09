@@ -1,7 +1,7 @@
 <template>
 <v-row justify="center">
   <v-dialog v-model="gallery" fullscreen hide-overlay transition="dialog-bottom-transition">
-    <v-card v-if="images" class="pa-4">
+    <v-card v-if="galleryPictures" class="pa-4">
       <v-toolbar dark color="secondary">
         <v-toolbar-items>
           <v-btn icon @click="getImages">
@@ -18,17 +18,17 @@
       </v-toolbar>
       <v-row>
         <v-col
-          v-for="(file, index) in images"
-          :key="index"
+          v-for="(link, fileName) in galleryPictures"
+          :key="fileName"
         >
-          <v-card hover class="pa-0" tile @click="select(index)">
-            <v-fab-transition>
-              <v-btn fab icon @click.stop="remove(index)" v-if="authorized">
+          <v-card hover class="pa-0" tile @click="select(fileName)">
+            <!-- <v-fab-transition>
+              <v-btn fab icon @click.stop="remove(fileName)" v-if="authorized">
                 <v-icon color="red darken-2">mdi-delete</v-icon>
               </v-btn>
-            </v-fab-transition>
+            </v-fab-transition> -->
             <v-card-text>
-              <v-img :src="`${staticEndpoint}/${file}`"
+              <v-img :src="link"
                      :max-height="imageSize"
                      :max-width="imageSize"
                      contain
@@ -46,20 +46,24 @@
 
 import { mapState, mapMutations, mapActions } from 'vuex'
 
-const { hostname, avatar, image, icon } = require('@/configs/host').default
-
 export default {
   name: 'ImageGallery',
   props: {
     destination: String,
-    selectedImageURL: String,
+    selectedImageURL: String, /* sync! */
+    selectedImageLink: String, /* sync! */
     activate: Boolean
   },
   data: () => ({
-    images: [],
+    galleryPictures: [],
     confirmRemoving: false,
     details: null,
     removing: null,
+    stores: {
+      avatar: 'avatars',
+      icon: 'icons',
+      image: 'images'
+    },
     limits: {
       avatar: 50000,
       image: 1000000,
@@ -69,18 +73,16 @@ export default {
       avatar: 48,
       image: 300,
       icon: 150
-    },
-    hostname,
-    endpoints: {
-      avatar,
-      image,
-      icon
     }
   }),
   computed: {
-    ...mapState(['authorized', 'popup']),
+    ...mapState(['authorized']),
+    ...mapState('media', ['images', 'icons', 'avatars', 'staticEndpoints']),
+    mediaStore () {
+      return this.stores[this.destination]
+    },
     staticEndpoint () {
-      return `${this.hostname}/${this.endpoints[this.destination].static}`
+      return this.staticEndpoints[this.mediaStore]
     },
     fileLimit () {
       return this.limits[this.destination]
@@ -99,7 +101,7 @@ export default {
   },
   watch: {
     activate (val) {
-      if (val) this.getImages()
+      if (val) this.galleryPictures = this[this.mediaStore]
     },
     'popup.action': {
       handler (val) {
@@ -109,19 +111,17 @@ export default {
   },
   methods: {
     ...mapActions({
-      getAllImages: 'GET_IMAGES',
       removeImage: 'DELETE_IMAGE'
     }),
     ...mapMutations({
       dialogDelete: 'DIALOG_DELETE'
     }),
     async getImages () {
-      const response = await this.getAllImages(this.destination)
-      this.images = response.filter(img => img !== '.gitkeep' && img !== 'logo.png' && img !== 'facebook.png' && img !== 'linkedin.png')
+      this.galleryPictures = this[this.mediaStore]
     },
-    select (index) {
-      const val = `${this.staticEndpoint}/${this.images[index]}`
-      this.$emit('update:selectedImageURL', val)
+    select (fileName) {
+      this.$emit('update:selectedImageURL', `${this.staticEndpoint}/${fileName}`)
+      this.$emit('update:selectedImageLink', this.galleryPictures[fileName])
       this.$emit('update:activate', false)
     },
     remove (index) {
@@ -132,7 +132,7 @@ export default {
       if (this.index === null) return
       await this.removeImage({
         destination: this.destination,
-        file: this.images[this.removing]
+        file: this.galleryPictures[this.removing]
       })
       this.getImages()
       this.removing = null

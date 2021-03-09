@@ -1,13 +1,13 @@
 <template>
   <v-app class="homefone">
-    <v-container fluid class="homefone">
+    <v-container fluid class="homefone" v-if="pageContentReady">
       <MainNavBar :page.sync="page" />
 
       <!-- ============================= TOP ============================= -->
       <section id="top">
         <div class="base-title">
           <a href="#top" class="core-goto"></a>
-          <Top />
+          <TopOfPage />
         </div>
       </section>
       <!-- ============================= TESTIMONIALS ============================= -->
@@ -93,18 +93,18 @@
 import { mapState } from 'vuex'
 
 const {
-  MultipageTop,
+  TopOfPage,
   Aside,
   UserContact,
   Testimonials,
   FAQ,
   Footer
-} = require('@/components').default
+} = require('@/components')
 
 export default {
   name: 'Page',
   components: {
-    Top: MultipageTop,
+    TopOfPage,
     Aside,
     UserContact,
     Testimonials,
@@ -120,7 +120,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['pages', 'currentLand']),
+    ...mapState(['pages', 'currentLand', 'pageContentReady']),
     ...mapState('content', ['address']),
     buildingName () {
       return this.address?.formatted

@@ -69,12 +69,9 @@
 
 <script>
 
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
-const {
-  Auth,
-  LandConfig
-} = require('@/components/editor').default
+import { Auth, LandConfig } from '@/components/editor'
 
 export default {
   name: 'BottomNavigation',
@@ -116,19 +113,35 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      saveGeneralInfo: 'SAVE_GENERAL_INFO',
-      savePages: 'SAVE_PAGES'
-    }),
-    ...mapActions('content', {
-      saveContent: 'SAVE_CONTENT'
-    }),
-    ...mapActions('testimonials', {
-      saveTestimonials: 'SAVE_CONTENT'
-    }),
-    ...mapActions('internetPlans', {
-      savePlans: 'SAVE_PLANS'
-    }),
+    async saveGeneralInfo () {
+      const { scheme } = require('@/configs/generalInfo')
+      const data = Object.assign({}, ...Object.keys(scheme).map(key => ({ [key]: this.$store.state[key] })))
+      this.__saveGeneralInfo(data)
+    },
+
+    savePageContent () {
+      const data = JSON.parse(JSON.stringify(this.$store.state.content))
+
+      if (this.currentLand.indexOf('live') === -1) {
+        this.__saveLand(this.currentLand, data)
+      } else {
+        if (this.currentLand === 'live') this.__saveLiveHome(data)
+        else this.__saveLivePage(this.currentLand.slice(5), data)
+      }
+    },
+
+    savePlans () {
+      // this.__commonWorker.postMessage({
+      //   store: 'common',
+      //   action: 'put',
+      //   key: 'plans',
+      //   data: this.$store.state.internetPlans.plans
+      // })
+    },
+
+    async saveTestimonials () {
+      this.__saveTestimonials(this.$store.state.testimonials.testimonials)
+    },
 
     editSelectedPage () {
       if (!this.page) return
@@ -136,14 +149,9 @@ export default {
       this.$router.push({ path: this.currentLand })
     },
 
-    async savePageContent () {
-      return await this.saveContent(this.currentLand)
-    },
-
     async save () {
       const action = this.saveActions[this.$route.name] || 'savePageContent'
       await this[action]()
-      // if (this.$route.name === 'live-page') this.savePages()
     }
   }
 }

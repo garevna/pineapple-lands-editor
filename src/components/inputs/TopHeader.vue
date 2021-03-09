@@ -1,13 +1,13 @@
 <template>
   <v-textarea
-          class="h1"
-          v-model="inputValue"
-          auto-grow
-          rows="1"
-          :row-height="48"
-          hide-details
-          flat
-          prepend-inner-icon="mdi-pencil"
+    class="h1"
+    v-model="inputValue"
+    auto-grow
+    rows="1"
+    :row-height="48"
+    hide-details
+    flat
+    prepend-inner-icon="mdi-pencil"
   ></v-textarea>
 </template>
 

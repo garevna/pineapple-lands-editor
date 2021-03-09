@@ -1,5 +1,3 @@
-const Dotenv = require('dotenv-webpack')
-
 module.exports = {
   transpileDependencies: [
     'vuetify'
@@ -13,12 +11,16 @@ module.exports = {
       splitChunks: {
         automaticNameDelimiter: '.'
       }
-    },
-    plugins: [new Dotenv()]
+    }
   },
   pwa: {
+    workboxPluginMode: 'GenerateSW',
+    manifestPath: 'site.webmanifest',
     themeColor: '#20731C',
     msTileColor: '#FAFAFA'
   },
-  runtimeCompiler: true
+  runtimeCompiler: true,
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/pineapple-lands-editor/'
+    : '/'
 }

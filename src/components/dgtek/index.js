@@ -6,7 +6,7 @@ import Testimonials from './Testimonials.vue'
 import Footer from './Footer.vue'
 import Popup from './Popup.vue'
 
-export default {
+export {
   AppHeader,
   Top,
   Aside,

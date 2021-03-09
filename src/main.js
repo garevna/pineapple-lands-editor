@@ -1,6 +1,7 @@
 /* eslint-disable */
 
-import Vue from 'vue'
+// import Vue from 'vue'
+import Vue from '@/VueExtended'
 import App from './App.vue'
 import './registerServiceWorker'
 import router from './router.js'
@@ -10,14 +11,24 @@ import vuetify from './plugins/vuetify'
 import '@/sass/fonts.scss'
 import '@/sass/variables.scss'
 
-import VuePhoneNumberInput from 'vue-phone-number-input'
-import 'vue-phone-number-input/dist/vue-phone-number-input.css'
-Vue.component('vue-phone-number-input', VuePhoneNumberInput)
+Vue.prototype.__storage = localStorage
 
 import Popup from '@/components/editor/Popup.vue'
 Vue.component('popup', Popup)
 
 Vue.config.productionTip = false
+
+Vue.prototype.__commit = function (mutation, data) {
+  this.commit(mutation, data)
+}.bind(store)
+
+Vue.prototype.__dispatch = function (action, data) {
+  this.dispatch(action, data)
+}.bind(store)
+
+Vue.prototype.$openExternalLink = function (link) {
+  window.open(link, '_blank')
+}
 
 const vue = new Vue({
   router,

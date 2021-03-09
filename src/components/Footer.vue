@@ -139,19 +139,14 @@
 
 import { mapState } from 'vuex'
 
-import FooterFone from '@/components/footer/FooterFone.vue'
-import FooterBottomContent from '@/components/footer/BottomContent.vue'
-import FooterBottomContentSmall from '@/components/footer/BottomContentSmall.vue'
-
-import SubHeader from '@/components/inputs/SubHeader.vue'
-import SubHeader5 from '@/components/inputs/SubHeader5.vue'
+import { SubHeader, SubHeader5 } from '@/components/inputs'
 
 export default {
   name: 'Footer',
   components: {
-    FooterFone,
-    FooterBottomContentSmall,
-    FooterBottomContent,
+    FooterFone: () => import('@/components/footer/FooterFone.vue'),
+    FooterBottomContentSmall: () => import('@/components/footer/BottomContentSmall.vue'),
+    FooterBottomContent: () => import('@/components/footer/BottomContent.vue'),
     SubHeader,
     SubHeader5
   },

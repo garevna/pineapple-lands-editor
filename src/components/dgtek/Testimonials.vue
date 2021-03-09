@@ -98,7 +98,7 @@
 
 import { mapState, mapMutations } from 'vuex'
 
-const { SubHeader } = require('@/components/inputs').default
+import { SubHeader } from '@/components/inputs'
 
 export default {
   name: 'Testimonials',

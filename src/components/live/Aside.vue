@@ -89,10 +89,19 @@ strong {
 
 import { mapState } from 'vuex'
 
-import SubHeader from '@/components/inputs/SubHeader.vue'
-import Paragraph from '@/components/inputs/Paragraph.vue'
-import GreenText from '@/components/inputs/GreenText.vue'
-import BlackText from '@/components/inputs/BlackText.vue'
+// import SubHeader from '@/components/inputs/SubHeader.vue'
+// import Paragraph from '@/components/inputs/Paragraph.vue'
+// import GreenText from '@/components/inputs/GreenText.vue'
+// import BlackText from '@/components/inputs/BlackText.vue'
+
+const {
+  SubHeader,
+  Paragraph,
+  GreenText,
+  BlackText
+} = require('@/components/inputs')
+
+console.log(SubHeader)
 
 export default {
   name: 'Aside',

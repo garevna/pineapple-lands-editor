@@ -2,13 +2,13 @@
   <v-row align="center">
     <v-col cols="2">
       <ChangePicture
-            destination="icon"
-            :pictureURL.sync="iconSrc"
-            :index="index"
-            :action="true"
-            :perform.sync="deleteItem"
+        destination="icon"
+        :pictureURL.sync="iconSrc"
+        :index="index"
+        :action="true"
+        :perform.sync="deleteItem"
       />
-        <v-img :src="iconSrc" width="70" contain></v-img>
+      <v-img :src="iconSrc" width="70" contain></v-img>
     </v-col>
     <v-col cols="9">
       <SubSubHeader :value.sync="title" />
@@ -22,17 +22,16 @@
 
 <script>
 
-const {
-  SubSubHeader,
-  Paragraph
-} = require('@/components/inputs').default
+import { mapMutations } from 'vuex'
 
-// const { ChangePicture } = require('@/components/editor').default
+import { SubSubHeader, Paragraph } from '@/components/inputs'
+
+import { ChangePicture } from '@/components/editor'
 
 export default {
   name: 'ListItem',
   components: {
-    ChangePicture: () => import('@/components/editor/ChangePicture.vue'),
+    ChangePicture,
     SubSubHeader,
     Paragraph
   },
@@ -47,36 +46,32 @@ export default {
     title: {
       get () { return this.item.title },
       set (val) {
-        this.$store.commit('content/UPDATE_LIST_ITEM', {
-          num: this.index,
-          prop: 'title',
-          value: val
-        })
+        this.update('title', val)
       }
     },
     text: {
       get () { return this.item.text },
       set (val) {
-        this.$store.commit('content/UPDATE_LIST_ITEM', {
-          num: this.index,
-          prop: 'text',
-          value: val
-        })
+        this.update('text', val)
       }
     }
   },
   watch: {
     iconSrc (val) {
-      this.$store.commit('content/UPDATE_LIST_ITEM', {
-        num: this.index,
-        prop: 'icon',
-        value: val
-      })
+      this.update('icon', val)
     },
     deleteItem (val) {
       if (!val) return
       this.$emit('update:remove', this.index)
       this.deleteItem = null
+    }
+  },
+  methods: {
+    ...mapMutations('content', {
+      updateListItem: 'UPDATE_LIST_ITEM'
+    }),
+    update (prop, value) {
+      this.updateListItem({ num: this.index, prop, value })
     }
   },
   mounted () {

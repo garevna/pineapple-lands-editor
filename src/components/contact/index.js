@@ -10,7 +10,7 @@ import Selector from './Selector.vue'
 import SelectorConfig from './SelectorConfig.vue'
 import TimeInput from './TimeInput.vue'
 
-export default {
+export {
   Combo,
   ComboBox,
   ComboBoxConfig,

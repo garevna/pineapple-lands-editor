@@ -81,7 +81,7 @@
 
 <script>
 
-import { mapState, mapActions } from 'vuex'
+import { mapState /*, mapActions */ } from 'vuex'
 
 const {
   LiveHomeTop,
@@ -92,7 +92,7 @@ const {
   Testimonials,
   FAQ,
   Footer
-} = require('@/components').default
+} = require('@/components')
 
 export default {
   name: 'Live',
@@ -114,17 +114,17 @@ export default {
   },
   computed: {
     ...mapState(['viewport', 'viewportWidth'])
-  },
-  methods: {
-    ...mapActions('contact', {
-      userFormConfig: 'UPDATE_USER_FORM_CONFIGURATION'
-    }),
-    ...mapActions('testimonials', {
-      getTestimonials: 'GET_CONTENT'
-    })
-  },
-  beforeMount () {
-    this.getTestimonials()
   }
+  // methods: {
+  //   ...mapActions('contact', {
+  //     userFormConfig: 'UPDATE_USER_FORM_CONFIGURATION'
+  //   }),
+  //   ...mapActions('testimonials', {
+  //     getTestimonials: 'GET_CONTENT'
+  //   })
+  // },
+  // beforeMount () {
+  //   this.getTestimonials()
+  // }
 }
 </script>

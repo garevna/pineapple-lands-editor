@@ -1,8 +1,9 @@
 <template>
   <v-card
-        flat
-        class="aside-card transparent mx-auto my-12"
-        width="480"
+    v-if="aside"
+    flat
+    class="aside-card transparent mx-auto my-12"
+    width="480"
   >
     <v-card flat class="transparent">
       <v-card-title>
@@ -64,6 +65,97 @@
   </v-card>
 </template>
 
+<script>
+
+import { mapState, mapMutations } from 'vuex'
+
+import {
+  SubHeader,
+  Paragraph,
+  AsideColoredText,
+  SmallText
+} from '@/components/inputs'
+
+export default {
+  name: 'Aside',
+  components: {
+    SubHeader,
+    Paragraph,
+    AsideColoredText,
+    SmallText
+  },
+  data () {
+    return {
+      changed: false
+      // items: this.aside.items
+    }
+  },
+  computed: {
+    ...mapState(['pageContentReady']),
+    ...mapState('content', ['aside']),
+    header: {
+      get () {
+        return this.aside.header
+      },
+      set (val) {
+        this.update({ prop: 'header', value: val })
+      }
+    },
+    text: {
+      get () {
+        return this.aside && this.aside.text
+      },
+      set (val) {
+        this.update({ prop: 'text', value: val })
+      }
+    },
+    smallTextOne: {
+      get () {
+        return this.aside && Array.isArray(this.aside.smallText) && this.aside.smallText[0]
+      },
+      set (val) {
+        this.updateSmallText({ num: 0, value: val })
+      }
+    },
+    smallTextTwo: {
+      get () {
+        return this.aside && Array.isArray(this.aside.smallText) && this.aside.smallText[1]
+      },
+      set (val) {
+        this.updateSmallText({ num: 1, value: val })
+      }
+    }
+  },
+  watch: {
+    aside: {
+      deep: true,
+      immediate: true,
+      handler (val) {
+        if (val) {
+          this.items = val.items
+        }
+      }
+    }
+  },
+  methods: {
+    ...mapMutations('content', {
+      addItem: 'ADD_ASIDE_ITEM',
+      removeItem: 'REMOVE_ASIDE_ITEM',
+      updateSmallText: 'UPDATE_ASIDE_SMALL_TEXT',
+      update: 'UPDATE_ASIDE'
+    }),
+    addItem () {
+      this.addItem()
+      this.changed = true
+    },
+    removeItem (index) {
+      this.removeItem(index)
+      this.changed = true
+    }
+  }
+}
+</script>
+
 <style scoped>
 p {
   line-height: 180%!important;
@@ -83,83 +175,3 @@ strong {
 }
 
 </style>
-
-<script>
-
-const {
-  SubHeader,
-  Paragraph,
-  AsideColoredText,
-  SmallText
-} = require('@/components/inputs').default
-
-export default {
-  name: 'Aside',
-  components: {
-    SubHeader,
-    Paragraph,
-    AsideColoredText,
-    SmallText
-  },
-  data () {
-    return {
-      changed: false,
-      items: this.$store.state.content.aside.items
-    }
-  },
-  computed: {
-    aside () {
-      return this.$store.state.content.aside
-    },
-    header: {
-      get () {
-        return this.$store.state.content.aside.header
-      },
-      set (val) {
-        this.$store.commit('content/UPDATE_ASIDE', { prop: 'header', value: val })
-      }
-    },
-    text: {
-      get () {
-        return this.$store.state.content.aside.text
-      },
-      set (val) {
-        this.$store.commit('content/UPDATE_ASIDE', { prop: 'text', value: val })
-      }
-    },
-    smallTextOne: {
-      get () {
-        return this.$store.state.content.aside.smallText[0]
-      },
-      set (val) {
-        this.$store.commit('content/UPDATE_ASIDE_SMALL_TEXT', { num: 0, value: val })
-      }
-    },
-    smallTextTwo: {
-      get () {
-        return this.$store.state.content.aside.smallText[1]
-      },
-      set (val) {
-        this.$store.commit('content/UPDATE_ASIDE_SMALL_TEXT', { num: 1, value: val })
-      }
-    }
-  },
-  watch: {
-    changed (val) {
-      if (!val) return
-      this.items = this.$store.state.content.aside.items
-      this.changed = false
-    }
-  },
-  methods: {
-    addItem () {
-      this.$store.commit('content/ADD_ASIDE_ITEM')
-      this.changed = true
-    },
-    removeItem (index) {
-      this.$store.commit('content/REMOVE_ASIDE_ITEM', index)
-      this.changed = true
-    }
-  }
-}
-</script>

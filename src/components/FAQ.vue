@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="my-12">
+  <v-container fluid class="my-12" v-if="faq">
     <v-card flat width="100%" max-width="900" class="transparent mx-auto my-10">
       <v-card-title class="text-center mb-12">
         <SubHeader :value.sync="header" />
@@ -12,11 +12,10 @@
             tile
       >
         <v-expansion-panel
-          v-for="(item,index) in content"
+          v-for="(item,index) in items"
           :key="index"
         >
           <v-expansion-panel-header class="text-left">
-
             <v-tooltip top dark color="#09b">
               <template v-slot:activator="{ on }">
                 <v-btn
@@ -31,7 +30,7 @@
                       style="margin-top: 48px; margin-left: -40px"
                       :value="index"
                       class="button-minus"
-                      @click="$store.commit('content/DELETE_FAQ_ITEM', index)"
+                      @click="remove(index)"
                       v-on="on"
                 >
                   <v-icon>$delete</v-icon>
@@ -77,7 +76,7 @@
                   right
                   color="info"
                   class="button-plus"
-                  @click="$store.commit('content/ADD_FAQ_ITEM')"
+                  @click="addItem"
                    v-on="on"
             >
               <v-icon>mdi-plus</v-icon>
@@ -95,6 +94,86 @@
     </v-card>
   </v-container>
 </template>
+
+<script>
+
+import { mapState, mapMutations } from 'vuex'
+
+import { SubHeader, Button } from '@/components/inputs'
+
+export default {
+  name: 'FAQ',
+  components: {
+    SubHeader,
+    Button
+  },
+  props: ['page'],
+  data () {
+    return {
+      panel: null,
+      items: []
+    }
+  },
+  computed: {
+    ...mapState('content', ['faq']),
+    header: {
+      get () {
+        return this.faq ? this.faq.header : ''
+      },
+      set (val) {
+        this.update({ prop: 'header', value: val })
+      }
+    },
+    button: {
+      get () {
+        return this.faq ? this.faq.button : ''
+      },
+      set (val) {
+        this.update({ prop: 'button', value: val })
+      }
+    },
+    goto: {
+      get () {
+        return this.faq && this.faq.goto ? this.faq.goto : ''
+      },
+      set (val) {
+        this.update({ prop: 'goto', value: val })
+      }
+    }
+  },
+  watch: {
+    items: {
+      deep: true,
+      handler (val) {
+        //
+      }
+    }
+  },
+  methods: {
+    ...mapMutations('content', {
+      update: 'UPDATE_FAQ',
+      updateItem: 'UPDATE_FAQ_ITEM',
+      addItem: 'ADD_FAQ_ITEM',
+      remove: 'DELETE_FAQ_ITEM'
+    }),
+    getQuestion (num) {
+      return this.faq.items[num].question
+    },
+    getAnswerText (num) {
+      return this.faq.items[num].answer.split('<br>').join('\n')
+    },
+    saveQuestion (num, question) {
+      this.updateItem({ num, prop: 'question', value: question })
+    },
+    saveAnswer (num, answer) {
+      this.updateItem({ num, prop: 'answer', value: answer.split('\n').join('<br>') })
+    }
+  },
+  mounted () {
+    this.items = this.$store.state.content.faq.items
+  }
+}
+</script>
 
 <style scoped>
 .v-card__text {
@@ -127,82 +206,3 @@
   }
 }
 </style>
-
-<script>
-
-// import { mapState } from 'vuex'
-
-import SubHeader from '@/components/inputs/SubHeader.vue'
-import Button from '@/components/inputs/Button.vue'
-// import ButtonWithTooltip from '@/components/editor/ButtonWithTooltip.vue'
-
-export default {
-  name: 'FAQ',
-  components: {
-    // ButtonWithTooltip,
-    SubHeader,
-    Button
-  },
-  props: ['page'],
-  data () {
-    return {
-      panel: null,
-      faq: null,
-      content: []
-    }
-  },
-  computed: {
-    // ...mapState('content', ['faq']),
-    header: {
-      get () {
-        return this.faq ? this.faq.header : ''
-      },
-      set (val) {
-        this.$store.commit('content/UPDATE_FAQ', { prop: 'header', value: val })
-      }
-    },
-    button: {
-      get () {
-        return this.faq ? this.faq.button : ''
-      },
-      set (val) {
-        this.$store.commit('content/UPDATE_FAQ', { prop: 'button', value: val })
-      }
-    },
-    goto: {
-      get () {
-        return this.faq && this.faq.goto ? this.faq.goto : ''
-      },
-      set (val) {
-        this.$store.commit('content/UPDATE_FAQ', { prop: 'goto', value: val })
-      }
-    }
-  },
-  watch: {
-    faq: {
-      deep: true,
-      handler (val) {
-        this.content = this.faq.items
-      }
-    }
-  },
-  methods: {
-    getQuestion (num) {
-      return this.content[num].question
-    },
-    getAnswerText (num) {
-      return this.content[num].answer.split('<br>').join('\n')
-    },
-    saveQuestion (index, question) {
-      this.$store.commit('content/UPDATE_FAQ_ITEM', { num: index, prop: 'question', value: question })
-    },
-    saveAnswer (index, answer) {
-      this.$store.commit('content/UPDATE_FAQ_ITEM', { num: index, prop: 'answer', value: answer.split('\n').join('<br>') })
-    }
-  },
-  mounted () {
-    this.faq = this.$store.state.content.faq
-    this.content = this.faq.items
-  }
-}
-</script>

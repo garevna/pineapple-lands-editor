@@ -1,25 +1,16 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
 
-const {
-  info,
-  livePages,
-  dgtekAside,
-  userForm,
-  howToConnect,
-  list,
-  faq,
+import {
+  infoSectionMutations,
+  livePagesMutations,
+  asideDGTekMutations,
+  userFormMutations,
+  howToConnectMutations,
+  listSectionMutations,
+  faqSectionMutations,
   updates
-} = require('./mutations').default
-
-const {
-  GET_CONTENT,
-  SAVE_CONTENT
-  // addNewPage,
-  // setNewPageContent
-} = require('./actions').default
-
-// const userFormInitial = require('@/configs/userFormInitial.js').default
+} from '@/store/mutations/content'
 
 const state = {
   browserTabTitle: 'pineapple.net',
@@ -36,7 +27,9 @@ const state = {
 
 const mutations = {
   UPDATE_PAGE_NUM: (state, payload) => { state.pageNum = payload },
-  UPDATE_TOP: (state, payload) => { state.top[payload.prop] = payload.value },
+  UPDATE_TOP: (state, payload) => {
+    state.top = Object.assign({}, state.top, { [payload.prop]: payload.value })
+  },
   UPDATE_BROWSER_TAB_TITLE: (state, val) => { state.browserTabTitle = val },
   UPDATE_EMAIL_SUBJECT: (state, val) => { state.emailSubject = val },
   UPDATE_EMAIL_TEXT: (state, val) => { state.emailText = val },
@@ -44,35 +37,25 @@ const mutations = {
     state.mainNavButtons = Object.assign([], payload.mainNavButtons)
     state.mainNavSectors = Object.assign([], payload.mainNavSectors)
   },
+  UPDATE_MAIN_NAV_BUTTON: (state, payload) => {
+    const { index, text, goto } = payload
+    text && Object.assign(state.mainNavButtons, { [index]: text })
+    goto && Object.assign(state.mainNavSectors, { [index]: goto })
+  },
 
-  /* INFO */
-  ...info.default,
-
-  /* LIVE - PAGES */
-  ...livePages,
-
-  /* DGTEK ASIDE */
-  ...dgtekAside.default,
-
-  /* USER FORM */
-  ...userForm.default,
-
-  /* HOW TO CONNECT */
-  ...howToConnect.default,
-
-  /* FAQ */
-  ...faq.default,
-
-  /* LIST */
-  ...list.default,
-
-  /* CONTENT OF LAND UPDATES */
-  ...updates.default
+  ...infoSectionMutations,
+  ...livePagesMutations,
+  ...asideDGTekMutations,
+  ...userFormMutations,
+  ...howToConnectMutations,
+  ...listSectionMutations,
+  ...faqSectionMutations,
+  ...updates
 }
 
 const actions = {
-  GET_CONTENT,
-  SAVE_CONTENT
+  // GET_CONTENT,
+  // SAVE_CONTENT
   // ...addNewPage,
   // ...setNewPageContent
 }

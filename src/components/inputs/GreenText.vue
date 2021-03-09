@@ -24,21 +24,32 @@
 </style>
 
 <script>
+
+import { mapState, mapMutations } from 'vuex'
+
 export default {
   name: 'GreenText',
   props: ['index'],
   computed: {
+    ...mapState('content', ['info']),
     inputValue: {
       get () {
-        return this.$store.state.content.info.offer[this.index].greenText
+        return this.info.offer[this.index].greenText
       },
-      set (val) {
-        this.$store.commit('content/UPDATE_OFFER_GREEN_TEXT', {
-          num: this.index,
-          value: val
-        })
+      set (value) {
+        this.update({ num: this.index, value })
       }
     }
+  },
+  watch: {
+    index (val) {
+      console.log('Index changed: ', val, this.inputValue)
+    }
+  },
+  methods: {
+    ...mapMutations('content', {
+      update: 'UPDATE_OFFER_GREEN_TEXT'
+    })
   }
 }
 </script>

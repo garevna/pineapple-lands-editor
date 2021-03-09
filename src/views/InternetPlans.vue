@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="ready">
+  <v-container v-if="internetPlansReady">
     <v-card-text class="text-center">
       <h1>FIBRE <span class="green--text">INTERNET PLANS</span></h1>
     </v-card-text>
@@ -49,9 +49,9 @@
 
 <script>
 
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
-const { PriceCard } = require('@/components/editor').default
+import { PriceCard } from '@/components/editor'
 
 export default {
   name: 'InternetPlans',
@@ -65,7 +65,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['plan']),
+    ...mapState(['plan', 'internetPlansReady']),
     ...mapState('internetPlans', ['plans'])
   },
   watch: {
@@ -74,16 +74,6 @@ export default {
       this.$emit('update:page', '#footer')
       this.contact = false
     }
-  },
-  methods: {
-    ...mapActions('internetPlans', {
-      getData: 'GET_DATA'
-    })
-  },
-  beforeMount () {
-    this.getData().then((response) => {
-      this.ready = true
-    })
   }
 }
 </script>

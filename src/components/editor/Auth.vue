@@ -25,7 +25,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn text @click="validate">SUBMIT</v-btn>
+            <v-btn text @click="sendRequest">SUBMIT</v-btn>
             <v-btn text @click="$emit('update:opened', false)">CLOSE</v-btn>
           </v-card-actions>
         </v-card>
@@ -38,9 +38,8 @@
 
 <script>
 
+import { auth } from '@/helpers'
 import { mapMutations } from 'vuex'
-
-const { auth } = require('@/helpers').default
 
 export default {
   name: 'Auth',
@@ -57,11 +56,24 @@ export default {
       accessDenied: 'AUTH_FAILURE',
       accessGranted: 'AUTH_SUCCESS'
     }),
-    validate: async function () {
-      const response = await auth(this.login, this.password)
-      response.status !== 200 ? this.accessDenied() : this.accessGranted()
+    sendRequest () {
+      const { login, password } = auth(this.login, this.password)
+      this.__authWorker.postMessage({
+        store: 'auth',
+        action: 'auth',
+        login,
+        password
+      })
+    },
+    validate: async function (event) {
+      const { action, status } = event.data
+      if (action !== 'auth') return
+      status !== 200 ? this.accessDenied() : this.accessGranted()
       this.$emit('update:opened', false)
     }
+  },
+  mounted () {
+    this.__authWorker.addEventListener('message', this.validate)
   }
 }
 </script>

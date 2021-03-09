@@ -155,12 +155,14 @@
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
+
+import { Config } from '@/components/contact'
 
 export default {
   name: 'UserFormCustomization',
   components: {
-    Config: () => import('@/components/contact/Config.vue')
+    Config
   },
   props: ['dialog'],
   data () {
@@ -200,6 +202,12 @@ export default {
     }
   },
   methods: {
+    ...mapMutations('content', {
+      update: 'UPDATE_USER_FORM_FIELDS'
+    }),
+    ...mapActions('contact', {
+      setFields: 'SET_FIELDS_TO_SHOW'
+    }),
     moveUp (index) {
       this.formFields.splice(index - 1, 0, this.formFields.splice(index, 1)[0])
     },
@@ -224,8 +232,9 @@ export default {
       card.scrollTop = card.scrollHeight
     },
     reflectAllChanges () {
-      this.$store.commit('content/UPDATE_USER_FORM_FIELDS', this.userForm.fieldsToShow)
-      this.$store.dispatch('contact/SET_FIELDS_TO_SHOW', this.userForm.fieldsToShow)
+      // this.update(this.userForm.fieldsToShow)
+      this.update(this.formFields)
+      this.setFields(this.userForm.fieldsToShow)
         .then(() => { this.modal = false })
     }
   },

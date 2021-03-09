@@ -2,36 +2,42 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import modules from './modules'
 
+import {
+  RECEIVE_MESSAGE_FROM_AUTH_WORKER,
+  RECEIVE_MESSAGE_FROM_COMMON_WORKER,
+  RECEIVE_MESSAGE_FROM_LANDS_WORKER,
+  RECEIVE_MESSAGE_FROM_LIVE_WORKER,
+  RECEIVE_MESSAGE_FROM_MEDIA_WORKER,
+  RECEIVE_MESSAGE_FROM_FILES_WORKER,
+  RECEIVE_MESSAGE_FROM_IMAGES_WORKER,
+  RECEIVE_MESSAGE_FROM_ICONS_WORKER,
+  RECEIVE_MESSAGE_FROM_AVATARS_WORKER
+} from '@/store/workers'
+
+import { ready } from '@/store/state/ready'
+import { setReady } from '@/store/mutations/root/ready'
+
+const lands = require('@/configs/lands').default
+const generalInfo = require('@/configs/generalInfo').default
+const {
+  fieldTypes,
+  validators,
+  description
+} = require('@/configs/contactFormFieldsConfig.js').default
+
 const {
   viewport,
   pages,
   popups
-} = require('./modules/mutations').default
-
-const lands = require('@/configs/lands').default
-
-const { fieldTypes, validators, description } = require('@/configs/contactFormFieldsConfig.js').default
-
-const {
-  GET_GENERAL_INFO,
-  SAVE_GENERAL_INFO,
-  GET_PAGES,
-  SAVE_PAGES,
-  GET_IMAGES,
-  DELETE_IMAGE
-} = require('./modules/actions').default
-
-const generalInfo = require('@/configs/generalInfo').default
-const { validateToken } = require('@/helpers').default
+} = require('@/store/mutations/root')
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {
     authorized: false,
     progress: false,
     ...generalInfo,
-    contactEndpoint: '',
     viewportWidth: window.innerWidth,
     viewportHeight: window.innerHeight,
     plan: 'residential',
@@ -50,11 +56,14 @@ export default new Vuex.Store({
     description,
     lands,
     error: null,
-    showPageInfo: false
+    showPageInfo: false,
+    ...ready
   },
+
   modules,
 
   mutations: {
+    ...setReady,
     ...viewport,
     ...pages,
     ...popups,
@@ -63,17 +72,16 @@ export default new Vuex.Store({
       state.progress = value
     },
 
-    UPDATE_GENERAL_INFO: (state, payload) => { state[payload.prop] = payload.value },
+    UPDATE_GENERAL_INFO: (state, payload) => {
+      for (const prop in payload) {
+        state[prop] = payload[prop]
+      }
+    },
+
     SET_CURRENT_LAND: (state, value) => { state.currentLand = value },
 
     CHANGE_PLAN: (state, plan) => { state.plan = plan },
 
-    SET_ERROR: (state, error) => {
-      state.error = error
-    },
-    CLEAR_ERROR: (state) => {
-      state.error = null
-    },
     SET_PROPERTY: (state, payload) => {
       Vue.set(payload.object, payload.propertyName, payload.value)
     },
@@ -83,18 +91,16 @@ export default new Vuex.Store({
   },
 
   actions: {
-    GET_GENERAL_INFO,
-    SAVE_GENERAL_INFO,
-    GET_PAGES,
-    SAVE_PAGES,
-    GET_IMAGES,
-    DELETE_IMAGE,
-
-    async VALIDATE_TOKEN ({ state, commit, dispatch }) {
-      commit('SET_PROGRESS', true)
-      const response = await validateToken()
-      commit('SET_PROGRESS', false)
-      commit(response.status !== 200 ? 'AUTH_FAILURE' : 'AUTH_SUCCESS')
-    }
+    RECEIVE_MESSAGE_FROM_AUTH_WORKER,
+    RECEIVE_MESSAGE_FROM_COMMON_WORKER,
+    RECEIVE_MESSAGE_FROM_LANDS_WORKER,
+    RECEIVE_MESSAGE_FROM_LIVE_WORKER,
+    RECEIVE_MESSAGE_FROM_MEDIA_WORKER,
+    RECEIVE_MESSAGE_FROM_FILES_WORKER,
+    RECEIVE_MESSAGE_FROM_IMAGES_WORKER,
+    RECEIVE_MESSAGE_FROM_ICONS_WORKER,
+    RECEIVE_MESSAGE_FROM_AVATARS_WORKER
   }
 })
+
+export default store

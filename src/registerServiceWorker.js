@@ -4,11 +4,16 @@ import { register } from 'register-service-worker'
 
 if (process.env.NODE_ENV === 'production') {
   register(`${process.env.BASE_URL}service-worker.js`, {
-    ready () {
+    registrationOptions: { scope: './' },
+    ready (registered) {
+      console.log(registered)
       console.log(
-        'App is being served from cache by a service worker.\n' +
-        'For more details, visit https://goo.gl/AFskqB'
+        `App is being served from cache by a service worker.\n
+        For more details, visit https://goo.gl/AFskqB`
       )
+      this.addEventListener('fetch', function (event) {
+        console.log(event.request.url)
+      })
     },
     registered () {
       console.log('Service worker has been registered.')

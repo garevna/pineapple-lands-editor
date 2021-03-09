@@ -47,30 +47,6 @@
   </v-card>
 </template>
 
-<style scoped>
-
-.pineapple-submit-button, .dgtek-submit-button {
-  font-family: Gilroy;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 16px!important;
-  line-height: 100%;
-  text-transform: uppercase;
-  padding: 12px 16px;
-  text-align:center!important;
-  color: #fff!important;
-  width: 340px;
-}
-.pineapple-submit-button {
-  background-color: #72BF44;
-  border-radius: 32px;
-}
-.dgtek-submit-button {
-  background-color: #f44336;
-  border-radius: 8px;
-}
-</style>
-
 <script>
 
 import { mapState } from 'vuex'
@@ -87,15 +63,6 @@ export default {
   },
   computed: {
     ...mapState(['currentLand', 'lands']),
-    // ...mapState('editor', ['configs']),
-    // route () {
-    //   if (this.$route.name === 'live-page') return 'live-page'
-    //   if (this.$route.name === 'dgtek') return 'dgtek-1'
-    //   const index = ['conservatory', 'qv1', 'aurora'].findIndex(item => item === this.$route.name) + 1
-    //   if (index) return `2-${index}`
-    //   const land = this.lands.find(land => land.route === this.$route.name)
-    //   return land.short
-    // },
     sections () {
       return this.configs[this.$route.name].map(item => item.title)
     },
@@ -129,3 +96,27 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+
+.pineapple-submit-button, .dgtek-submit-button {
+  font-family: Gilroy;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px!important;
+  line-height: 100%;
+  text-transform: uppercase;
+  padding: 12px 16px;
+  text-align:center!important;
+  color: #fff!important;
+  width: 340px;
+}
+.pineapple-submit-button {
+  background-color: #72BF44;
+  border-radius: 32px;
+}
+.dgtek-submit-button {
+  background-color: #f44336;
+  border-radius: 8px;
+}
+</style>

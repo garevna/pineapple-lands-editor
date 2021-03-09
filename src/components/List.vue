@@ -3,9 +3,9 @@
     <v-row align="center" justify="space-around">
       <v-col cols="12" md="5">
         <v-card
-              flat
-              class="aside-card transparent mx-auto my-12"
-              width="480"
+          flat
+          class="aside-card transparent mx-auto my-12"
+          width="480"
         >
           <v-card-title>
             <SubHeader :value.sync="header" />
@@ -26,9 +26,9 @@
               :key="index"
         >
           <ListItem
-                :index="index"
-                :item="item"
-                :remove.sync="remove"
+            :index="index"
+            :item="item"
+            :remove.sync="remove"
           />
         </v-card>
       </v-col>
@@ -42,11 +42,14 @@
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
-import SubHeader from '@/components/inputs/SubHeader.vue'
-import Paragraph from '@/components/inputs/Paragraph.vue'
-import ListItem from '@/components/editor/ListItem.vue'
+import {
+  SubHeader,
+  Paragraph
+} from '@/components/inputs'
+
+import { ListItem } from '@/components/editor'
 
 export default {
   name: 'List',
@@ -59,7 +62,7 @@ export default {
     return {
       changed: false,
       remove: null,
-      items: this.$store.state.content.list.items,
+      // items: [],
       imageSrc: []
     }
   },
@@ -67,54 +70,67 @@ export default {
     ...mapState('content', ['list']),
     header: {
       get () {
-        return this.list.header
+        return this.list?.header
       },
       set (val) {
-        this.$store.commit('content/UPDATE_LIST', { prop: 'header', value: val })
+        this.update({ prop: 'header', value: val })
       }
     },
     text: {
       get () {
-        return this.list.text
+        return this.list?.text
       },
       set (val) {
-        this.$store.commit('content/UPDATE_LIST', { prop: 'text', value: val })
+        this.update({ prop: 'text', value: val })
       }
     },
     button: {
       get () {
-        return this.list.button
+        return this.list?.button
       },
       set (val) {
-        this.$store.commit('content/UPDATE_LIST', { prop: 'button', value: val })
+        this.update({ prop: 'button', value: val })
+      }
+    },
+    items: {
+      get () {
+        return this.list?.items
+      },
+      set (val) {
+        this.updateItems(val)
       }
     }
   },
   watch: {
-    changed (val) {
-      if (!val) return
-      this.items = this.$store.state.content.list.items
-      this.changed = false
-    },
     items: {
       deep: true,
+      immediate: true,
       handler (val) {
-        // console.log(val)
+        if (val) {
+          this.update(val)
+        }
       }
     },
     remove (val) {
       if (typeof val !== 'number') return
-      this.$store.commit('content/REMOVE_LIST_ITEM', val)
+      this.removeItem(val)
       this.remove = false
     }
   },
   methods: {
+    ...mapMutations('content', {
+      update: 'UPDATE_LIST',
+      updateItem: 'UPDATE_LIST_ITEM',
+      updateItems: 'UPDATE_LIST_ITEMS',
+      addItem: 'ADD_LIST_ITEM',
+      removeItem: 'REMOVE_LIST_ITEM'
+    }),
     addListItem () {
-      this.$store.commit('content/ADD_LIST_ITEM')
+      this.addItem()
       this.changed = true
     },
     removeListItem (index) {
-      this.$store.commit('content/REMOVE_LIST_ITEM', index)
+      this.removeItem(index)
       this.changed = true
     }
   }
