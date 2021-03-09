@@ -14,10 +14,10 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/pineapple-lands-editor/precache-manifest.bc282dc3596bc77e43f58c2b97723324.js"
+  "/pineapple-lands-editor/precache-manifest.f092423ef55e9415198f42ec7146c06c.js"
 );
 
-workbox.core.setCacheNameDetails({prefix: "pineapple-lands-editor"});
+workbox.core.setCacheNameDetails({prefix: "pa.pineapple.net.au"});
 
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
