@@ -12,7 +12,7 @@ const workersNames = [
   '__avatarsWorker'
 ]
 
-const path = location.href.indexOf('pineapple-lands-editor/') > 0 ? 'pineapple-lands-editor' : ''
+const path = location.href.indexOf('pineapple-lands-editor') > 0 ? 'pineapple-lands-editor/' : ''
 workersNames.forEach(name => {
   Vue.prototype[name] = new Worker(`/${path}live.worker.js`)
 })
