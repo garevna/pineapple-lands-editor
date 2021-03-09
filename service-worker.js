@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/pineapple-lands-editor/precache-manifest.2550d9ad024532c594d6760e91cfd328.js"
+  "/pineapple-lands-editor/precache-manifest.24b3e8693fcf71040a6b6134ba590a4c.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "pa.pineapple.net.au"});

@@ -4,7 +4,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/pineapple-lands-editor/browserconfig.xml"
   },
   {
-    "revision": "cd444477a25c0db7fc1d",
+    "revision": "a93c422301e048363be2",
     "url": "/pineapple-lands-editor/css/app.949a8185.css"
   },
   {
@@ -484,7 +484,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/pineapple-lands-editor/img/testimonials/default.png"
   },
   {
-    "revision": "1b3b1a9fe159e4432f9b5cc1b7d1d672",
+    "revision": "4cf365c2261bcdb1678c4c6a2ea92574",
     "url": "/pineapple-lands-editor/index.html"
   },
   {
@@ -492,8 +492,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/pineapple-lands-editor/js/3months.c7b72355.js"
   },
   {
-    "revision": "cd444477a25c0db7fc1d",
-    "url": "/pineapple-lands-editor/js/app.2932b93c.js"
+    "revision": "a93c422301e048363be2",
+    "url": "/pineapple-lands-editor/js/app.cc0e175d.js"
   },
   {
     "revision": "1af186aa6f220fc6c75d",
