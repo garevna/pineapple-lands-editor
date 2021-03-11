@@ -13,9 +13,10 @@ const setReady = {
 }
 
 export const RECEIVE_MESSAGE_FROM_COMMON_WORKER = ({ commit, dispatch }, payload) => {
-  const { status, action, /* store, */ key, result } = payload
-  if (status !== 200) return
-  if (action !== 'save') {
+  const { status, action, key, result } = payload
+  if (status !== 200) return commit(action === 'get' ? 'READ_FAILURE' : 'SAVE_FAILURE', result)
+  if (action === 'put') return commit('SAVE_SUCCESS')
+  if (action === 'get') {
     commit(mutations[key], result, { root: true })
     commit(setReady[key], true, { root: true })
   }

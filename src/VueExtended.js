@@ -145,6 +145,16 @@ Vue.prototype.__saveTestimonials = function (data) {
   })
 }
 
+Vue.prototype.__saveInternetPlans = function (data) {
+  Vue.prototype.__commit('SET_PROGRESS', true)
+  Vue.prototype.__commonWorker.postMessage({
+    store: 'common',
+    action: 'put',
+    key: 'plans',
+    data
+  })
+}
+
 Vue.prototype.__sendImageRequest = function (fileName) {
   Vue.prototype.__sendFileRequest('images', fileName)
 }

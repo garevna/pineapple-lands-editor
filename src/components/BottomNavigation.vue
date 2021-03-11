@@ -131,6 +131,8 @@ export default {
     },
 
     savePlans () {
+      console.log(this.$store.state.internetPlans)
+      this.__saveInternetPlans(this.$store.state.internetPlans)
       // this.__commonWorker.postMessage({
       //   store: 'common',
       //   action: 'put',

@@ -18,6 +18,12 @@
         flat
         class="d-flex flex-wrap justify-center transparent"
       >
+        <!-- <Tariff
+          v-for="(item, index) in plans[plan]"
+          :key="index"
+          plan="plan"
+          :index="index"
+        /> -->
         <PriceCard class="d-none d-md-block"
           v-for="(item, index) in plans[plan]"
           :key="index"
@@ -68,31 +74,21 @@
   </v-card>
 </template>
 
-<style scoped>
-.v-btn.v-btn--icon {
-  background: #94C578!important;
-}
-.v-window__prev .v-btn:hover,
-.v-window__next .v-btn:hover {
-  background: #20731C!important;
-}
-</style>
-
 <script>
 
 import { mapState, mapMutations } from 'vuex'
 
 import { SubHeader, Button } from '@/components/inputs'
 
-import { PriceCard, SwitchToggle } from '@/components/plans'
+import { SwitchToggle, PriceCard } from '@/components/plans'
 
 export default {
   name: 'InternetPlans',
   components: {
     SubHeader,
-    PriceCard,
     SwitchMode: SwitchToggle,
-    Button
+    Button,
+    PriceCard
   },
   props: ['page'],
   data () {
@@ -140,3 +136,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.v-btn.v-btn--icon {
+  background: #94C578!important;
+}
+.v-window__prev .v-btn:hover,
+.v-window__next .v-btn:hover {
+  background: #20731C!important;
+}
+</style>
