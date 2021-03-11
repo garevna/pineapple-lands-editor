@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
         `App is being served from cache by a service worker.\n
         For more details, visit https://goo.gl/AFskqB`
       )
-      this.addEventListener('fetch', function (event) {
+      self.addEventListener('fetch', function (event) {
         console.log(event.request.url)
       })
     },
