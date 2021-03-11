@@ -1,10 +1,19 @@
 <template>
-  <v-app class="homefone">
+  <v-app class="homefone mb-12">
     <MainNavigationDriver :land.sync="land" />
 
     <v-container class="homefone mx-auto px-auto">
       <router-view class="mt-12 mx-0 pa-12"></router-view>
     </v-container>
+    <!-- ============================= FOOTER ============================= -->
+    <section id="footer" class="homefone mb-12" style="width: 100%" v-if="showFooter">
+      <div class="base-title">
+        <a href="#footer" class="core-goto"></a>
+          <v-row width="100%">
+            <Footer :page.sync="page" />
+          </v-row>
+      </div>
+    </section>
 
     <!-- ============================= BOTTOM NAV ============================= -->
     <BottomNavigation />
@@ -25,12 +34,14 @@ import { mapState, mapGetters, mapMutations } from 'vuex'
 
 const {
   BottomNavigation,
-  MainNavigationDriver
+  MainNavigationDriver,
+  Footer
 } = require('@/components')
 
 export default {
   name: 'App',
   components: {
+    Footer,
     BottomNavigation,
     MainNavigationDriver
   },
@@ -44,7 +55,11 @@ export default {
   },
   computed: {
     ...mapState(['viewport', 'viewportWidth', 'authorized']),
-    ...mapGetters('editor', ['contentEndpoint'])
+    ...mapGetters('editor', ['contentEndpoint']),
+    showFooter () {
+      const pages = ['live-pages', 'dgtek-free-upgrade', 'testimonials', 'plans', 'home']
+      return pages.indexOf(this.$route.name) === -1
+    }
   },
   methods: {
     ...mapMutations({
@@ -59,24 +74,8 @@ export default {
     this.__init()
   },
   errorCaptured: errorHandler,
-  // errorCaptured (error, component, info) {
-  //   errorHandler(error, component, info)
-  // },
-  // errorCaptured (error, component, info) {
-  //   console.group(`${error}\n(${info})`)
-  //   console.log('  In component: ', component.$options._componentTag)
-  //   const parentLevelOne = component.$options.parent.$options._componentTag
-  //   parentLevelOne && console.log('    From: ', parentLevelOne)
-  //   const parentLevelTwo = component.$options.parent.$options.parent.$options._componentTag
-  //   parentLevelTwo && console.log('      From: ', parentLevelTwo)
-  //   const parentLevelThree = component.$options.parent.$options.parent.$options.parent.$options._componentTag
-  //   parentLevelThree && console.log('        From: ', parentLevelThree)
-  //   console.groupEnd(`${error}\n(${info})`)
-  //   return false
-  // },
   beforeMount () {
-    this.setProgress(true)
-    this.__authWorker.postMessage({ store: 'auth', action: 'token' })
+    this.__authentication()
     document.title = 'CRM'
   },
   mounted () {

@@ -6,7 +6,7 @@
           <v-col cols="12" lg="4">
             <v-card flat class="transparent mx-auto">
               <v-card-actions>
-                <Logo />
+                <Logo class="ml-2" />
                 <!-- <v-img src="@/assets/logo.png" width="80" height="52" contain position="left center" style="margin-left: 8px;"></v-img> -->
               </v-card-actions>
               <v-card-title>
@@ -105,31 +105,6 @@
   </v-container>
 </template>
 
-<style scoped>
-h6, p {
-  font-family: 'Gilroy';
-  font-style: normal;
-}
-h6 {
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 17px;
-  color: #000;
-}
-p {
-  font-weight: normal;
-  font-size: 12px;
-  line-height: 16px;
-  color: #757575;
-}
-a {
-  text-decoration: none;
-  color: #757575!important;
-  display: inline-block;
-  margin-right: 10px;
-}
-</style>
-
 <script>
 
 const { Logo } = require('@/components/dgtek/icons').default
@@ -150,3 +125,29 @@ export default {
   })
 }
 </script>
+
+<style scoped>
+h6, p {
+  font-family: 'Gilroy';
+  font-style: normal;
+}
+h6 {
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 17px;
+  color: #000;
+}
+p {
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 16px;
+  color: #757575;
+  text-align:left;
+}
+a {
+  text-decoration: none;
+  color: #757575!important;
+  display: inline-block;
+  margin-right: 10px;
+}
+</style>

@@ -15,8 +15,6 @@ import TestimonialsCard from './TestimonialsCard.vue'
 import UploadImage from './UploadImage.vue'
 import UserFormCustomization from './UserFormCustomization.vue'
 
-import Spinner from './Spinner.vue'
-
 export {
   Auth,
   ButtonConfig,
@@ -33,6 +31,5 @@ export {
   PriceCard,
   TestimonialsCard,
   UploadImage,
-  UserFormCustomization,
-  Spinner
+  UserFormCustomization
 }

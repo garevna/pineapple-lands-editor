@@ -15,13 +15,13 @@
 
       <!-- ==================== SHADOW =============================== -->
 
-      <svg width="800" height="800" style="position: absolute; top:82px; left: 82px;">
+      <!-- <svg width="800" height="800" style="position: absolute; top:82px; left: 82px;">
         <path class="path blur" d="M28.1694 106.851C34.9083 98.837 39.5866 95.3979 45.9404 90.4906C93.2789 53.9542 145.777 27.3811 203.115 10.52C227.459 3.37854 252.316 -0.877352 277.767 0.399966C295.55 1.30951 312.566 5.02431 328.034 14.2357C330.833 15.9279 333.568 17.5698 336.367 19.2619C337.067 19.8148 337.831 20.418 338.532 20.9709C339.4 21.9662 340.204 22.9112 341.073 23.9065C346.064 29.4995 351.634 34.62 356.045 40.6856C372.323 63.1452 380.322 88.8902 385.048 115.772C391.091 150.412 390.901 185.093 385.807 219.831C379.705 261.216 368.08 300.825 344.135 335.877C335.225 348.999 324.555 360.422 311.335 369.315C290.886 383.045 268.046 387.756 243.798 386.395C221.413 385.161 200.201 379.168 179.582 370.852C160.17 362.971 141.608 353.489 124.085 342.036C112.632 334.546 101.129 327.121 90.3803 318.74C78.8033 309.706 67.93 299.78 57.1204 289.905C46.579 280.344 37.4349 269.406 29.199 257.841C15.7709 238.974 5.74096 218.551 2.20584 195.4C-1.83237 168.957 3.30258 144.38 17.4331 121.632" fill="none" transform="scale(1.5, 1.5)" stroke="#0005" stroke-width="4">
           <filter id="dropshadow" x="-2" y="-2" width="200" height="200">
             <feGaussianBlur  stdDeviation="2"/>
           </filter>
         </path>
-      </svg>
+      </svg> -->
 
       <!-- ==================== END OF SHADOW =============================== -->
 
@@ -46,12 +46,11 @@
 
 import { mapState, mapGetters, mapMutations } from 'vuex'
 
-import { Spinner, ChangePicture } from '@/components/editor'
+import { ChangePicture } from '@/components/editor'
 
 export default {
   name: 'TopPicture',
   components: {
-    Spinner,
     ChangePicture
   },
   data: () => ({
@@ -102,9 +101,9 @@ export default {
 
 .spinner {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-20%,-50%);
+  top: 30%;
+  left: 45%;
+  /* transform: translate(-30%,-60%); */
 }
 
 figure {

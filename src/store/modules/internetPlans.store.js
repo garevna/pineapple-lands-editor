@@ -29,7 +29,6 @@ const { emptyTariff } = require('@/configs/emptyTariff')
 
 const mutations = {
   SET_PLANS (state, payload) {
-    console.log(payload)
     const { plans } = payload
     const residential = plans.residential.map(item => Object.assign({}, emptyTariff, item))
     const business = plans.business.map(item => Object.assign({}, emptyTariff, item))

@@ -51,8 +51,6 @@ import { mapState, mapMutations } from 'vuex'
 
 import { Tariff } from '@/components/plans'
 
-const { emptyTariff } = require('@/configs/emptyTariff')
-
 export default {
   name: 'InternetPlans',
   components: {
@@ -73,7 +71,6 @@ export default {
     }),
     residential: {
       get () {
-        // const residential = this.plans.residential.map(item => Object.assign({}, emptyTariff, item))
         return this.plans.residential
       },
       set (val) {
@@ -82,7 +79,6 @@ export default {
     },
     business: {
       get () {
-        // return this.plans.business.map(item => Object.assign(emptyTariff, item))
         return this.plans.business
       },
       set (val) {
@@ -91,32 +87,10 @@ export default {
     }
   },
   watch: {
-    // residential: {
-    //   deep: true,
-    //   handler (newVal, oldVal) {
-    //     console.log(newVal, oldVal)
-    //   }
-    // },
-    // business: {
-    //   deep: true,
-    //   handler (newVal, oldVal) {
-    //     console.log(newVal, oldVal)
-    //   }
-    // },
     contact (val) {
       if (!val) return
       this.$emit('update:page', '#footer')
       this.contact = false
-    }
-  },
-  methods: {
-    insertAfter (plan, index) {
-      console.log(plan, this[plan])
-      this[plan].splice(index + 1, 0, emptyTariff)
-    },
-    remove (plan, index) {
-      console.log(plan, this[plan])
-      // this[plan].splice(index, 1)
     }
   }
 }

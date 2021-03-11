@@ -1,5 +1,5 @@
 <template>
-<v-container fluid class="footer--bottom-content">
+<v-container fluid class="footer--bottom-content" v-if="generalInfoReady">
   <v-row width="100%" justify="center" class="mx-auto">
     <v-col style="min-width: 340px; max-width: 340px">
       <v-card flat class="transparent mx-auto">
@@ -61,10 +61,12 @@
 
 import { mapState } from 'vuex'
 
+const { scheme } = require('@/configs/generalInfo')
+
 export default {
   name: 'FooterBottomContent',
   computed: {
-    ...mapState(['officePhone', 'officeAddress', 'officeEmail', 'officeABN', 'linkedIn', 'faceBook']),
+    ...mapState(['generalInfoReady', ...Object.keys(scheme)]),
     ...mapState('content', ['about', 'copyright'])
   }
 }

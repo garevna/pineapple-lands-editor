@@ -11,7 +11,7 @@
               <v-icon x-large>mdi-close</v-icon>
             </v-btn>
           </v-toolbar>
-          <v-card-text>
+          <v-card-text v-if="!spinner">
             <v-text-field
               label="Login"
               v-model="login"
@@ -23,9 +23,10 @@
               outlined
             ></v-text-field>
           </v-card-text>
+          <Spinner v-if="spinner" />
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn text @click="sendRequest">SUBMIT</v-btn>
+            <v-btn text @click="sendRequest" v-if="!spinner">SUBMIT</v-btn>
             <v-btn text @click="$emit('update:opened', false)">CLOSE</v-btn>
           </v-card-actions>
         </v-card>
@@ -48,7 +49,8 @@ export default {
     return {
       login: '',
       password: '',
-      submit: null
+      submit: null,
+      spinner: false
     }
   },
   methods: {
@@ -57,15 +59,12 @@ export default {
       accessGranted: 'AUTH_SUCCESS'
     }),
     sendRequest () {
+      this.spinner = true
       const { login, password } = auth(this.login, this.password)
-      this.__authWorker.postMessage({
-        store: 'auth',
-        action: 'auth',
-        login,
-        password
-      })
+      this.__authorization(login, password)
     },
     validate: async function (event) {
+      this.spinner = false
       const { action, status } = event.data
       if (action !== 'auth') return
       status !== 200 ? this.accessDenied() : this.accessGranted()

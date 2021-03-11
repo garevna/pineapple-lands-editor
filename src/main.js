@@ -16,6 +16,9 @@ Vue.prototype.__storage = localStorage
 import Popup from '@/components/editor/Popup.vue'
 Vue.component('popup', Popup)
 
+import Spinner from '@/components/editor/Spinner.vue'
+Vue.component('Spinner', Spinner)
+
 Vue.config.productionTip = false
 
 Vue.prototype.__commit = function (mutation, data) {

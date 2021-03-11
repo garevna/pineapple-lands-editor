@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid style="overflow-x: hidden; margin-top: 100px; margin-bottom: 64px;">
+  <v-container fluid style="overflow: visible; margin-top: 100px; margin-bottom: 64px;">
     <v-img
           :src="top.pictureURL"
           scroll-threshold="500"
@@ -19,18 +19,6 @@
               <v-card-text class="mx-auto mx-lg-0" style="background: #ffffffa0">
                 <Paragraph :value.sync="topText" />
               </v-card-text>
-              <!-- <v-card-text class="text-center text-md-left">
-                <v-btn
-                    color="buttons"
-                    dark
-                    rounded
-                    height="48"
-                    class="submit-button px-auto mx-auto"
-                    @click="$emit('update:page', 'contact')"
-                >
-                  {{ top.button }}
-                </v-btn>
-              </v-card-text> -->
             </v-card>
           </v-card>
         </v-col>

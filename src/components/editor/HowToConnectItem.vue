@@ -32,7 +32,6 @@ export default {
   components: {
     SubSubHeader,
     Paragraph,
-    Spinner: () => import('@/components/editor/Spinner.vue'),
     ChangePicture: () => import('@/components/editor/ChangePicture.vue')
   },
   props: {

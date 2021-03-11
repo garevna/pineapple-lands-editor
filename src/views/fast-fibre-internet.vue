@@ -65,14 +65,14 @@
         </section>
       </v-row>
       <!-- ============================= FOOTER ============================= -->
-      <section id="footer" class="homefone">
+      <!-- <section id="footer" class="homefone">
         <div class="base-title">
           <a href="#footer" class="core-goto"></a>
             <v-row width="100%">
               <Footer :page.sync="page" :user.sync="user" />
             </v-row>
         </div>
-      </section>
+      </section> -->
   </v-container>
 </template>
 
@@ -87,8 +87,7 @@ import {
   HowToConnect,
   Testimonials,
   InternetPlans,
-  FAQ,
-  Footer
+  FAQ
 } from '@/components'
 
 export default {
@@ -100,8 +99,7 @@ export default {
     HowToConnect,
     Testimonials,
     InternetPlans,
-    FAQ,
-    Footer
+    FAQ
   },
   data () {
     return {

@@ -1,25 +1,25 @@
 <template>
-  <v-container fluid class="homefone pt-12" v-if="testimonialsReady">
+  <v-container fluid class="homefone pt-12 mb-12" v-if="testimonialsReady">
     <v-card flat class="transparent mx-auto mt-0 mb-12 text-center" max-width="1440">
-      <v-row justify="center">
+      <v-row justify="center" class="mb-12">
         <v-col
-                cols="12"
-                md="6"
-                lg="4"
-                v-for="(review, index) in testimonials"
-                :key="index"
+          cols="12"
+          md="6"
+          lg="4"
+          v-for="(review, index) in testimonials"
+          :key="index"
         >
           <TestimonialsCard :index="index" :content="review" :removed.sync="removed" />
         </v-col>
       </v-row>
       <v-row justify="center">
         <v-btn
-              fab
-              dark
-              small
-              max-width="320"
-              color="info"
-              @click.stop="addReview"
+          fab
+          dark
+          small
+          max-width="320"
+          color="info"
+          @click.stop="addReview"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -27,28 +27,6 @@
     </v-card>
   </v-container>
 </template>
-
-<style>
-.testimonials .v-btn__content,
-.testimonials .mdi::before,
-.testimonials .mdi-chevron-right::before,
-.testimonials .v-icon::after {
-  color: #fff!important;
-}
-
-.testimonials .theme--light.v-btn.v-btn--icon {
-  background: #7b79!important;
-  color: #fff!important;
-}
-</style>
-
-<style scoped>
-
-.v-carousel__controls {
-  z-index: 0!important;
-}
-
-</style>
 
 <script>
 
@@ -86,3 +64,24 @@ export default {
 }
 
 </script>
+
+<style>
+.testimonials .v-btn__content,
+.testimonials .mdi::before,
+.testimonials .mdi-chevron-right::before,
+.testimonials .v-icon::after {
+  color: #fff!important;
+}
+
+.testimonials .theme--light.v-btn.v-btn--icon {
+  background: #7b79!important;
+  color: #fff!important;
+}
+</style>
+
+<style scoped>
+
+.v-carousel__controls {
+  z-index: 0!important;
+}
+</style>

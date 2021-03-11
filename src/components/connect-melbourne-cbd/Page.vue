@@ -20,13 +20,13 @@
 
       <!-- ============================= USER CONTACT ============================= -->
 
-      <v-row justify="center" class="pa-0 ma-0">
+      <v-row justify="center" class="pa-0 ma-0 mt-12">
         <v-sheet
           width="100%"
           max-width="1440"
           color="homefone"
           tile
-          class="mx-auto"
+          class="mx-auto mt-12"
         >
           <v-row class="mx-0 px-0">
             <v-col cols="12" md="6" class="aside-col">
@@ -58,16 +58,6 @@
           </div>
         </section>
       </v-row>
-
-      <!-- ============================= FOOTER ============================= -->
-      <section id="footer" class="homefone">
-        <div class="base-title">
-          <a href="#footer" class="core-goto"></a>
-            <v-row width="100%">
-              <Footer :page.sync="page" />
-            </v-row>
-        </div>
-      </section>
   </v-container>
 </template>
 
@@ -80,8 +70,7 @@ import {
   Aside,
   UserContact,
   Testimonials,
-  FAQ,
-  Footer
+  FAQ
 } from '@/components'
 
 export default {
@@ -91,8 +80,7 @@ export default {
     Aside,
     UserContact,
     Testimonials,
-    FAQ,
-    Footer
+    FAQ
   },
   props: ['homePageName', 'pageNum'],
   data () {

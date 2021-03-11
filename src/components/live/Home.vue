@@ -67,21 +67,12 @@
           </div>
         </section>
       </v-row>
-      <!-- ============================= FOOTER ============================= -->
-      <section id="footer" class="homefone">
-        <div class="base-title">
-          <a href="#footer" class="core-goto"></a>
-            <v-row width="100%">
-              <Footer :page.sync="page" />
-            </v-row>
-        </div>
-      </section>
   </v-container>
 </template>
 
 <script>
 
-import { mapState /*, mapActions */ } from 'vuex'
+import { mapState } from 'vuex'
 
 const {
   LiveHomeTop,
@@ -90,8 +81,7 @@ const {
   List,
   InternetPlans,
   Testimonials,
-  FAQ,
-  Footer
+  FAQ
 } = require('@/components')
 
 export default {
@@ -103,8 +93,7 @@ export default {
     HowToConnect,
     Testimonials,
     InternetPlans,
-    FAQ,
-    Footer
+    FAQ
   },
   data () {
     return {

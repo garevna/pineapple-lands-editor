@@ -78,15 +78,6 @@
           </div>
         </section>
       </v-row>
-      <!-- ============================= FOOTER ============================= -->
-      <section id="footer" class="homefone">
-        <div class="base-title">
-          <a href="#footer" class="core-goto"></a>
-            <v-row width="100%">
-              <Footer :page.sync="page" :user.sync="user" />
-            </v-row>
-        </div>
-      </section>
   </v-container>
 </template>
 
@@ -101,8 +92,7 @@ import {
   HowToConnect,
   Testimonials,
   FAQ,
-  Disclaimer,
-  Footer
+  Disclaimer
 } from '@/components'
 
 export default {
@@ -114,8 +104,7 @@ export default {
     HowToConnect,
     Testimonials,
     FAQ,
-    Disclaimer,
-    Footer
+    Disclaimer
   },
   data () {
     return {

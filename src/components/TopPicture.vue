@@ -18,12 +18,11 @@
 
 import { mapState, mapGetters, mapMutations } from 'vuex'
 
-import { Spinner, ChangePicture } from '@/components/editor'
+import { ChangePicture } from '@/components/editor'
 
 export default {
   name: 'TopPicture',
   components: {
-    Spinner,
     ChangePicture
   },
   data: () => ({

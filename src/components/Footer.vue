@@ -74,6 +74,72 @@
   </v-container>
 </template>
 
+<script>
+
+import { mapState } from 'vuex'
+
+import { SubHeader, SubHeader5 } from '@/components/inputs'
+
+const { scheme } = require('@/configs/generalInfo')
+const generalInfoKeys = Object.keys(scheme)
+
+export default {
+  name: 'Footer',
+  components: {
+    FooterFone: () => import('@/components/footer/FooterFone.vue'),
+    FooterBottomContentSmall: () => import('@/components/footer/BottomContentSmall.vue'),
+    FooterBottomContent: () => import('@/components/footer/BottomContent.vue'),
+    SubHeader,
+    SubHeader5
+  },
+  props: ['page'],
+  data () {
+    return {
+      name: '',
+      email: '',
+      phone: ''
+    }
+  },
+  computed: {
+    ...mapState(['viewportWidth', ...generalInfoKeys]),
+    ...mapState('content', ['footer']),
+    title: {
+      get () {
+        return this.footer.title ? this.footer.title : this.footer.topHead ? this.footer.topHead
+          : 'READY TO GET STARTED?'
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_FOOTER', {
+          prop: this.footer.title ? 'title' : 'topHead',
+          value: val
+        })
+      }
+    },
+    text: {
+      get () {
+        return this.footer.text ? this.footer.text : this.footer.topText ? this.footer.topText
+          : 'Leave your inquiry and we\'ll get back to you within 24 hours on business days'
+      },
+      set (val) {
+        this.$store.commit('content/UPDATE_FOOTER', {
+          prop: this.footer.text ? 'text' : 'topText',
+          value: val
+        })
+      }
+    },
+    topContentTop () {
+      return this.viewportWidth < 420 ? '80px' : this.viewportWidth > 1904 ? '288px' : '198px'
+    },
+    topContentFont () {
+      return this.viewportWidth < 420 ? '80px' : this.viewportWidth > 1904 ? '288px' : '198px'
+    },
+    footerHeight () {
+      return this.viewportWidth < 420 ? 680 : this.viewportWidth > 1904 ? 980 : 860
+    }
+  }
+}
+</script>
+
 <style>
 
 .footer--top-content {
@@ -134,66 +200,3 @@
 }
 
 </style>
-
-<script>
-
-import { mapState } from 'vuex'
-
-import { SubHeader, SubHeader5 } from '@/components/inputs'
-
-export default {
-  name: 'Footer',
-  components: {
-    FooterFone: () => import('@/components/footer/FooterFone.vue'),
-    FooterBottomContentSmall: () => import('@/components/footer/BottomContentSmall.vue'),
-    FooterBottomContent: () => import('@/components/footer/BottomContent.vue'),
-    SubHeader,
-    SubHeader5
-  },
-  props: ['user', 'page'],
-  data () {
-    return {
-      name: '',
-      email: '',
-      phone: ''
-    }
-  },
-  computed: {
-    ...mapState(['viewportWidth']),
-    ...mapState('content', ['footer']),
-    title: {
-      get () {
-        return this.footer.title ? this.footer.title : this.footer.topHead ? this.footer.topHead
-          : 'READY TO GET STARTED?'
-      },
-      set (val) {
-        this.$store.commit('content/UPDATE_FOOTER', {
-          prop: this.footer.title ? 'title' : 'topHead',
-          value: val
-        })
-      }
-    },
-    text: {
-      get () {
-        return this.footer.text ? this.footer.text : this.footer.topText ? this.footer.topText
-          : 'Leave your inquiry and we\'ll get back to you within 24 hours on business days'
-      },
-      set (val) {
-        this.$store.commit('content/UPDATE_FOOTER', {
-          prop: this.footer.text ? 'text' : 'topText',
-          value: val
-        })
-      }
-    },
-    topContentTop () {
-      return this.viewportWidth < 420 ? '80px' : this.viewportWidth > 1904 ? '288px' : '198px'
-    },
-    topContentFont () {
-      return this.viewportWidth < 420 ? '80px' : this.viewportWidth > 1904 ? '288px' : '198px'
-    },
-    footerHeight () {
-      return this.viewportWidth < 420 ? 680 : this.viewportWidth > 1904 ? 980 : 860
-    }
-  }
-}
-</script>

@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="deepgreen px-auto nbn" v-if="pageContentReady">
+  <v-container fluid class="deepgreen px-auto nbn" v-if="pageContentReady" style="overflow: visible">
     <v-card flat class="transparent mx-auto" width="100%" max-width="1440">
       <v-row align="center" justify="center">
         <v-col sm="12" md="7" class="text-center mx-auto">
@@ -24,7 +24,7 @@
                 class="nbn-logo mx-auto"
                 contain
               />
-              <Spinner v-else class="spinner" />
+              <Spinner v-else />
             </v-card>
         </v-col>
       </v-row>
@@ -36,12 +36,10 @@
 import { mapState, mapGetters, mapMutations } from 'vuex'
 
 import { TopHeader, Paragraph, Button } from '@/components/inputs'
-import { Spinner } from '@/components/editor'
 
 export default {
   name: 'Top',
   components: {
-    Spinner,
     TopHeader,
     Paragraph,
     Button
@@ -50,7 +48,6 @@ export default {
   computed: {
     ...mapState(['pageContentReady']),
     ...mapState('content', ['top']),
-    // ...mapState('media', ['images']),
     ...mapGetters('media', ['getImageLink']),
     header: {
       get () {
@@ -102,13 +99,6 @@ export default {
 </script>
 
 <style scoped>
-
-.spinner {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-20%,-50%);
-}
 .nbn {
   overflow-x: hidden;
   margin-top: 160px;

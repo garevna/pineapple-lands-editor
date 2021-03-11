@@ -19,7 +19,7 @@
 
       <!-- ============================= USER CONTACT ============================= -->
 
-      <v-row justify="center" class="pa-0 ma-0">
+      <v-row justify="center" class="pa-0 ma-0 mt-12">
         <v-col cols="12" md="6" class="aside-col">
           <section id="dgtek" style="width: 100%">
             <div class="base-title">
@@ -74,15 +74,6 @@
           </div>
         </section>
       </v-row>
-      <!-- ============================= FOOTER ============================= -->
-      <section id="footer" class="homefone">
-        <div class="base-title">
-          <a href="#footer" class="core-goto"></a>
-            <v-row width="100%">
-              <Footer :page.sync="page" :user.sync="user" />
-            </v-row>
-        </div>
-      </section>
   </v-container>
 </template>
 
@@ -102,8 +93,7 @@ import {
   HowToConnect,
   Testimonials,
   InternetPlans,
-  FAQ,
-  Footer
+  FAQ
 } from '@/components'
 
 export default {
@@ -116,8 +106,7 @@ export default {
     GreenSection,
     Testimonials,
     InternetPlans,
-    FAQ,
-    Footer
+    FAQ
   },
   data () {
     return {

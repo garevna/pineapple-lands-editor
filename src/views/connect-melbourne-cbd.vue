@@ -56,15 +56,6 @@
           </div>
         </section>
       </v-row>
-      <!-- ============================= FOOTER ============================= -->
-      <section id="footer" class="homefone">
-        <div class="base-title">
-          <a href="#footer" class="core-goto"></a>
-            <v-row width="100%">
-              <Footer :page.sync="page" />
-            </v-row>
-        </div>
-      </section>
   </v-container>
 </template>
 
@@ -79,11 +70,8 @@ const {
   HowToConnect,
   Testimonials,
   InternetPlans,
-  FAQ,
-  Footer
+  FAQ
 } = require('@/components')
-
-console.log(List)
 
 export default {
   name: 'connect-melbourne-cbd',
@@ -94,8 +82,7 @@ export default {
     HowToConnect,
     Testimonials,
     InternetPlans,
-    FAQ,
-    Footer
+    FAQ
   },
   data () {
     return {

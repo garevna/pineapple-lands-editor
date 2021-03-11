@@ -32,11 +32,13 @@ const mutations = {
 Vue.prototype.callback = function (event) {
   const { status, store: target, action, key, result } = event.data
   Vue.prototype.__commit('SET_PROGRESS', false)
+  console.log('ACTION: ', action, ' STATUS: ', status)
   if (status !== 200) {
-    Vue.prototype.__commit(action === 'save' ? 'SAVE_FAILURE' : 'READ_FAILURE', result)
+    const mutation = action === 'token' || action === 'auth' ? 'AUTH_FAILURE' : action === 'get' ? 'READ_FAILURE' : 'SAVE_FAILURE'
+    Vue.prototype.__commit(mutation, result)
     return
   }
-  if (action === 'save') Vue.prototype.__commit('SAVE_SUCCESS', result)
+  if (action === 'put' || action === 'save') Vue.prototype.__commit('SAVE_SUCCESS', result)
   if (target === 'lands' || (target === 'live' && key !== 'list')) Vue.prototype.__commit('SET_PAGE_CONTENT_READY', true)
 }
 
@@ -50,6 +52,20 @@ for (const worker of workersNames) {
   }
 
   Vue.prototype[worker].addEventListener('message', Vue.prototype.callback)
+}
+
+Vue.prototype.__authentication = function () {
+  Vue.prototype.__commit('SET_PROGRESS', true)
+  this.__authWorker.postMessage({ store: 'auth', action: 'token' })
+}
+
+Vue.prototype.__authorization = function (login, password) {
+  this.__authWorker.postMessage({
+    store: 'auth',
+    action: 'auth',
+    login,
+    password
+  })
 }
 
 Vue.prototype.__sendLandRequest = function (landName) {
