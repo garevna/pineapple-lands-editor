@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid style="overflow-x: hidden; margin-top: 80px; margin-bottom: 64px;">
+  <v-container fluid style="overflow: visible; margin-top: 80px; margin-bottom: 64px;">
     <v-card flat tile class="mx-auto homefone" width="100%" max-width="1180">
       <v-row align="center" justify="center">
         <v-col sm="12" md="6">

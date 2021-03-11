@@ -4,10 +4,11 @@
       <v-tooltip bottom color="#09b">
         <template v-slot:activator="{ on }">
           <v-app-bar-nav-icon
-              color="#09b"
-              @click.stop="drawer = !drawer"
-              large
-              v-on="on"
+            dark
+            text
+            @click.stop="drawer = !drawer"
+            large
+            v-on="on"
           ></v-app-bar-nav-icon>
         </template>
         <span>Landing pages</span>

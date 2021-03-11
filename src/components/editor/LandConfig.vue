@@ -14,6 +14,7 @@
           <v-btn
             icon
             dark
+            text
             @click="$emit('update:opened', false)"
           >
             <v-icon large>$close</v-icon>

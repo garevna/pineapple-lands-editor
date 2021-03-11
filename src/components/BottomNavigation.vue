@@ -11,6 +11,8 @@
           v-if="live || subpage"
           value="listOfPages"
           @click="$router.push({ path: '/live-pages' })"
+          dark
+          text
         >
           <span>List of pages</span>
           <v-icon>mdi-view-list</v-icon>
@@ -19,6 +21,8 @@
         <!--                 GOTO /LIVE                 -->
         <v-btn
           value="main"
+          dark
+          text
           @click="$router.push({ path: '/live' })"
           v-if="subpage || listOfPages"
         >
@@ -28,6 +32,8 @@
 
         <!--             CONFIG PAGE INFO             -->
         <v-btn
+          dark
+          text
           value="info"
           @click="config = true"
           v-if="pageConfig"
@@ -37,25 +43,25 @@
         </v-btn>
 
         <!--               HIDE LIVE SUBPAGE              -->
-        <v-btn @click="$store.commit('HIDE_CURRENT_PAGE')" v-if="subpage && !hidden">
+        <v-btn dark text @click="$store.commit('HIDE_CURRENT_PAGE')" v-if="subpage && !hidden">
           <span>Hide</span>
           <v-icon>$hidden</v-icon>
         </v-btn>
 
         <!--               SHOW LIVE SUBPAGE              -->
-        <v-btn @click="$store.commit('SET_CURRENT_PAGE_ACTIVE')" v-if="subpage && hidden">
+        <v-btn dark text @click="$store.commit('SET_CURRENT_PAGE_ACTIVE')" v-if="subpage && hidden">
           <span>Set active</span>
           <v-icon>$active</v-icon>
         </v-btn>
 
         <!--                        SAVE                        -->
-        <v-btn @click="save" v-if="authorized && !listOfPages">
+        <v-btn dark text @click="save" v-if="authorized && !listOfPages">
           <span>Save</span>
           <v-icon>mdi-content-save-edit</v-icon>
         </v-btn>
 
         <!--                  AUTH                  -->
-        <v-btn @click="login = true" v-if="!authorized">
+        <v-btn dark text @click="login = true" v-if="!authorized">
           <span>Sign In</span>
           <v-icon>mdi-login</v-icon>
         </v-btn>
@@ -131,14 +137,7 @@ export default {
     },
 
     savePlans () {
-      console.log(this.$store.state.internetPlans)
       this.__saveInternetPlans(this.$store.state.internetPlans)
-      // this.__commonWorker.postMessage({
-      //   store: 'common',
-      //   action: 'put',
-      //   key: 'plans',
-      //   data: this.$store.state.internetPlans.plans
-      // })
     },
 
     async saveTestimonials () {
